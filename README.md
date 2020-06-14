@@ -1,4 +1,4 @@
-# RED COGS
+# Red Cogs
 Personal Red Cogs for Clip#3279
 
 ### Information
