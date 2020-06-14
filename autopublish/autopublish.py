@@ -1,19 +1,16 @@
 import asyncio
 
-import contextlib
 from contextlib import suppress
-
 import discord
-from discord import Member, Role, TextChannel, DMChannel
-
-import redbot
 from redbot.core import commands
 
-from core import checks
-from core.models import PermissionLevel
+BaseCog = getattr(commands, "Cog", object)
 
-class AutoPublishPlugin(commands.Cog):
+
+class AutoPublish(BaseCog):
     """Auto publish message in a specific announcement channel"""
+    def __init__(self, bot):
+        self.bot = bot
 
     @commands.Cog.listener()
     async def on_message(self, message):
