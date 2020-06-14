@@ -6,7 +6,6 @@ from redbot.core import commands
 
 BaseCog = getattr(commands, "Cog", object)
 
-
 class AutoPublish(BaseCog):
     """Auto publish message in a specific announcement channel"""
     def __init__(self, bot):
