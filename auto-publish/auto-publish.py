@@ -13,9 +13,7 @@ from core import checks
 from core.models import PermissionLevel
 
 class AutoPublishPlugin(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-        self.db = bot.plugin_db.get_partition(self)
+    """Auto publish message in a specific announcement channel"""
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -41,6 +39,3 @@ class AutoPublishPlugin(commands.Cog):
                     await message.publish()
                 await msg.delete()
                 print("AUTOPUBLISH: Message published")
-
-def setup(bot):
-    bot.add_cog(AutoPublishPlugin(bot))
