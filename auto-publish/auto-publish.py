@@ -5,7 +5,9 @@ from contextlib import suppress
 
 import discord
 from discord import Member, Role, TextChannel, DMChannel
-from discord.ext import commands
+
+import redbot
+from redbot.core import commands
 
 from core import checks
 from core.models import PermissionLevel
