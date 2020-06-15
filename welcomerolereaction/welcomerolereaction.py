@@ -12,6 +12,7 @@ from discord.utils import get
 import requests
 from discord import Webhook, RequestsWebhookAdapter
 
+
 #----------------# CONFIG #----------------#
 
 guild_id = 454261607799717888
