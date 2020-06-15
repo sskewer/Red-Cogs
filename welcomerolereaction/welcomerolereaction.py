@@ -9,7 +9,7 @@ from redbot.core import commands
 
 role_id = 721988422041862195
 reaction_name = '<:fnit_gift:601709109955395585>'
-message_id = 721988332153733141
+message_id = 721990614228664361
 welcome_channel_id = 603955376286728226
 welcome_message = ['{user}, benvenuto nel team No Sweat!', '{user}? Il team No Sweat ti stava aspettando!', 'Team No Sweat, finalmente anche {user} è qui con noi!']
 
