@@ -50,8 +50,7 @@ class NoSweat(commands.Cog):
     if payload.emoji.id == reaction_id and payload.message_id == message_id:
         await member.add_roles(role)
         # Embed
-        #random_message = random.choice(welcome_messages)
-        random_message = "{user}, benvenuto!"
+        random_message = random.choice(welcome_messages)
         replaced_message = random_message.replace("{user}", member.mention)
         embed = discord.Embed(description=replaced_message, color=0x0066cc, timestamp=datetime.datetime.utcnow())
         embed.set_author(name=member.display_name, icon_url=member.avatar_url)
