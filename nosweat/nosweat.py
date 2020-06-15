@@ -55,7 +55,7 @@ class NoSweat(commands.Cog):
         replaced_message = random_message.replace("{user}", member.mention)
         embed = discord.Embed(description=replaced_message, color=0x0066cc, timestamp=datetime.datetime.utcnow())
         embed.set_author(name=member.display_name, icon_url=member.avatar_url)
-        embed.set_footer(text="Team No Sweat")
+        embed.set_footer(text="Membri No Sweat: "+len(role.members))
         # Welcome Webhook
         webhook = Webhook.partial(webhook_id, webhook_token,\
                                   adapter=RequestsWebhookAdapter())
