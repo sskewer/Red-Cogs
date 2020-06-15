@@ -1,12 +1,18 @@
 import asyncio
 
 from contextlib import suppress
-import discord
 from redbot.core import commands
+
+import discord
+from discord import Embed, Guild, Member, Role
+from discord.ext import commands
+from discord.ext.commands import Bot, Cog, Context, Greedy, group
+from discord.utils import get
 
 
 #----------------# CONFIG #----------------#
 
+guild_id = 454261607799717888
 role_id = 721988422041862195
 reaction_name = '<:fnit_gift:601709109955395585>'
 message_id = 721990614228664361
@@ -23,13 +29,21 @@ class WelcomeRoleReaction(BaseCog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener()
-    async def on_reaction_add(self, reaction, user)
+    @commands.Cog.listener()        
+    async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
         # Vars
         role = get(user.guild.roles, id=role_id)
         welcome_channel = get(user.guild.channels, id=welcome_channel_id)
-        # Role
-        if reaction.message.id != message_id:
+        user: discord.User = self.bot.get_user(int(payload.user_id))
+        guild: discord.Guild = self.bot.config.get(guild_id)
+        # Reaction Role
+        if user.bot:
             return
-        if reaction.emoji == reaction_name:
-            await user.add_roles(role)
+
+        member: discord.Member = await guild.fetch_member(payload.user_id)
+
+        if member is None:
+            return
+
+        if payload.emoji.name == reaction_name:
+            await member.add_roles(role)
