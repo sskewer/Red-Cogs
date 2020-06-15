@@ -1,8 +1,11 @@
 import asyncio
+import io
 
 from contextlib import suppress
 import discord
-from redbot.core import commands
+from redbot.core import Config, commands
+from redbot.core.bot import Red
+from typing import Any
 
 from discord import Embed, Guild, Member, Role
 from discord.ext import commands
