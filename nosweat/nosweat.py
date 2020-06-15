@@ -58,4 +58,4 @@ class NoSweat(commands.Cog):
     # Welcome Webhook
     webhook = Webhook.partial(webhook_id, webhook_token,\
                               adapter=RequestsWebhookAdapter())
-    await webhook.send("Test")
+    await webhook.send(embed=embed)
