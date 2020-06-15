@@ -1,0 +1,10 @@
+{ 
+  "NAME" : "NoSweat", 
+  "AUTHOR" : "sskewer", 
+  "SHORT" : "Role reaction and Welcome Message", 
+  "DESCRIPTION" : "Role reaction on a specific message and give the welcome by webhook in a specific channel",
+  "INSTALL_MSG" : "Thanks for installing Welcome % Role Reacrion.",
+  "REQUIREMENTS" : [],
+  "TAGS" : ["reaction", "welcome", "role"],
+  "DISABLED" : false
+} 
