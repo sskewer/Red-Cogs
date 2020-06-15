@@ -36,6 +36,7 @@ class WelcomeRoleReaction(BaseCog):
         welcome_channel = get(user.guild.channels, id=welcome_channel_id)
         user: discord.User = self.bot.get_user(int(payload.user_id))
         guild: discord.Guild = self.bot.config.get(guild_id)
+        
         # Reaction Role
         if user.bot:
             return
