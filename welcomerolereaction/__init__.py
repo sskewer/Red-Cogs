@@ -1,3 +1,5 @@
+from .welcomerolereaction import WelcomeRoleReaction
+
 async def setup(bot):
   welcomerolereaction = WelcomeRoleReaction(bot)
   
