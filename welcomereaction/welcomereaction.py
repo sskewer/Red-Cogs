@@ -26,9 +26,9 @@ welcome_messages = ['{user}, benvenuto nel team No Sweat!', '{user}? Il team No 
 #------------------------------------------#
 
 
-BaseCog = getattr(commands, "Cog", object)
+Cog: Any = getattr(commands, "Cog", object)
 
-class WelcomeReaction(BaseCog):
+class WelcomeReaction(Cog):
     """Role reaction and give the welcome by webhook to a specific channel"""
     def __init__(self, bot):
         self.bot = bot
