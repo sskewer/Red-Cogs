@@ -25,6 +25,7 @@ webhook_id = 722048542784618563
 welcome_channel_id = 603955376286728226
 webhook_token = "r8eIanRgdkC_sfl8DOdCbXHzOiRY8WjUOh6j0aXRDB5KmNcf4UMFzrqzbMIEPKLuVp9P"
 welcome_messages = ['{user}, benvenuto nel team No Sweat!', '{user}? Il team No Sweat ti stava aspettando!', 'Team No Sweat, finalmente anche {user} è qui con noi!', 'Guardate chi è arrivato? Anche {user} nel team No Sweat!']
+counter_text = "Membri No Sweat: "
 
 #------------------------------------------#
 
@@ -51,7 +52,7 @@ class NoSweat(commands.Cog):
     if payload.emoji.id == reaction_id and payload.message_id == message_id:
         await member.add_roles(role)
         # Embed
-        footer = "Membri No Sweat: " + str(len(role.members))
+        footer = counter_text + str(len(role.members)+1)
         random_message = secrets.choice(welcome_messages)
         replaced_message = random_message.replace("{user}", member.mention)
         embed = discord.Embed(description=replaced_message, color=0x0066cc, timestamp=datetime.datetime.utcnow())
