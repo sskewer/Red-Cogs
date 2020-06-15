@@ -50,14 +50,12 @@ class NoSweat(commands.Cog):
         await member.add_roles(role)
 
     # Embed
-    #random_message = random.choice(welcome_messages)
-    #embed = discord.Embed(description="{user}, benvenuto!".replace("{user}", member.mention), color=discord.Color.blue(), timestamp=datetime.datetime.utcnow())
-    #embed.set_author(name=member.display_name, icon_url=member.user.avatar_url)
-    #embed.set_footer(text=guild.name, icon_url=guild.icon_url)
+    random_message = random.choice(welcome_messages)
+    embed = discord.Embed(description="{user}, benvenuto!".replace("{user}", member.mention), color=discord.Color.blue(), timestamp=datetime.datetime.utcnow())
+    embed.set_author(name=member.display_name, icon_url=member.user.avatar_url)
+    embed.set_footer(text=guild.name, icon_url=guild.icon_url)
 
     # Welcome Webhook
     webhook = Webhook.partial(webhook_id, webhook_token,\
                               adapter=RequestsWebhookAdapter())
-    #hooks = await welcome_channel.webhooks()
-    #hook = get(hooks, id=webhook_id)
     await webhook.send("Test")
