@@ -17,7 +17,7 @@ from discord import Webhook, RequestsWebhookAdapter
 #----------------# CONFIG #----------------#
 
 role_id = 721988422041862195
-reaction_name = '<:fnit_gift:601709109955395585>'
+reaction_id = 601709109955395585
 message_id = 721990614228664361
 webhook_id = 721997644955779102
 welcome_channel_id = 603955376286728226
@@ -45,7 +45,7 @@ class NoSweat(commands.Cog):
         return
     if role in member.roles:
         return
-    if payload.emoji.name == reaction_name:
+    if payload.emoji.id == reaction_id:
         await member.add_roles(role)
 
     # Embed
