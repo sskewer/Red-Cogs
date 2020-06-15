@@ -47,16 +47,14 @@ class NoSweat(commands.Cog):
         return
     if role in member.roles:
         return
-    if payload.emoji.id == reaction_id and payload.message.id == message_id:
+    if payload.emoji.id == reaction_id and payload.message_id == message_id:
         await member.add_roles(role)
-
-    # Embed
-    #random_message = random.choice(welcome_messages)
-    embed = discord.Embed(description="{user}, benvenuto!", color=discord.Color.blue(), timestamp=datetime.datetime.utcnow())
-    embed.set_author(name=member.display_name, icon_url=member.avatar_url)
-    embed.set_footer(text=guild.name, icon_url=guild.icon_url)
-
-    # Welcome Webhook
-    webhook = Webhook.partial(webhook_id, webhook_token,\
-                              adapter=RequestsWebhookAdapter())
-    await webhook.send(embed=embed)
+        # Embed
+        #random_message = random.choice(welcome_messages)
+        embed = discord.Embed(description="{user}, benvenuto!", color=discord.Color.blue(), timestamp=datetime.datetime.utcnow())
+        embed.set_author(name=member.display_name, icon_url=member.avatar_url)
+        embed.set_footer(text=guild.name, icon_url=guild.icon_url)
+        # Welcome Webhook
+        webhook = Webhook.partial(webhook_id, webhook_token,\
+                                  adapter=RequestsWebhookAdapter())
+        await webhook.send(embed=embed)
