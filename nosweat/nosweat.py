@@ -34,10 +34,10 @@ class NoSweat(commands.Cog):
   async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
     # Vars
     guild = self.bot.get_guild(payload.guild_id)
-    role = get(guild.roles, id=role_id)
-    welcome_channel = get(guild.channels, id=welcome_channel_id)
     if not guild:
       return
+    role = get(guild.roles, id=role_id)
+    welcome_channel = get(guild.channels, id=welcome_channel_id)
     member = guild.get_member(payload.user_id)
 
     # Reaction Role
