@@ -1,9 +1,9 @@
 import asyncio
 
 from contextlib import suppress
+import discord
 from redbot.core import commands
 
-import discord
 from discord import Embed, Guild, Member, Role
 from discord.ext import commands
 from discord.ext.commands import Bot, Cog, Context, Greedy, group
