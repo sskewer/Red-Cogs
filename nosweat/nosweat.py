@@ -18,12 +18,12 @@ from discord import Webhook, RequestsWebhookAdapter
 
 #----------------# CONFIG #----------------#
 
-role_id = 721988422041862195
-reaction_id = 601709109955395585
-message_id = 722048515101950043
-webhook_id = 722048542784618563
-welcome_channel_id = 603955376286728226
-webhook_token = "r8eIanRgdkC_sfl8DOdCbXHzOiRY8WjUOh6j0aXRDB5KmNcf4UMFzrqzbMIEPKLuVp9P"
+role_id = 722126212025024512
+reaction_id = 722128124481110068
+message_id = 722188635419574312
+webhook_id = 722189437227892856
+welcome_channel_id = 714206119480000582
+webhook_token = "LdRpVSNKLy3MjhCcD6oynpY4pMj7JlVtBq-PkoMiySJM1UK6YuEsUivYX4VmV3o9NZ-3"
 welcome_messages = ['{user}, benvenuto nel team No Sweat!', '{user}? Il team No Sweat ti stava aspettando!', 'Team No Sweat, finalmente anche {user} è qui con noi!', 'Guardate chi è arrivato? Anche {user} nel team No Sweat!']
 counter_text = "Membri No Sweat: "
 
