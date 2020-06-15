@@ -26,7 +26,7 @@ welcome_message = ['{user}, benvenuto nel team No Sweat!', '{user}? Il team No S
 BaseCog = getattr(commands, "Cog", object)
 
 class WelcomeRoleReaction(BaseCog):
-    """Bind a role reaction to a message and give the welcome to a specific channel"""
+    """Role reaction and give the welcome by webhook to a specific channel"""
     def __init__(self, bot):
         self.bot = bot
 
