@@ -52,8 +52,8 @@ class NoSweat(commands.Cog):
         # Embed
         #random_message = random.choice(welcome_messages)
         random_message = "{user}, benvenuto!"
-        replaced_message = random_message.replace("{user}", member.mention)
-        embed = discord.Embed(description=replaced_message, color=discord.Color("#0066cc"), timestamp=datetime.datetime.utcnow())
+        #replaced_message = random_message.replace("{user}", member.mention)
+        embed = discord.Embed(description=random_message, color=0x0066cc, timestamp=datetime.datetime.utcnow())
         embed.set_author(name=member.display_name, icon_url=member.avatar_url)
         embed.set_footer(text=guild.name, icon_url=guild.icon_url)
         # Welcome Webhook
