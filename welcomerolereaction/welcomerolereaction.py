@@ -39,6 +39,8 @@ class WelcomeRoleReaction(BaseCog):
         guild: discord.Guild = self.bot.config.get(guild_id)
         
         # Reaction Role
+        if payload.guild_id is None:
+            return
         if user.bot:
             return
         member: discord.Member = await guild.fetch_member(payload.user_id)
