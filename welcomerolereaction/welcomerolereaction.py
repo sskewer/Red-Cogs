@@ -46,6 +46,8 @@ class WelcomeRoleReaction(BaseCog):
         member: discord.Member = await guild.fetch_member(payload.user_id)
         if member is None:
             return
+        if role in member.roles:
+            return
         if payload.emoji.name == reaction_name:
             await member.add_roles(role)
         
