@@ -50,5 +50,5 @@ class WelcomeRoleReaction(BaseCog):
         # Welcome Webhook
         hooks = await welcome_channel.webhooks()
         hook = get(hooks, id=webhook_id)
-        await hook.send(content="Test")
+        await hook.send(content="{user}, benvenuto!".replace("{user}", user.mention))
         
