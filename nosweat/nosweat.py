@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 from contextlib import suppress
 
 import discord
@@ -51,7 +52,7 @@ class NoSweat(commands.Cog):
 
     # Embed
     random_message = random.choice(welcome_messages)
-    embed = discord.Embed(description="{user}, benvenuto!".replace("{user}", member.mention), color=discord.Color.blue(), timestamp=datetime.datetime.utcnow())
+    embed = discord.Embed(description="{user}, benvenuto!", color=discord.Color.blue(), timestamp=datetime.datetime.utcnow())
     embed.set_author(name=member.display_name, icon_url=member.user.avatar_url)
     embed.set_footer(text=guild.name, icon_url=guild.icon_url)
 
