@@ -16,7 +16,6 @@ from discord import Webhook, RequestsWebhookAdapter
 
 #----------------# CONFIG #----------------#
 
-guild_id = 454261607799717888
 role_id = 721988422041862195
 reaction_name = '<:fnit_gift:601709109955395585>'
 message_id = 721990614228664361
@@ -34,17 +33,14 @@ class NoSweat(commands.Cog):
   @commands.Cog.listener()
   async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
     # Vars
-    role = get(user.guild.roles, id=role_id)
-    welcome_channel = get(user.guild.channels, id=welcome_channel_id)
-    user: discord.User = self.bot.get_user(int(payload.user_id))
-    guild: discord.Guild = self.bot.config.get(guild_id)
+    guild = self.bot.get_guild(payload.guild_id)
+    role = get(guild.roles, id=role_id)
+    welcome_channel = get(guild.channels, id=welcome_channel_id)
+    if not guild:
+      return
+    member = guild.get_member(payload.user_id)
 
     # Reaction Role
-    if payload.guild_id is None:
-        return
-    if user.bot:
-        return
-    member: discord.Member = await guild.fetch_member(payload.user_id)
     if member is None:
         return
     if role in member.roles:
@@ -55,7 +51,7 @@ class NoSweat(commands.Cog):
     # Embed
     random_message = random.choice(welcome_messages)
     embed = discord.Embed(description="{user}, benvenuto!".replace("{user}", member.mention), color=discord.Color.blue(), timestamp=datetime.datetime.utcnow())
-    embed.set_author(name=member.display_name, icon_url=user.avatar_url)
+    embed.set_author(name=member.display_name, icon_url=member.user.avatar_url)
     embed.set_footer(text=guild.name, icon_url=guild.icon_url)
 
     # Welcome Webhook
