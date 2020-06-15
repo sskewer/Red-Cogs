@@ -14,6 +14,18 @@ from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 import requests
 from discord import Webhook, RequestsWebhookAdapter
 
+#----------------# CONFIG #----------------#
+
+guild_id = 454261607799717888
+role_id = 721988422041862195
+reaction_name = '<:fnit_gift:601709109955395585>'
+message_id = 721990614228664361
+webhook_id = 721997644955779102
+welcome_channel_id = 603955376286728226
+welcome_messages = ['{user}, benvenuto nel team No Sweat!', '{user}? Il team No Sweat ti stava aspettando!', 'Team No Sweat, finalmente anche {user} è qui con noi!']
+
+#------------------------------------------#
+
 BaseCog = getattr(commands, "Cog", object)
 
 class NoSweat(Cog):
