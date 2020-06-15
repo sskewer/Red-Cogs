@@ -9,6 +9,8 @@ from discord.ext import commands
 from discord.ext.commands import Bot, Cog, Context, Greedy, group
 from discord.utils import get
 
+import requests
+from discord import Webhook, RequestsWebhookAdapter
 
 #----------------# CONFIG #----------------#
 
