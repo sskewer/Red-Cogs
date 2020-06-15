@@ -47,7 +47,7 @@ class NoSweat(commands.Cog):
         return
     if role in member.roles:
         return
-    if payload.emoji.id == reaction_id:
+    if payload.emoji.id == reaction_id and payload.message.id == message_id:
         await member.add_roles(role)
 
     # Embed
