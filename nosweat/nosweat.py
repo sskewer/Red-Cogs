@@ -56,5 +56,5 @@ class NoSweat(commands.Cog):
 
     # Welcome Webhook
     hooks = await welcome_channel.webhooks()
-    hook = get(hooks, id=webhook_id)
-    await hook.send(content="Test")
+    #hook = get(hooks, id=webhook_id)
+    await hooks[0].send(content="Test")
