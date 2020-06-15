@@ -53,8 +53,13 @@ class WelcomeRoleReaction(BaseCog):
         if payload.emoji.name == reaction_name:
             await member.add_roles(role)
         
+        # Embed
+        embed = discord.Embed(description="{user}, benvenuto!".replace("{user}", member.mention), color=discord.Color.blue(), timestamp=datetime.datetime.utcnow())
+        embed.set_author(name=member.display_name, icon_url=user.avatar_url)
+        embed.set_footer(text=guild.name, icon_url=guild.icon_url)
+        
         # Welcome Webhook
         hooks = await welcome_channel.webhooks()
         hook = get(hooks, id=webhook_id)
-        await hook.send(content="{user}, benvenuto!".replace("{user}", user.mention))
+        await hook.send(embed=embed)
         
