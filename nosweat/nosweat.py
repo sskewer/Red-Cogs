@@ -24,7 +24,7 @@ message_id = 721990614228664361
 webhook_id = 721997644955779102
 welcome_channel_id = 603955376286728226
 webhook_token = "Cv83ufD1LJdcGNtRfWmBUOHaIxYpB6aMOx5H_8MdL82mlfnUK8PRsVvZa3NvuKRreyLi"
-welcome_messages = ['{user}, benvenuto nel team No Sweat!', '{user}? Il team No Sweat ti stava aspettando!', 'Team No Sweat, finalmente anche {user} è qui con noi!']
+welcome_messages = ['{user}, benvenuto nel team No Sweat!', '{user}? Il team No Sweat ti stava aspettando!', 'Team No Sweat, finalmente anche {user} è qui con noi!', 'Guardate chi è arrivato? Anche {user} nel Team No Sweat!]
 
 #------------------------------------------#
 
