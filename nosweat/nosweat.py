@@ -21,6 +21,7 @@ reaction_id = 601709109955395585
 message_id = 721990614228664361
 webhook_id = 721997644955779102
 welcome_channel_id = 603955376286728226
+webhook_token = "Cv83ufD1LJdcGNtRfWmBUOHaIxYpB6aMOx5H_8MdL82mlfnUK8PRsVvZa3NvuKRreyLi"
 welcome_messages = ['{user}, benvenuto nel team No Sweat!', '{user}? Il team No Sweat ti stava aspettando!', 'Team No Sweat, finalmente anche {user} è qui con noi!']
 
 #------------------------------------------#
@@ -55,6 +56,8 @@ class NoSweat(commands.Cog):
     #embed.set_footer(text=guild.name, icon_url=guild.icon_url)
 
     # Welcome Webhook
-    hooks = await welcome_channel.webhooks()
+    webhook = Webhook.partial(webhook_id, webhook_token,\
+                              adapter=RequestsWebhookAdapter())
+    #hooks = await welcome_channel.webhooks()
     #hook = get(hooks, id=webhook_id)
-    await hooks[0].send(content="Test")
+    await webhook.send("Test")
