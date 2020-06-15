@@ -20,10 +20,10 @@ from discord import Webhook, RequestsWebhookAdapter
 
 role_id = 721988422041862195
 reaction_id = 601709109955395585
-message_id = 721990614228664361
-webhook_id = 721997644955779102
+message_id = 722048515101950043
+webhook_id = 722048542784618563
 welcome_channel_id = 603955376286728226
-webhook_token = "Cv83ufD1LJdcGNtRfWmBUOHaIxYpB6aMOx5H_8MdL82mlfnUK8PRsVvZa3NvuKRreyLi"
+webhook_token = "r8eIanRgdkC_sfl8DOdCbXHzOiRY8WjUOh6j0aXRDB5KmNcf4UMFzrqzbMIEPKLuVp9P"
 welcome_messages = ['{user}, benvenuto nel team No Sweat!', '{user}? Il team No Sweat ti stava aspettando!', 'Team No Sweat, finalmente anche {user} è qui con noi!', 'Guardate chi è arrivato? Anche {user} nel team No Sweat!']
 
 #------------------------------------------#
