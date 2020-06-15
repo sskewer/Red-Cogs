@@ -1,12 +1,9 @@
 import asyncio
-import io
 
-from contextlib import suppress
 import discord
-from redbot.core import Config, commands
-from redbot.core.bot import Red
+from redbot.core import Config, checks, commands
 from typing import Any
-
+from contextlib import suppress
 from discord import Embed, Guild, Member, Role
 from discord.ext import commands
 from discord.ext.commands import Bot, Cog, Context, Greedy, group
@@ -29,14 +26,14 @@ welcome_messages = ['{user}, benvenuto nel team No Sweat!', '{user}? Il team No 
 #------------------------------------------#
 
 
-Cog: Any = getattr(commands, "Cog", object)
+Cog : Any = getattr(commands, "Cog", object)
 
 class WelcomeReaction(Cog):
     """Role reaction and give the welcome by webhook to a specific channel"""
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener()        
+    @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
         # Vars
         role = get(user.guild.roles, id=role_id)
