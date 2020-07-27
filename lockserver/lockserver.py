@@ -18,10 +18,11 @@ class LockServer(BaseCog):
     async def lockserver(self, ctx):
         member = ctx.guild.get_member(ctx.message.author.id)
         everyone = ctx.guild.default_role
-        perms_on = everyone.permissions.update(send_messages=True)
-        perms_off = everyone.permissions.update(send_messages=False)
+        permissions = everyone.permissions
+        perms_on = permissions.update(send_messages=True)
+        perms_off = permissions.update(send_messages=False)
         
-        if everyone.permissions.send_messages == True:
+        if permissions.send_messages == True:
             await everyone.edit(permissions=perms_off, reason=f"{member.display_name} ha bloccato il server")
             embed=discord.Embed(description=f"Il server è ora bloccato per l'invio di messaggi.", color=discord.Color.red(), timestamp=datetime.datetime.utcnow())
             embed.set_author(name="|  Blocco Server", icon_url=member.avatar_url)
