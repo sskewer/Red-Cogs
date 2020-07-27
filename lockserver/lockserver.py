@@ -21,8 +21,8 @@ class LockServer(BaseCog):
         
         if everyonePermissions.send_messages === true:
             await ctx.guild.default_role.edit(permissions=send_messages, reason=f"{member.display_name} ha bloccato il server")
-            embed=discord.Embed(description=f"La slowmode per questo canale è ora **{time}**", color=discord.Color.red(), timestamp=datetime.datetime.utcnow())
+            embed=discord.Embed(description=f"Il server è ora bloccato per l'invio di messaggi.", color=discord.Color.red(), timestamp=datetime.datetime.utcnow())
             embed.set_author(name="|  Blocco Server", url=member.avatar_url)
-            embed.set_footer(text=f"Richiesta da {member.display_name}")
+            embed.set_footer(text=f"Richiesto da {member.display_name}")
         else:
     
