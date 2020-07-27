@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+import copy
 
 from contextlib import suppress
 import discord
@@ -19,8 +20,8 @@ class LockServer(BaseCog):
         member = ctx.guild.get_member(ctx.message.author.id)
         everyone = ctx.guild.default_role
         permissions = everyone.permissions
-        perms_on = copy(permissions)
-        perms_off = copy(permissions)
+        perms_on = copy.copy(permissions)
+        perms_off = copy.copy(permissions)
         perms_on.update(send_messages=True)
         perms_off.update(send_messages=False)
         
