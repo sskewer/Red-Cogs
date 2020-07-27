@@ -19,8 +19,10 @@ class LockServer(BaseCog):
         member = ctx.guild.get_member(ctx.message.author.id)
         everyone = ctx.guild.default_role
         permissions = everyone.permissions
-        perms_on = permissions.update(send_messages=True)
-        perms_off = permissions.update(send_messages=False)
+        perms_on = copy(permissions)
+        perms_off = copy(permissions)
+        perms_on.update(send_messages=True)
+        perms_off.update(send_messages=False)
         
         if permissions.send_messages == True:
             await everyone.edit(permissions=perms_off, reason=f"{member.display_name} ha bloccato il server")
