@@ -13,7 +13,7 @@ class LockServer(BaseCog):
         self.bot = bot
         
     @commands.guild_only()
-    @commands.command(aliases=["serverlock"])
+    @commands.command(aliases=["server-lock"])
     @commands.has_permissions(ban_members=True)
     async def lockserver(self, ctx):
         member = ctx.guild.get_member(ctx.message.author.id)
