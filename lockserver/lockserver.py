@@ -18,8 +18,8 @@ class LockServer(BaseCog):
     async def lockserver(self, ctx):
         member = ctx.guild.get_member(ctx.message.author.id)
         everyonePermissions = ctx.guild.default_role.permissions
-        perms_on = discord.Permissions(send_messages=True)
-        perms_off = discord.Permissions(send_messages=False)
+        perms_on = everyonePermissions(send_messages=True)
+        perms_off = everyonePermissions(send_messages=False)
         
         if everyonePermissions.send_messages == True:
             await ctx.guild.default_role.edit(permissions=perms_off, reason=f"{member.display_name} ha bloccato il server")
