@@ -14,7 +14,7 @@ class LockServer(BaseCog):
         
     @commands.guild_only()
     @commands.command(aliases=["serverlock"])
-    @checks.has_permissions(ban_members=True)
+    @commands.has_permissions(ban_members=True)
     async def lockserver(self, ctx):
         member = ctx.guild.get_member(ctx.message.author.id)
         everyonePermissions = ctx.guild.default_role.permissions
