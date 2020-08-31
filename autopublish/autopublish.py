@@ -13,7 +13,7 @@ class AutoPublish(BaseCog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.channel.id == 625752242611421214 or message.channel.id == 454264582622412801 or message.channel.id == 591189981481926666:
+        if message.channel.id == 454264582622412801 or message.channel.id == 591189981481926666:
             print("AUTOPUBLISH: Message to publish detected")
             bot_channel = message.guild.get_channel(603955376286728226)
             embed = discord.Embed(title="**Annullare la Pubblicazione?**", color=discord.Colour.dark_red())
