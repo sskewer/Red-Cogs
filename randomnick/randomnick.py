@@ -17,7 +17,7 @@ class RandomNick(BaseCog):
     @commands.guild_only()
     @commands.command(aliases=["random"])
     @commands.has_permissions(manage_nicknames=True)
-    async def randomnick(self, ctx: Context, user: discord.Member):
+    async def randomnick(self, ctx, *, user: discord.Member):
         randomnick = random.choice(randomArray)
         try:
             await user.edit(nick=randomnick)
