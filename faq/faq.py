@@ -12,14 +12,14 @@ class Faq(BaseCog):
         
   @commands.guild_only()
   @commands.command()
-  async def faq(self, ctx, *, args: str = None):
-    if args == None:
+  async def faq(self, ctx, *, args: str):
+    if args != None:
       if ctx.message.mentions == []:
         member = None
       else:
         for mention in ctx.message.mentions:
           args = args.replace(f"<@!{mention.id}>", "")
-      if args != False:
+      if args.isspace() == False:
         channel = ctx.guild.get_channel(774706975400919090)
         messages = await channel.history(limit=50).flatten()
         titles = []
