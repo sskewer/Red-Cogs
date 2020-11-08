@@ -57,12 +57,12 @@ class Faq(BaseCog):
             else:
               await ctx.send(embed=embed)
             
-        # Remove Author Message
+          # Remove Author Message
+          await ctx.message.delete()
+      else:
         await ctx.message.delete()
     else:
       await ctx.message.delete()
   else:
     await ctx.message.delete()
-else:
-  await ctx.message.delete()
         
