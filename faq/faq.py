@@ -14,45 +14,55 @@ class Faq(BaseCog):
   @commands.command()
   async def faq(self, ctx, *, args: str = None):
     if args == None:
-      await ctx.message.delete()
-      
-    if ctx.message.mentions == []:
-      member = None
-    else:
-      for mention in ctx.message.mentions:
-        args = args.replace(f"<@!{mention.id}>", "")
-    channel = ctx.guild.get_channel(774706975400919090)
-    messages = await channel.history(limit=50).flatten()
-    titles = []
-    for message in messages:
-      complete_message = message.content.splitlines( )
-      for line in complete_message:
-        if "**[" in line:
-          title = line[line.index("**")+2:line.rindex("**")]
-          titles.append(title)
-        
-    # Search Function
-    for n, title in enumerate(titles):
-      if args in title:
-        found_message = messages[n]
-        found_title = title
-        
-    # Embed Message
-    embed = discord.Embed(description=f"[`{found_title}`]({found_message.jump_url})", color=discord.Colour.from_rgb(19, 123, 196))
-    if ctx.message.mentions == []:
-      await ctx.send(embed=embed)
-    else:
-      epicstaff = ctx.guild.get_role(454262403819896833)
-      moderatori = ctx.guild.get_role(454262524955852800)
-      guardiano = ctx.guild.get_role(454268394464870401)
-      vindertech = ctx.guild.get_role(659513332218331155)
-      if epicstaff in ctx.author.roles or moderatori in ctx.author.roles or guardiano in ctx.author.roles or vindertech in ctx.author.roles:
-        content = "";
-        for mention in ctx.message.mentions:
-          content = content + "<@!" + mention.id + "> "
-        await ctx.send(content=content, embed=embed)
+      if ctx.message.mentions == []:
+        member = None
       else:
-        await ctx.send(embed=embed)
+        for mention in ctx.message.mentions:
+          args = args.replace(f"<@!{mention.id}>", "")
+      if args.isspace() == False:
+        channel = ctx.guild.get_channel(774706975400919090)
+        messages = await channel.history(limit=50).flatten()
+        titles = []
+        for message in messages:
+          complete_message = message.content.splitlines( )
+          for line in complete_message:
+            if "**[" in line:
+              title = line[line.index("**")+2:line.rindex("**")]
+              titles.append(title)
+        
+        # Search Function
+        found_message == None
+        for n, title in enumerate(titles):
+          args = args.replace(" ", "")
+          search_title = title.replace(" ", "")
+          if args.lower() in search_title.lower():
+            found_message = messages[n]
+            found_title = title
+        
+        # Embed Message
+        if found_messages != None:
+          embed = discord.Embed(description=f"[`{found_title}`]({found_message.jump_url})", color=discord.Colour.from_rgb(19, 123, 196))
+          if ctx.message.mentions == []:
+            await ctx.send(embed=embed)
+          else:
+            epicstaff = ctx.guild.get_role(454262403819896833)
+            moderatori = ctx.guild.get_role(454262524955852800)
+            guardiano = ctx.guild.get_role(454268394464870401)
+            vindertech = ctx.guild.get_role(659513332218331155)
+            if epicstaff in ctx.author.roles or moderatori in ctx.author.roles or guardiano in ctx.author.roles or vindertech in ctx.author.roles:
+              content = "";
+              for mention in ctx.message.mentions:
+                content = content + "<@!" + mention.id + "> "
+              await ctx.send(content=content, embed=embed)
+            else:
+              await ctx.send(embed=embed)
             
-    # Remove Author Message
+        # Remove Author Message
+        await ctx.message.delete()
+    else:
+      await ctx.message.delete()
+  else:
     await ctx.message.delete()
+else:
+  await ctx.message.delete()
+        
