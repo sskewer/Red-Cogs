@@ -12,7 +12,8 @@ class Faq(BaseCog):
         
   @commands.guild_only()
   @commands.command()
-  async def faq(self, ctx, *, args: str):
+  async def faq(self, ctx):
+    args = ctx.message.content.replace("?faq ", "")
     if args != None:
       if ctx.message.mentions == []:
         member = None
