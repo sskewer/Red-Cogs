@@ -19,7 +19,7 @@ class Faq(BaseCog):
       else:
         for mention in ctx.message.mentions:
           args = args.replace(f"<@!{mention.id}>", "")
-      if args.isspace() == False:
+      if args != False:
         channel = ctx.guild.get_channel(774706975400919090)
         messages = await channel.history(limit=50).flatten()
         titles = []
