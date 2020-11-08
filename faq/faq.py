@@ -18,15 +18,15 @@ class Faq(BaseCog):
     else:
       for mention in ctx.message.mentions:
         args = args.replace(f"<@!{mention.id}>", "")
-      channel = ctx.guild.get_channel(774706975400919090)
-      messages = await channel.history(limit=50).flatten()
-      titles = []
-      for message in messages:
-        complete_message = message.content.splitlines( )
-        for line in complete_message:
-          if "**[" in line:
-            title = line[line.index("**")+2:line.rindex("**")]
-            titles.append(title)
+    channel = ctx.guild.get_channel(774706975400919090)
+    messages = await channel.history(limit=50).flatten()
+    titles = []
+    for message in messages:
+      complete_message = message.content.splitlines( )
+      for line in complete_message:
+        if "**[" in line:
+          title = line[line.index("**")+2:line.rindex("**")]
+          titles.append(title)
         
     # Search Function
     for n, title in enumerate(titles):
