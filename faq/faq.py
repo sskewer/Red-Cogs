@@ -31,7 +31,7 @@ class Faq(BaseCog):
               titles.append(title)
         
         # Search Function
-        found_message == None
+        found_message = None
         for n, title in enumerate(titles):
           args = args.replace(" ", "")
           search_title = title.replace(" ", "")
