@@ -59,10 +59,10 @@ class Faq(BaseCog):
             
           # Remove Author Message
           await ctx.message.delete()
+        else:
+          await ctx.message.delete()
       else:
         await ctx.message.delete()
     else:
       await ctx.message.delete()
-  else:
-    await ctx.message.delete()
         
