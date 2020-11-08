@@ -2,16 +2,18 @@ import discord
 from discord import File
 from discord.ext import commands
 
-from core import checks
-from core.models import PermissionLevel
+from contextlib import suppress
+from redbot.core import commands
 
-class Faq(commands.Cog):
+BaseCog = getattr(commands, "Cog", object)
+
+class Faq(BaseCog):
   """Ottenere un collegamento diretto alla FAQ indicata"""
   
   def __init__(self, bot):
     self.bot = bot
-    self.db = bot.plugin_db.get_partition(self)
         
+    @commands.guild_only()
     @commands.command()
     async def faq(self, ctx, *, args: str = None):
       if ctx.message.mentions == []:
@@ -54,7 +56,3 @@ class Faq(commands.Cog):
             
       # Remove Author Message
       await ctx.message.delete()
-
-
-def setup(bot):
-  bot.add_cog(Faq(bot))
