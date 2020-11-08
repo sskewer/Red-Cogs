@@ -40,7 +40,7 @@ class Faq(BaseCog):
             found_title = title
         
         # Embed Message
-        if found_messages != None:
+        if found_message != None:
           embed = discord.Embed(description=f"[`{found_title}`]({found_message.jump_url})", color=discord.Colour.from_rgb(19, 123, 196))
           if ctx.message.mentions == []:
             await ctx.send(embed=embed)
