@@ -52,7 +52,7 @@ class Faq(BaseCog):
             if epicstaff in ctx.author.roles or moderatori in ctx.author.roles or guardiano in ctx.author.roles or vindertech in ctx.author.roles:
               content = "";
               for mention in ctx.message.mentions:
-                content = content + "<@!" + mention.id + "> "
+                content = content + "<@!" + str(mention.id) + "> "
               await ctx.send(content=content, embed=embed)
             else:
               await ctx.send(embed=embed)
