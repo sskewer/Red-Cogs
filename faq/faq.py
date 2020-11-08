@@ -13,6 +13,9 @@ class Faq(BaseCog):
   @commands.guild_only()
   @commands.command()
   async def faq(self, ctx, *, args: str = None):
+    if args == None:
+      await ctx.message.delete()
+      
     if ctx.message.mentions == []:
       member = None
     else:
