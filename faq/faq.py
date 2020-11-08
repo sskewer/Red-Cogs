@@ -4,7 +4,7 @@ from redbot.core import commands
 
 BaseCog = getattr(commands, "Cog", object)
 
-class FaqCommand(BaseCog):
+class Faq(BaseCog):
   """Ottenere un collegamento diretto alla FAQ indicata"""
   
   def __init__(self, bot):
