@@ -1,4 +1,4 @@
-from .faq import FaqCommand
+from .faq import Faq
 
 def setup(bot):
-    bot.add_cog(FaqCommand(bot))
+    bot.add_cog(Faq(bot))
