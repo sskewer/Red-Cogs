@@ -11,8 +11,8 @@ class FaqCommand(BaseCog):
     self.bot = bot
         
     @commands.guild_only()
-    @commands.command()
-    async def faq(self, ctx, *, args: str = None):
+    @commands.command(name='faqtest')
+    async def faq_test(self, ctx, *, args: str = None):
       if ctx.message.mentions == []:
         member = None
       else:
