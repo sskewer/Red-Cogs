@@ -23,21 +23,21 @@ class Faq(BaseCog):
       if args.isspace() == False:
         channel = ctx.guild.get_channel(774706975400919090)
         messages = await channel.history(limit=50).flatten()
-        titles = []
-        for message in messages:
+        titles = {}
+        for n, message in enumerate(messages):
           complete_message = message.content.splitlines( )
           for line in complete_message:
             if "**[" in line:
               title = line[line.index("**")+2:line.rindex("**")]
-              titles.append(title)
+              titles.update({title : n})
         
         # Search Function
         found_message = None
-        for n, title in enumerate(titles):
+        for title in titles:
           args = args.replace(" ", "")
           search_title = title.replace(" ", "")
           if args.lower() in search_title.lower():
-            found_message = messages[n]
+            found_message = messages[titles[title]]
             found_title = title
         
         # Embed Message
@@ -51,9 +51,9 @@ class Faq(BaseCog):
             guardiano = ctx.guild.get_role(454268394464870401)
             vindertech = ctx.guild.get_role(659513332218331155)
             if epicstaff in ctx.author.roles or moderatori in ctx.author.roles or guardiano in ctx.author.roles or vindertech in ctx.author.roles:
-              content = "";
+              content = ""
               for mention in ctx.message.mentions:
-                content = content + "<@!" + str(mention.id) + "> "
+                content += f"<@!{mention.id}> "
               await ctx.send(content=content, embed=embed)
             else:
               await ctx.send(embed=embed)
