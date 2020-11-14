@@ -22,7 +22,6 @@ class TicketAlert(BaseCog):
       def check(reaction, user):
         return reaction.message.id == sent_message.id and user.id != self.bot.user.id and str(reaction.emoji) == "✅"
       reaction, member = await self.bot.wait_for('reaction_add', check=check)
-      await channel.send("Triggered")
       embed = discord.Embed(description = f"[`Richiesta presa in carico da {member}`]({message.jump_url})", color = discord.Colour.from_rgb(19, 123, 196))
       await sent_message.edit(content = "", embed = embed)
       sent_message = await channel.fetch_message(sent_message.id)
