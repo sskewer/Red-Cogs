@@ -8,7 +8,6 @@ class TicketAlert(BaseCog):
   
   def __init__(self, bot):
     self.bot = bot
-    self.db = bot.plugin_db.get_partition(self)
         
   @commands.Cog.listener()
   async def on_message(self, message):
