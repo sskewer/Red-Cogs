@@ -1,12 +1,10 @@
 import discord
-from discord import File
-from discord.ext import commands
-import time
+from contextlib import suppress
+from redbot.core import commands
 
-from core import checks
-from core.models import PermissionLevel
+BaseCog = getattr(commands, "Cog", object)
 
-class TicketAlert(commands.Cog):
+class TicketAlert(BaseCog):
   
   def __init__(self, bot):
     self.bot = bot
