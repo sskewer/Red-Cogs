@@ -19,14 +19,14 @@ class TicketAlert(BaseCog):
       embed.set_footer(text = "Reagisci per prendere in carico la segnalazione")
       sent_message = await channel.send(content = f"{referente_vindertech_role.mention} {vindertech_role.mention}", embed = embed)
       await sent_message.add_reaction("✅")
-      #def check(reaction, user):
-        #return reaction.message == sent_message and user.id != self.bot.user.id and str(reaction.emoji) == "✅"
-      reaction, member = await self.bot.wait_for('reaction_add')
+      def check(reaction, user):
+        return reaction.message.id == sent_message.id and user.id != self.bot.user.id and str(reaction.emoji) == "✅"
+      reaction, member = await self.bot.wait_for('reaction_add', check=check)
+      await channel.send("Triggered")
       embed = discord.Embed(description = f"[`Richiesta presa in carico da {member.user.name}#{member.user.discriminator}`]({message.jump_url})", color = discord.Colour.from_rgb(19, 123, 196))
       await sent_message.edit(content = "", embed = embed)
       sent_message = await channel.fetch_message(sent_message.id)
-      for reaction in sent_message.reactions:
-        await sent_message.clear_reaction(reaction)
+      await sent_message.clear_reactions()
 
 def setup(bot):
   bot.add_cog(TicketAlert(bot))
