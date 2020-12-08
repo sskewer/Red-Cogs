@@ -64,15 +64,13 @@ class FacebookFeed(BaseCog):
   #@tasks.loop(seconds = 30)
   #async def loop():
     if message.author.id == 422746977772765184:
-      await self.bot.get_channel(603955376286728226).send("Test 1")
       post = next(get_posts('FortniteGameITALIA', pages=1))
-      await self.bot.get_channel(603955376286728226).send("Test 2")
-      last_feed = await self.config.guild(ctx.guild).last_feed()
-      await self.bot.get_channel(603955376286728226).send("Test 3")
+      guild = self.bot.get_guild(454261607799717888)
+      last_feed = await self.config.guild(guild).last_feed()
       if last_feed != None and last_feed != post["post_id"]:
         if post["text"] != None:
-          color = await self.config.guild(ctx.guild).color()
-          avatar = await self.config.guild(ctx.guild).avatar()
+          color = await self.config.guild(guild).color()
+          avatar = await self.config.guild(guild).avatar()
           if post["post_url"] != None:
             post_url = post["post_url"]
           else:
@@ -88,7 +86,7 @@ class FacebookFeed(BaseCog):
           if post["image"] != None:
             embed.set_image(url = post["image"])
           msg = await self.bot.get_channel(454264582622412801).send(embed=embed)
-          await self.config.guild(ctx.guild).last_feed.set(post["post_id"])
+          await self.config.guild(guild).last_feed.set(post["post_id"])
           try:
             await msg.publish()
           except:
