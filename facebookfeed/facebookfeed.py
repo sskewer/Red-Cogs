@@ -1,7 +1,6 @@
 import datetime
 import threading
 import discord
-from discord.ext import tasks
 from asyncio import sleep
 from contextlib import suppress
 from redbot.core import Config, commands
@@ -61,11 +60,6 @@ class FacebookFeed(BaseCog):
   async def on_ready(self):
     """Controllare nuovi post dalla pagina Facebook e nel caso pubblicarli"""
     while True:
-      
-    #self.loop.start()
-  
-  #@tasks.loop(minutes = 5)
-  #async def loop(self):
       post = next(get_posts('FortniteGameITALIA', pages=1))
       guild = self.bot.get_guild(454261607799717888)
       last_feed = await self.config.guild(guild).last_feed()
