@@ -40,8 +40,9 @@ class FacebookFeed(BaseCog):
           url = value
         else:
           await ctx.message.add_reaction("🚫")
-        # Aggiungere al database (url)
-        await ctx.message.add_reaction("✅")
+        if url != None:
+          # Aggiungere al database (url)
+          await ctx.message.add_reaction("✅")
       # Default
       else:
         await ctx.message.add_reaction("🚫")
