@@ -56,9 +56,7 @@ class FacebookFeed(BaseCog):
   
   #------------# FEED CHECKER #------------#
   
-  @commands.Cog.listener()
-  async def on_ready(self):
-    """Controllare nuovi post dalla pagina Facebook e nel caso pubblicarli"""
+  async def checker(self):
     while True:
       post = next(get_posts('FortniteGameITALIA', pages=1))
       guild = self.bot.get_guild(454261607799717888)
@@ -83,4 +81,4 @@ class FacebookFeed(BaseCog):
             embed.set_image(url = post["image"])
           msg = await self.bot.get_channel(454264582622412801).send(embed=embed)
           await self.config.guild(guild).last_feed.set(post["post_id"])
-          await sleep(300)
+      await sleep(300)
