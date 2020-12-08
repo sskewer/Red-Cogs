@@ -60,8 +60,9 @@ class FacebookFeed(BaseCog):
     """Controllare nuovi post dalla pagina Facebook e nel caso pubblicarli"""
     self.loop.start()
   
-  @tasks.loop(minutes = 5)
+  @tasks.loop(seconds = 30)
   async def loop(self):
+    await self.bot.get_channel(603955376286728226).send("Test")
     post = next(get_posts('FortniteGameITALIA', pages=1))
     last_feed = await self.config.guild(ctx.guild).last_feed()
     if last_feed != None and last_feed != post["post_id"]:
