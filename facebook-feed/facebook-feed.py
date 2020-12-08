@@ -37,7 +37,7 @@ class FacebookFeed(BaseCog):
           else:
             await ctx.message.add_reaction("🚫")
         elif value.startswith("http"):
-            url = value
+          url = value
         else:
           await ctx.message.add_reaction("🚫")
         # Aggiungere al database (url)
