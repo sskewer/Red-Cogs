@@ -70,6 +70,7 @@ class FacebookFeed(Cog):
   
   async def checker(self):
     while True:
+      checking = await self.bot.get_channel(454264582622412801).send("Controllando nuovi post su Facebook...")
       post = next(get_posts('FortniteGameITALIA', pages=1))
       guild = self.bot.get_guild(454261607799717888)
       last_feed = await self.config.guild(guild).last_feed()
@@ -92,5 +93,6 @@ class FacebookFeed(Cog):
           if post["image"] != None:
             embed.set_image(url = post["image"])
           msg = await self.bot.get_channel(454264582622412801).send(embed=embed)
+          await msg.edit("Nuovo post di Facebook inviato in <#454264582622412801>")
           await self.config.guild(guild).last_feed.set(post["post_id"])
       await sleep(300)
