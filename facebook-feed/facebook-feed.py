@@ -27,8 +27,10 @@ class FacebookFeed(BaseCog):
   
   #------------# FEED CHECKER #------------#
   
-  async def feed_func():
-    posts = next(get_posts('FortniteGameITALIA', pages=1))
-  feed_checker = threading.Timer(600, feed_func)
-  feed_checker.start()
+  @commands.Cog.listener()
+  async def on_ready():
+    async def feed_func():
+      posts = next(get_posts('FortniteGameITALIA', pages=1))
+    feed_checker = threading.Timer(600, feed_func)
+    feed_checker.start()
         
