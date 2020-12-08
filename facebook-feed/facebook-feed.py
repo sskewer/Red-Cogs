@@ -84,7 +84,8 @@ class FacebookFeed(BaseCog):
               ts = post["time"]
             else:
               ts = datetime.datetime.utcnow()
-            embed = discord.Embed(colour = discord.Colour.green(), description = post["text"], timestamp = ts)
+            hex_int = int(color.replace("#", "0x"), 16)
+            embed = discord.Embed(colour = hex_int, description = post["text"], timestamp = ts)
             embed.set_author(name = "Fortnite (@FortniteGameITALIA)", icon_url = avatar, url = post_url)
             embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/W3XV58CH/Facebook-Icon.png")
             if post["image"] != None:
