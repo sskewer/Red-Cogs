@@ -6,7 +6,7 @@ from redbot.core import commands
 from pymongo import MongoClient
 from facebook_scraper import get_posts
 
-cluster = MongoClient("mongodb+srv://modmail:dbFortniteITA@modmail.rsxw7.mongodb.net/FortniteITA?retryWrites=true&w=majority")
+cluster = MongoClient("mongodb://modmail:dbFortniteITA@modmail.rsxw7.mongodb.net/FortniteITA?retryWrites=true&w=majority")
 db = cluster["FortniteITA"]
 collection = db["Facebook"]
 
