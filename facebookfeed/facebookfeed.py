@@ -74,7 +74,7 @@ class FacebookFeed(Cog):
     if epicstaff in ctx.author.roles or moderatori in ctx.author.roles:
       if value == "reset":
         post = next(get_posts('FortniteGameITALIA', pages=1))
-        await self.config.guild(guild).last_feed.set(post["post_id"])
+        await self.config.guild(ctx.guild).last_feed.set(post["post_id"])
         await ctx.message.add_reaction("✅")
       elif value.isdecimal() == True:
         await self.config.guild(ctx.guild).last_feed.set(value)
