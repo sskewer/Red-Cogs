@@ -56,9 +56,11 @@ class FacebookFeed(BaseCog):
         url = value
       else:
         await ctx.message.add_reaction("🚫")
-      if url != None:
+      try:
         await self.config.guild(ctx.guild).avatar.set(url)
         await ctx.message.add_reaction("✅")
+      except:
+        pass
   
   #------------# FEED CHECKER #------------#
   
