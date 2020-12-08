@@ -20,7 +20,7 @@ class FacebookFeed(Cog):
     self.config = Config.get_conf(self, identifier=4000121111111111, force_registration=True)
     
     default_global = {}
-    default_guild = {"color": "#ffffff", "avatar": "https://cdn.discordapp.com/attachments/603955376286728226/785930411821891594/8730.png", "last_feed": 1}
+    default_guild = {"color": "#1878f1", "avatar": "https://i.postimg.cc/Kv8fxsdY/Facebook.png", "last_feed": 1}
     self.config.register_global(**default_global)
     self.config.register_guild(**default_guild)
   
@@ -105,7 +105,7 @@ class FacebookFeed(Cog):
           hex_int = int(color.replace("#", "0x"), 16)
           embed = discord.Embed(colour = hex_int, description = post["text"], timestamp = ts)
           embed.set_author(name = "Fortnite (@FortniteGameITALIA)", icon_url = avatar, url = post_url)
-          embed.set_footer(text = "Facebook", icon_url = "https://cdn.discordapp.com/attachments/603955376286728226/785930411821891594/8730.png")
+          embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/Kv8fxsdY/Facebook.png")
           if post["image"] != None:
             embed.set_image(url = post["image"])
           msg = await self.bot.get_channel(454264582622412801).send(embed=embed)
