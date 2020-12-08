@@ -11,7 +11,7 @@ class FacebookFeed(BaseCog):
     self.bot = bot
         
   @commands.guild_only()
-  @commands.command(alias = ["fb"])
+  @commands.command(aliases=["fb"])
   async def facebook(self, ctx):
     args = ctx.message.content.replace("?facebook ", "")
     epicstaff = ctx.guild.get_role(454262403819896833)
