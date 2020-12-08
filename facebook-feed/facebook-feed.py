@@ -1,4 +1,5 @@
 import datetime
+import threading
 import discord
 from contextlib import suppress
 from redbot.core import commands
@@ -11,7 +12,9 @@ class FacebookFeed(BaseCog):
   
   def __init__(self, bot):
     self.bot = bot
-        
+  
+  #--------------# COMMANDS #--------------#
+  
   @commands.guild_only()
   @commands.command(aliases=["fb"])
   async def facebook(self, ctx):
@@ -24,5 +27,8 @@ class FacebookFeed(BaseCog):
   
   #------------# FEED CHECKER #------------#
   
-  posts = next(get_posts('FortniteGameITALIA', pages=1))
+  async def feed_func():
+    posts = next(get_posts('FortniteGameITALIA', pages=1))
+  feed_checker = threading.Timer(600, feed_func)
+  feed_checker.start()
         
