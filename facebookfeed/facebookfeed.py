@@ -20,7 +20,7 @@ class FacebookFeed(Cog):
     self.config = Config.get_conf(self, identifier=4000121111111111, force_registration=True)
     
     default_global = {}
-    default_guild = {"color": "#fadb89", "avatar": "https://cdn.discordapp.com/attachments/603955376286728226/785930411821891594/8730.png", "last_feed": 1}
+    default_guild = {"color": "#ffffff", "avatar": "https://cdn.discordapp.com/attachments/603955376286728226/785930411821891594/8730.png", "last_feed": 1}
     self.config.register_global(**default_global)
     self.config.register_guild(**default_guild)
   
