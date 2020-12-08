@@ -5,11 +5,6 @@ from contextlib import suppress
 from redbot.core import Config, commands
 from redbot.core.data_manager import cog_data_path
 from facebook_scraper import get_posts
-from pymongo import MongoClient
-
-cluster = MongoClient("mongodb://modmail:dbFortniteITA@modmail.rsxw7.mongodb.net/FortniteITA?retryWrites=true&w=majority")
-db = cluster["FortniteITA"]
-collection = db["Facebook"]
 
 BaseCog = getattr(commands, "Cog", object)
 
@@ -20,7 +15,7 @@ class FacebookFeed(BaseCog):
     self.bot = bot    
     self.config = Config.get_conf(self, identifier=4000121111111111, force_registration=True)
     default_global = {}
-    default_guild = {"color": None, "avatar": None, "last_feed": 1}
+    default_guild = {"color": "#fadb89", "avatar": "https://i.postimg.cc/W3XV58CH/Facebook-Icon.png", "last_feed": 1}
     self.config.register_global(**default_global)
     self.config.register_guild(**default_guild)
   
@@ -36,12 +31,8 @@ class FacebookFeed(BaseCog):
       # Color
       if option == "color":
         if value.startswith("#"):
-          #try:
-          #collection.update_one({"_id" : "setup"}, {"$set" : {"color" : value}})
           await self.config.guild(ctx.guild).color.set(value)
           await ctx.message.add_reaction("✅")
-          #except:
-            #await ctx.message.add_reaction("🚫")
         else:
           await ctx.message.add_reaction("🚫")
       # Avatar
@@ -56,12 +47,8 @@ class FacebookFeed(BaseCog):
         else:
           await ctx.message.add_reaction("🚫")
         if url != None:
-          #try:
-          #collection.update_one({"_id" : "setup"}, {"$set" : {"avatar" : url}})
           await self.config.guild(ctx.guild).avatar.set(url)
           await ctx.message.add_reaction("✅")
-          #except:
-            #await ctx.message.add_reaction("🚫")
       # Default
       else:
         await ctx.message.add_reaction("🚫")
@@ -76,31 +63,28 @@ class FacebookFeed(BaseCog):
   @tasks.loop(minutes = 5)
   async def loop(self):
     post = next(get_posts('FortniteGameITALIA', pages=1))
-    last_feed = collection.find_one({"_id" : "feed"})["last"]
+    last_feed = await self.config.guild(ctx.guild).last_feed()
     if last_feed != None and last_feed != post["post_id"]:
       if post["text"] != None:
-        setup = collection.find_one({"_id" : "setup"})
-        if setup != None:
-          color = setup["color"]
-          avatar = setup["avatar"]
-          if color != None and avatar != None:
-            if post["post_url"] != None:
-              post_url = post["post_url"]
-            else:
-              post_url = "https://www.facebook.com/FortniteGameITALIA/"
-            if post["time"] != None:
-              ts = post["time"]
-            else:
-              ts = datetime.datetime.utcnow()
-            hex_int = int(color.replace("#", "0x"), 16)
-            embed = discord.Embed(colour = hex_int, description = post["text"], timestamp = ts)
-            embed.set_author(name = "Fortnite (@FortniteGameITALIA)", icon_url = avatar, url = post_url)
-            embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/W3XV58CH/Facebook-Icon.png")
-            if post["image"] != None:
-              embed.set_image(url = post["image"])
-            msg = await self.bot.get_channel(454264582622412801).send(embed=embed)
-            collection.update_one({"_id" : "feed"}, {"$set" : {"last" : post["post_id"]}})
-            try:
-              await msg.publish()
-            except:
-              pass
+        color = await self.config.guild(ctx.guild).color()
+        avatar = await self.config.guild(ctx.guild).avatar()
+        if post["post_url"] != None:
+          post_url = post["post_url"]
+        else:
+          post_url = "https://www.facebook.com/FortniteGameITALIA/"
+        if post["time"] != None:
+          ts = post["time"]
+        else:
+          ts = datetime.datetime.utcnow()
+        hex_int = int(color.replace("#", "0x"), 16)
+        embed = discord.Embed(colour = hex_int, description = post["text"], timestamp = ts)
+        embed.set_author(name = "Fortnite (@FortniteGameITALIA)", icon_url = avatar, url = post_url)
+        embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/W3XV58CH/Facebook-Icon.png")
+        if post["image"] != None:
+          embed.set_image(url = post["image"])
+        msg = await self.bot.get_channel(454264582622412801).send(embed=embed)
+        await self.config.guild(ctx.guild).last_feed.set(post["post_id"])
+        try:
+          await msg.publish()
+        except:
+          pass
