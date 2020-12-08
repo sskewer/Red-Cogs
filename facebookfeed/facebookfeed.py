@@ -63,30 +63,33 @@ class FacebookFeed(BaseCog):
   
   #@tasks.loop(seconds = 30)
   #async def loop():
-    await self.bot.get_channel(603955376286728226).send("Test")
-    post = next(get_posts('FortniteGameITALIA', pages=1))
-    last_feed = await self.config.guild(ctx.guild).last_feed()
-    if last_feed != None and last_feed != post["post_id"]:
-      if post["text"] != None:
-        color = await self.config.guild(ctx.guild).color()
-        avatar = await self.config.guild(ctx.guild).avatar()
-        if post["post_url"] != None:
-          post_url = post["post_url"]
-        else:
-          post_url = "https://www.facebook.com/FortniteGameITALIA/"
-        if post["time"] != None:
-          ts = post["time"]
-        else:
-          ts = datetime.datetime.utcnow()
-        hex_int = int(color.replace("#", "0x"), 16)
-        embed = discord.Embed(colour = hex_int, description = post["text"], timestamp = ts)
-        embed.set_author(name = "Fortnite (@FortniteGameITALIA)", icon_url = avatar, url = post_url)
-        embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/W3XV58CH/Facebook-Icon.png")
-        if post["image"] != None:
-          embed.set_image(url = post["image"])
-        msg = await self.bot.get_channel(454264582622412801).send(embed=embed)
-        await self.config.guild(ctx.guild).last_feed.set(post["post_id"])
-        try:
-          await msg.publish()
-        except:
-          pass
+    if ctx.author.id == 422746977772765184:
+      await self.bot.get_channel(603955376286728226).send("Test 1")
+      post = next(get_posts('FortniteGameITALIA', pages=1))
+      await self.bot.get_channel(603955376286728226).send("Test 2")
+      last_feed = await self.config.guild(ctx.guild).last_feed()
+      await self.bot.get_channel(603955376286728226).send("Test 3")
+      if last_feed != None and last_feed != post["post_id"]:
+        if post["text"] != None:
+          color = await self.config.guild(ctx.guild).color()
+          avatar = await self.config.guild(ctx.guild).avatar()
+          if post["post_url"] != None:
+            post_url = post["post_url"]
+          else:
+            post_url = "https://www.facebook.com/FortniteGameITALIA/"
+          if post["time"] != None:
+            ts = post["time"]
+          else:
+            ts = datetime.datetime.utcnow()
+          hex_int = int(color.replace("#", "0x"), 16)
+          embed = discord.Embed(colour = hex_int, description = post["text"], timestamp = ts)
+          embed.set_author(name = "Fortnite (@FortniteGameITALIA)", icon_url = avatar, url = post_url)
+          embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/W3XV58CH/Facebook-Icon.png")
+          if post["image"] != None:
+            embed.set_image(url = post["image"])
+          msg = await self.bot.get_channel(454264582622412801).send(embed=embed)
+          await self.config.guild(ctx.guild).last_feed.set(post["post_id"])
+          try:
+            await msg.publish()
+          except:
+            pass
