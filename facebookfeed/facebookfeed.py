@@ -63,7 +63,7 @@ class FacebookFeed(BaseCog):
   
   #@tasks.loop(seconds = 30)
   #async def loop():
-    if ctx.author.id == 422746977772765184:
+    if message.author.id == 422746977772765184:
       await self.bot.get_channel(603955376286728226).send("Test 1")
       post = next(get_posts('FortniteGameITALIA', pages=1))
       await self.bot.get_channel(603955376286728226).send("Test 2")
