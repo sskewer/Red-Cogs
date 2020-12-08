@@ -16,7 +16,7 @@ class FacebookFeed(BaseCog):
     self.bot = bot    
     self.config = Config.get_conf(self, identifier=4000121111111111, force_registration=True)
     default_global = {}
-    default_guild = {"color": "#fadb89", "avatar": "https://i.postimg.cc/W3XV58CH/Facebook-Icon.png", "last_feed": 1}
+    default_guild = {"color": "#fadb89", "avatar": "https://cdn.discordapp.com/attachments/603955376286728226/785930411821891594/8730.png", "last_feed": 1}
     self.config.register_global(**default_global)
     self.config.register_guild(**default_guild)
   
@@ -57,12 +57,12 @@ class FacebookFeed(BaseCog):
   #------------# FEED CHECKER #------------#
   
   @commands.Cog.listener()
-  async def on_message(self, message):
+  async def on_ready(self):
     """Controllare nuovi post dalla pagina Facebook e nel caso pubblicarli"""
-    #self.loop.start()
+    self.loop.start()
   
-  #@tasks.loop(seconds = 30)
-  #async def loop():
+  @tasks.loop(minutes = 5)
+  async def loop(self):
     if message.author.id == 422746977772765184:
       post = next(get_posts('FortniteGameITALIA', pages=1))
       guild = self.bot.get_guild(454261607799717888)
@@ -82,12 +82,8 @@ class FacebookFeed(BaseCog):
           hex_int = int(color.replace("#", "0x"), 16)
           embed = discord.Embed(colour = hex_int, description = post["text"], timestamp = ts)
           embed.set_author(name = "Fortnite (@FortniteGameITALIA)", icon_url = avatar, url = post_url)
-          embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/W3XV58CH/Facebook-Icon.png")
+          embed.set_footer(text = "Facebook", icon_url = "https://cdn.discordapp.com/attachments/603955376286728226/785930411821891594/8730.png")
           if post["image"] != None:
             embed.set_image(url = post["image"])
           msg = await self.bot.get_channel(454264582622412801).send(embed=embed)
           await self.config.guild(guild).last_feed.set(post["post_id"])
-          try:
-            await msg.publish()
-          except:
-            pass
