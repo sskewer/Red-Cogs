@@ -21,4 +21,8 @@ class FacebookFeed(BaseCog):
     moderatori = ctx.guild.get_role(454262524955852800)
     if epicstaff in ctx.author.roles or moderatori in ctx.author.roles:
         # Cambiare il colore o il link immagine nel database
+  
+  #------------# FEED CHECKER #------------#
+  
+  posts = next(get_posts('FortniteGameITALIA', pages=1))
         
