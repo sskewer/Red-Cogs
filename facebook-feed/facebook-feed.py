@@ -23,15 +23,30 @@ class FacebookFeed(BaseCog):
     epicstaff = ctx.guild.get_role(454262403819896833)
     moderatori = ctx.guild.get_role(454262524955852800)
     if epicstaff in ctx.author.roles or moderatori in ctx.author.roles:
+      # Color
       if args[0] == "color":
-        # Code
-        await ctx.message.add_reaction("✅")
+        if args[1].startswith("#"):
+          # Aggiungere al database
+          await ctx.message.add_reaction("✅")
+        else:
+          await ctx.message.add_reaction("🚫")
+      # Avatar
       elif args[0] == "avatar":
-        # Code
-        await ctx.message.add_reaction("✅")
+        if args[1] == None:
+          if ctx.message.attachments[0] != None:
+            url = ctx.message.attachments[0].url
+            # Aggiungere al database
+            await ctx.message.add_reaction("✅")
+          else:
+            await ctx.message.add_reaction("🚫")
+        elif args[1].startswith("http"):
+          # Aggiungere al database
+          await ctx.message.add_reaction("✅")
+        else:
+          await ctx.message.add_reaction("🚫")
+      # Default
       else:
         await ctx.message.add_reaction("🚫")
-      # Cambiare il colore o il link immagine nel database
   
   #------------# FEED CHECKER #------------#
   
