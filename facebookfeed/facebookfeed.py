@@ -65,6 +65,15 @@ class FacebookFeed(Cog):
         await ctx.message.add_reaction("✅")
       except:
         pass
+      
+  @_fb.command()
+  async def last(self, ctx: commands.Context, value: int):
+    """Modificare l'ID dell'ultimo feed nel database"""
+    epicstaff = ctx.guild.get_role(454262403819896833)
+    moderatori = ctx.guild.get_role(454262524955852800)
+    if epicstaff in ctx.author.roles or moderatori in ctx.author.roles:
+      await self.config.guild(ctx.guild).last_feed.set(value)
+      await ctx.message.add_reaction("✅")
   
   #------------# FEED CHECKER #------------#
   
@@ -76,7 +85,7 @@ class FacebookFeed(Cog):
       guild = self.bot.get_guild(454261607799717888)
       await self.bot.get_channel(603955376286728226).send("Test 2")
       last_feed = await self.config.guild(guild).last_feed()
-      await self.bot.get_channel(603955376286728226).send("Test 3")
+      await self.bot.get_channel(last).send("Test 3")
       if last_feed != None and last_feed != post["post_id"]:
         if post["text"] != None:
           color = await self.config.guild(guild).color()
@@ -99,5 +108,5 @@ class FacebookFeed(Cog):
           await msg.edit("**Nuovo post invitato in <#454264582622412801>**")
           await self.config.guild(guild).last_feed.set(post["post_id"])
       else:
-        await msg.edit("**Nessun nuovo post trovato**")
+        await msg.delete()
       await sleep(300)
