@@ -21,7 +21,7 @@ class FacebookFeed(BaseCog):
   #--------------# COMMANDS #--------------#
   
   @commands.guild_only()
-  @commands.command(aliases=["fb"])
+  @commands.command(aliases = ["fb"])
   async def facebook(self, ctx, option, value = None):
     """Modificare alcuni valori nel database"""
     epicstaff = ctx.guild.get_role(454262403819896833)
@@ -65,7 +65,7 @@ class FacebookFeed(BaseCog):
     """Controllare nuovi post dalla pagina Facebook e nel caso pubblicarli"""
     self.loop.start()
   
-  @tasks.loop(minutes=5)
+  @tasks.loop(minutes = 5)
   async def loop(self):
     post = next(get_posts('FortniteGameITALIA', pages=1))
     if post["text"] != None:
@@ -74,5 +74,23 @@ class FacebookFeed(BaseCog):
       if last_feed != None and setup != None:
         color = setup["color"]
         avatar = setup["avatar"]
-      # Prendere info dal database e creare l'embed
-        
+        if color != None and avatar != None:
+          if post["post_url"] != None:
+            post_url = post["post_url"]
+          else:
+            post_url = "https://www.facebook.com/FortniteGameITALIA/"
+          if post["time"] != None:
+            ts = post["time"]
+          else:
+            ts = datetime.datetime.utcnow()
+          embed = discord.Embed(colour = discord.Colour.green(), description = post["text"], timestamp = ts)
+          embed.set_author(name = "Fortnite (@FortniteGameITALIA)", icon_url = avatar, url = post_url)
+          embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/W3XV58CH/Facebook-Icon.png")
+          if post["image"] != None:
+            embed.set_image(url = post["image"])
+          channel = self.bot.get_channel(454264582622412801)
+          msg = await channel.send(embed=embed)
+          try:
+            await msg.publish()
+          except:
+            pass
