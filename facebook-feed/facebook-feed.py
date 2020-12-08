@@ -15,6 +15,7 @@ class FacebookFeed(BaseCog):
   @commands.guild_only()
   @commands.command(aliases=["fb"])
   async def facebook(self, ctx):
+    """Modificare alcuni valori nel database"""
     args = ctx.message.content.replace("?facebook ", "")
     epicstaff = ctx.guild.get_role(454262403819896833)
     moderatori = ctx.guild.get_role(454262524955852800)
