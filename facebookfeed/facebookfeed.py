@@ -30,11 +30,11 @@ class FacebookFeed(BaseCog):
       # Color
       if option == "color":
         if value.startswith("#"):
-          try:
-            collection.update_one({"_id" : "setup"}, {"$set" : {"color" : value}})
-            await ctx.message.add_reaction("✅")
-          except:
-            await ctx.message.add_reaction("🚫")
+          #try:
+          collection.update_one({"_id" : "setup"}, {"$set" : {"color" : value}})
+          await ctx.message.add_reaction("✅")
+          #except:
+            #await ctx.message.add_reaction("🚫")
         else:
           await ctx.message.add_reaction("🚫")
       # Avatar
@@ -49,11 +49,11 @@ class FacebookFeed(BaseCog):
         else:
           await ctx.message.add_reaction("🚫")
         if url != None:
-          try:
-            collection.update_one({"_id" : "setup"}, {"$set" : {"avatar" : url}})
-            await ctx.message.add_reaction("✅")
-          except:
-            await ctx.message.add_reaction("🚫")
+          #try:
+          collection.update_one({"_id" : "setup"}, {"$set" : {"avatar" : url}})
+          await ctx.message.add_reaction("✅")
+          #except:
+            #await ctx.message.add_reaction("🚫")
       # Default
       else:
         await ctx.message.add_reaction("🚫")
