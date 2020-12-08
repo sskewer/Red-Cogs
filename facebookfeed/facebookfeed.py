@@ -2,9 +2,10 @@ import datetime
 import discord
 from discord.ext import tasks
 from contextlib import suppress
-from redbot.core import commands
-#from pymongo import MongoClient
+from redbot.core import Config, commands
+from redbot.core.data_manager import cog_data_path
 from facebook_scraper import get_posts
+from pymongo import MongoClient
 
 cluster = MongoClient("mongodb://modmail:dbFortniteITA@modmail.rsxw7.mongodb.net/FortniteITA?retryWrites=true&w=majority")
 db = cluster["FortniteITA"]
@@ -16,11 +17,12 @@ class FacebookFeed(BaseCog):
   """Pubblicare i post di una pagina Facebook in un canale"""
   
   def __init__(self, bot):
-    self.bot = bot
-    self.path = str(cog_data_path(self)).replace("\\", "/")
+    self.bot = bot    
     self.config = Config.get_conf(self, identifier=4000121111111111, force_registration=True)
-    default_settings = {"color": None, "avatar": None, "last_feed": 1}
-    self.config.register_guild(**default_settings)
+    default_global = {}
+    default_guild = {"color": None, "avatar": None, "last_feed": 1}
+    self.config.register_global(**default_global)
+    self.config.register_guild(**default_guild)
   
   #--------------# COMMANDS #--------------#
   
@@ -36,6 +38,7 @@ class FacebookFeed(BaseCog):
         if value.startswith("#"):
           #try:
           #collection.update_one({"_id" : "setup"}, {"$set" : {"color" : value}})
+          await self.config.guild(ctx.guild).color.set(value)
           await ctx.message.add_reaction("✅")
           #except:
             #await ctx.message.add_reaction("🚫")
@@ -55,6 +58,7 @@ class FacebookFeed(BaseCog):
         if url != None:
           #try:
           #collection.update_one({"_id" : "setup"}, {"$set" : {"avatar" : url}})
+          await self.config.guild(ctx.guild).avatar.set(url)
           await ctx.message.add_reaction("✅")
           #except:
             #await ctx.message.add_reaction("🚫")
