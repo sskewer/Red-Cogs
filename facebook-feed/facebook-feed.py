@@ -3,7 +3,12 @@ import discord
 from discord.ext import tasks
 from contextlib import suppress
 from redbot.core import commands
+from pymongo import MongoClient
 from facebook_scraper import get_posts
+
+cluster = MongoClient("mongodb+srv://modmail:dbFortniteITA@modmail.rsxw7.mongodb.net/<dbname>?retryWrites=true&w=majority")
+db = cluster["FortniteITA"]
+collection = db["Facebook"]
 
 BaseCog = getattr(commands, "Cog", object)
 
@@ -25,8 +30,11 @@ class FacebookFeed(BaseCog):
       # Color
       if option == "color":
         if value.startswith("#"):
-          # Aggiungere al database
-          await ctx.message.add_reaction("✅")
+          try:
+            collection.update_one({"_id" : "setup"}, {"$set" : {"color" : value}})
+            await ctx.message.add_reaction("✅")
+          except:
+            await ctx.message.add_reaction("🚫")
         else:
           await ctx.message.add_reaction("🚫")
       # Avatar
@@ -41,8 +49,11 @@ class FacebookFeed(BaseCog):
         else:
           await ctx.message.add_reaction("🚫")
         if url != None:
-          # Aggiungere al database (url)
-          await ctx.message.add_reaction("✅")
+          try:
+            collection.update_one({"_id" : "setup"}, {"$set" : {"avatar" : url}})
+            await ctx.message.add_reaction("✅")
+          except:
+            await ctx.message.add_reaction("🚫")
       # Default
       else:
         await ctx.message.add_reaction("🚫")
@@ -58,5 +69,10 @@ class FacebookFeed(BaseCog):
   async def loop(self):
     post = next(get_posts('FortniteGameITALIA', pages=1))
     if post["text"] != None:
+      last_feed = collection.find_one({"_id" : "feed"})["last"]
+      setup = collection.find_one({"_id" : "setup"})
+      if last_feed != None and setup != None:
+        color = setup["color"]
+        avatar = setup["avatar"]
       # Prendere info dal database e creare l'embed
         
