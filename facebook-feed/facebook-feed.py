@@ -68,29 +68,30 @@ class FacebookFeed(BaseCog):
   @tasks.loop(minutes = 5)
   async def loop(self):
     post = next(get_posts('FortniteGameITALIA', pages=1))
-    if post["text"] != None:
-      last_feed = collection.find_one({"_id" : "feed"})["last"]
-      setup = collection.find_one({"_id" : "setup"})
-      if last_feed != None and setup != None:
-        color = setup["color"]
-        avatar = setup["avatar"]
-        if color != None and avatar != None:
-          if post["post_url"] != None:
-            post_url = post["post_url"]
-          else:
-            post_url = "https://www.facebook.com/FortniteGameITALIA/"
-          if post["time"] != None:
-            ts = post["time"]
-          else:
-            ts = datetime.datetime.utcnow()
-          embed = discord.Embed(colour = discord.Colour.green(), description = post["text"], timestamp = ts)
-          embed.set_author(name = "Fortnite (@FortniteGameITALIA)", icon_url = avatar, url = post_url)
-          embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/W3XV58CH/Facebook-Icon.png")
-          if post["image"] != None:
-            embed.set_image(url = post["image"])
-          channel = self.bot.get_channel(454264582622412801)
-          msg = await channel.send(embed=embed)
-          try:
-            await msg.publish()
-          except:
-            pass
+    last_feed = collection.find_one({"_id" : "feed"})["last"]
+    if last_feed != None and last_feed != post["post_id"]:
+      if post["text"] != None:
+        setup = collection.find_one({"_id" : "setup"})
+        if setup != None:
+          color = setup["color"]
+          avatar = setup["avatar"]
+          if color != None and avatar != None:
+            if post["post_url"] != None:
+              post_url = post["post_url"]
+            else:
+              post_url = "https://www.facebook.com/FortniteGameITALIA/"
+            if post["time"] != None:
+              ts = post["time"]
+            else:
+              ts = datetime.datetime.utcnow()
+            embed = discord.Embed(colour = discord.Colour.green(), description = post["text"], timestamp = ts)
+            embed.set_author(name = "Fortnite (@FortniteGameITALIA)", icon_url = avatar, url = post_url)
+            embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/W3XV58CH/Facebook-Icon.png")
+            if post["image"] != None:
+              embed.set_image(url = post["image"])
+            msg = await self.bot.get_channel(454264582622412801).send(embed=embed)
+            collection.update_one({"_id" : "feed"}, {"$set" : {"last" : post["post_id"]}})
+            try:
+              await msg.publish()
+            except:
+              pass
