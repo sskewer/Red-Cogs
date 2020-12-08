@@ -26,8 +26,8 @@ class FacebookFeed(BaseCog):
   @commands.guild_only()
   async def _fb(self, ctx: commands.Context):
     """Facebook Feed Cog by Simo#2471"""
-        if ctx.invoked_subcommand is None:
-            pass
+    if ctx.invoked_subcommand is None:
+        pass
   
   @_fb.command()
   async def color(self, ctx, value):
