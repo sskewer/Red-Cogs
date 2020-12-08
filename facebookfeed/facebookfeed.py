@@ -10,7 +10,6 @@ from redbot.core.bot import Red
 from redbot.core.commands import Cog
 from redbot.core.data_manager import cog_data_path
 
-BaseCog = getattr(commands, "Cog", object)
 
 class FacebookFeed(Cog):
   """Pubblicare i post di una pagina Facebook in un canale"""
@@ -35,7 +34,7 @@ class FacebookFeed(Cog):
         pass
   
   @_fb.command()
-  async def color(self, ctx, value):
+  async def color(self, ctx: commands.Context, value):
     """Modificare il colore del feed nel database"""
     epicstaff = ctx.guild.get_role(454262403819896833)
     moderatori = ctx.guild.get_role(454262524955852800)
@@ -47,7 +46,7 @@ class FacebookFeed(Cog):
         await ctx.message.add_reaction("🚫")
         
   @_fb.command()
-  async def avatar(self, ctx, value = None):
+  async def avatar(self, ctx: commands.Context, value = None):
     """Modificare l'avatar del feed nel database"""
     epicstaff = ctx.guild.get_role(454262403819896833)
     moderatori = ctx.guild.get_role(454262524955852800)
