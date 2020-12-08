@@ -17,33 +17,31 @@ class FacebookFeed(BaseCog):
   
   @commands.guild_only()
   @commands.command(aliases=["fb"])
-  async def facebook(self, ctx):
+  async def facebook(self, ctx, option, value = None):
     """Modificare alcuni valori nel database"""
-    args = ctx.message.content.replace("?facebook ", "").split()
     epicstaff = ctx.guild.get_role(454262403819896833)
     moderatori = ctx.guild.get_role(454262524955852800)
     if epicstaff in ctx.author.roles or moderatori in ctx.author.roles:
       # Color
-      if args[0] == "color":
-        if args[1].startswith("#"):
+      if option == "color":
+        if value.startswith("#"):
           # Aggiungere al database
           await ctx.message.add_reaction("✅")
         else:
           await ctx.message.add_reaction("🚫")
       # Avatar
-      elif args[0] == "avatar":
-        if args[1] == None:
+      elif option == "avatar":
+        if value == None:
           if ctx.message.attachments[0] != None:
             url = ctx.message.attachments[0].url
-            # Aggiungere al database
-            await ctx.message.add_reaction("✅")
           else:
             await ctx.message.add_reaction("🚫")
-        elif args[1].startswith("http"):
-          # Aggiungere al database
-          await ctx.message.add_reaction("✅")
+        elif value.startswith("http"):
+            url = value
         else:
           await ctx.message.add_reaction("🚫")
+        # Aggiungere al database (url)
+        await ctx.message.add_reaction("✅")
       # Default
       else:
         await ctx.message.add_reaction("🚫")
