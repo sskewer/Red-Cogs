@@ -70,7 +70,7 @@ class FacebookFeed(Cog):
   
   async def checker(self):
     while True:
-      checking = await self.bot.get_channel(454264582622412801).send("Controllando nuovi post su Facebook...")
+      checking = await self.bot.get_channel(603955376286728226).send("Controllando nuovi post su Facebook...")
       post = next(get_posts('FortniteGameITALIA', pages=1))
       guild = self.bot.get_guild(454261607799717888)
       last_feed = await self.config.guild(guild).last_feed()
