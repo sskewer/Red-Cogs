@@ -72,8 +72,11 @@ class FacebookFeed(Cog):
     while True:
       checking = await self.bot.get_channel(603955376286728226).send("Controllando nuovi post su Facebook...")
       post = next(get_posts('FortniteGameITALIA', pages=1))
+      await self.bot.get_channel(603955376286728226).send("Test 1")
       guild = self.bot.get_guild(454261607799717888)
+      await self.bot.get_channel(603955376286728226).send("Test 2")
       last_feed = await self.config.guild(guild).last_feed()
+      await self.bot.get_channel(603955376286728226).send("Test 3")
       if last_feed != None and last_feed != post["post_id"]:
         if post["text"] != None:
           color = await self.config.guild(guild).color()
