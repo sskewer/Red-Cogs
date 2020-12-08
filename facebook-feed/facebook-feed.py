@@ -53,7 +53,8 @@ class FacebookFeed(BaseCog):
   async def on_ready():
     """Controllare nuovi post dalla pagina Facebook e nel caso pubblicarli"""
     self.loop.start()
-  tasks.loop(minutes=5)
+  
+  @tasks.loop(minutes=5)
   async def loop(self):
     post = next(get_posts('FortniteGameITALIA', pages=1))
     if post["text"] != None:
