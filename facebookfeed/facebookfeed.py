@@ -22,37 +22,43 @@ class FacebookFeed(BaseCog):
   
   #--------------# COMMANDS #--------------#
   
+  @commands.group(name="facebook", aliases=["fb"])
   @commands.guild_only()
-  @commands.command(aliases = ["fb"])
-  async def facebook(self, ctx, option, value = None):
-    """Modificare alcuni valori nel database"""
+  async def _fb(self, ctx: commands.Context):
+    """Facebook Feed Cog by Simo#2471"""
+        if ctx.invoked_subcommand is None:
+            pass
+  
+  @_fb.command()
+  async def color(self, ctx, value):
+    """Modificare il colore del feed nel database"""
     epicstaff = ctx.guild.get_role(454262403819896833)
     moderatori = ctx.guild.get_role(454262524955852800)
     if epicstaff in ctx.author.roles or moderatori in ctx.author.roles:
-      # Color
-      if option == "color":
-        if value.startswith("#"):
-          await self.config.guild(ctx.guild).color.set(value)
-          await ctx.message.add_reaction("✅")
-        else:
-          await ctx.message.add_reaction("🚫")
-      # Avatar
-      elif option == "avatar":
-        if value == None:
-          if ctx.message.attachments[0] != None:
-            url = ctx.message.attachments[0].url
-          else:
-            await ctx.message.add_reaction("🚫")
-        elif value.startswith("http"):
-          url = value
-        else:
-          await ctx.message.add_reaction("🚫")
-        if url != None:
-          await self.config.guild(ctx.guild).avatar.set(url)
-          await ctx.message.add_reaction("✅")
-      # Default
+      if value.startswith("#"):
+        await self.config.guild(ctx.guild).color.set(value)
+        await ctx.message.add_reaction("✅")
       else:
         await ctx.message.add_reaction("🚫")
+        
+  @_fb.command()
+  async def avatar(self, ctx, value = None):
+    """Modificare l'avatar del feed nel database"""
+    epicstaff = ctx.guild.get_role(454262403819896833)
+    moderatori = ctx.guild.get_role(454262524955852800)
+    if epicstaff in ctx.author.roles or moderatori in ctx.author.roles:
+      if value == None:
+        if ctx.message.attachments[0] != None:
+          url = ctx.message.attachments[0].url
+        else:
+          await ctx.message.add_reaction("🚫")
+      elif value.startswith("http"):
+        url = value
+      else:
+        await ctx.message.add_reaction("🚫")
+      if url != None:
+        await self.config.guild(ctx.guild).avatar.set(url)
+        await ctx.message.add_reaction("✅")
   
   #------------# FEED CHECKER #------------#
   
