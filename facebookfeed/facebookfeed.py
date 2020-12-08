@@ -48,7 +48,7 @@ class FacebookFeed(BaseCog):
     moderatori = ctx.guild.get_role(454262524955852800)
     if epicstaff in ctx.author.roles or moderatori in ctx.author.roles:
       if value == None:
-        if ctx.message.attachments != None:
+        if len(ctx.message.attachments) > 0:
           url = ctx.message.attachments[0].url
         else:
           await ctx.message.add_reaction("🚫")
