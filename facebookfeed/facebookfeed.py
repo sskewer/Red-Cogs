@@ -67,14 +67,21 @@ class FacebookFeed(Cog):
         pass
       
   @_fb.command()
-  async def last(self, ctx: commands.Context, value: int):
+  async def last(self, ctx: commands.Context, value):
     """Modificare l'ID dell'ultimo feed nel database"""
     epicstaff = ctx.guild.get_role(454262403819896833)
     moderatori = ctx.guild.get_role(454262524955852800)
     if epicstaff in ctx.author.roles or moderatori in ctx.author.roles:
-      await self.config.guild(ctx.guild).last_feed.set(value)
-      await ctx.message.add_reaction("✅")
-  
+      if value == "reset":
+        post = next(get_posts('FortniteGameITALIA', pages=1))
+        await self.config.guild(guild).last_feed.set(post["post_id"])
+        await ctx.message.add_reaction("✅")
+      elif value.isdecimal() == True:
+        await self.config.guild(ctx.guild).last_feed.set(value)
+        await ctx.message.add_reaction("✅")
+      else:
+        await ctx.message.add_reaction("🚫")
+        
   #------------# FEED CHECKER #------------#
   
   async def checker(self):
