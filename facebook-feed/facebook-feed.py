@@ -19,11 +19,19 @@ class FacebookFeed(BaseCog):
   @commands.command(aliases=["fb"])
   async def facebook(self, ctx):
     """Modificare alcuni valori nel database"""
-    args = ctx.message.content.replace("?facebook ", "")
+    args = ctx.message.content.replace("?facebook ", "").split()
     epicstaff = ctx.guild.get_role(454262403819896833)
     moderatori = ctx.guild.get_role(454262524955852800)
     if epicstaff in ctx.author.roles or moderatori in ctx.author.roles:
-        # Cambiare il colore o il link immagine nel database
+      if args[0] == "color":
+        # Code
+        await ctx.message.add_reaction("✅")
+      elif args[0] == "avatar":
+        # Code
+        await ctx.message.add_reaction("✅")
+      else:
+        await ctx.message.add_reaction("🚫")
+      # Cambiare il colore o il link immagine nel database
   
   #------------# FEED CHECKER #------------#
   
