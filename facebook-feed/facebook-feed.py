@@ -29,6 +29,7 @@ class FacebookFeed(BaseCog):
   
   @commands.Cog.listener()
   async def on_ready():
+    """Controllare nuovi post dalla pagina Facebook e nel caso pubblicarli"""
     async def feed_func():
       post = next(get_posts('FortniteGameITALIA', pages=1))
       if post["text"] != None:
