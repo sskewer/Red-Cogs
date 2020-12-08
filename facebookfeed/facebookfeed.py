@@ -3,7 +3,7 @@ import discord
 from discord.ext import tasks
 from contextlib import suppress
 from redbot.core import commands
-from pymongo import MongoClient
+#from pymongo import MongoClient
 from facebook_scraper import get_posts
 
 cluster = MongoClient("mongodb://modmail:dbFortniteITA@modmail.rsxw7.mongodb.net/FortniteITA?retryWrites=true&w=majority")
@@ -17,6 +17,10 @@ class FacebookFeed(BaseCog):
   
   def __init__(self, bot):
     self.bot = bot
+    self.path = str(cog_data_path(self)).replace("\\", "/")
+    self.config = Config.get_conf(self, identifier=4000121111111111, force_registration=True)
+    default_settings = {"color": None, "avatar": None, "last_feed": 1}
+    self.config.register_guild(**default_settings)
   
   #--------------# COMMANDS #--------------#
   
@@ -31,7 +35,7 @@ class FacebookFeed(BaseCog):
       if option == "color":
         if value.startswith("#"):
           #try:
-          collection.update_one({"_id" : "setup"}, {"$set" : {"color" : value}})
+          #collection.update_one({"_id" : "setup"}, {"$set" : {"color" : value}})
           await ctx.message.add_reaction("✅")
           #except:
             #await ctx.message.add_reaction("🚫")
@@ -50,7 +54,7 @@ class FacebookFeed(BaseCog):
           await ctx.message.add_reaction("🚫")
         if url != None:
           #try:
-          collection.update_one({"_id" : "setup"}, {"$set" : {"avatar" : url}})
+          #collection.update_one({"_id" : "setup"}, {"$set" : {"avatar" : url}})
           await ctx.message.add_reaction("✅")
           #except:
             #await ctx.message.add_reaction("🚫")
