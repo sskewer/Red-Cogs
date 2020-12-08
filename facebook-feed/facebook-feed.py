@@ -1,5 +1,4 @@
 import datetime
-import threading
 import discord
 from discord.ext import tasks
 from contextlib import suppress
