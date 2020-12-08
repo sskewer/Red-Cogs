@@ -52,10 +52,10 @@ class FacebookFeed(BaseCog):
   @commands.Cog.listener()
   async def on_ready():
     """Controllare nuovi post dalla pagina Facebook e nel caso pubblicarli"""
-    async def feed_func():
-      post = next(get_posts('FortniteGameITALIA', pages=1))
-      if post["text"] != None:
-        # Prendere info dal database e creare l'embed
-    feed_checker = threading.Timer(600, feed_func)
-    feed_checker.start()
+    self.loop.start()
+  tasks.loop(minutes=5)
+  async def loop(self):
+    post = next(get_posts('FortniteGameITALIA', pages=1))
+    if post["text"] != None:
+      # Prendere info dal database e creare l'embed
         
