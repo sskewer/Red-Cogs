@@ -93,6 +93,8 @@ class FacebookFeed(Cog):
           if post["image"] != None:
             embed.set_image(url = post["image"])
           msg = await self.bot.get_channel(454264582622412801).send(embed=embed)
-          await msg.edit("Nuovo post di Facebook inviato in <#454264582622412801>")
+          await msg.edit("**Nuovo post invitato in <#454264582622412801>**")
           await self.config.guild(guild).last_feed.set(post["post_id"])
+      else:
+        await msg.edit("**Nessun nuovo post trovato**")
       await sleep(300)
