@@ -1,20 +1,25 @@
 import datetime
 import threading
-import discord
 from asyncio import sleep
 from contextlib import suppress
-from redbot.core import Config, commands
-from redbot.core.data_manager import cog_data_path
 from facebook_scraper import get_posts
+
+import discord
+from redbot.core import Config, commands
+from redbot.core.bot import Red
+from redbot.core.commands import Cog
+from redbot.core.data_manager import cog_data_path
 
 BaseCog = getattr(commands, "Cog", object)
 
-class FacebookFeed(BaseCog):
+class FacebookFeed(Cog):
   """Pubblicare i post di una pagina Facebook in un canale"""
   
-  def __init__(self, bot):
+  def __init__(self, bot: Red):
+    super().__init__()
     self.bot = bot    
     self.config = Config.get_conf(self, identifier=4000121111111111, force_registration=True)
+    
     default_global = {}
     default_guild = {"color": "#fadb89", "avatar": "https://cdn.discordapp.com/attachments/603955376286728226/785930411821891594/8730.png", "last_feed": 1}
     self.config.register_global(**default_global)
