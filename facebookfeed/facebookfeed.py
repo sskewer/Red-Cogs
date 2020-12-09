@@ -48,7 +48,7 @@ class FacebookFeed(Cog):
       embed.add_field(name = "Color", value = f"`{color}`", inline = True)
       embed.add_field(name = "Avatar", value = f"[`Clicca qui`]({avatar})", inline = True)
       embed.add_field(name = "Last Feed", value = f"`{last_feed}`", inline = True)
-      embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url())
+      embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
       await ctx.channel.send(embed = embed)
         
   @_fb.command()
