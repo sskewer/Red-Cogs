@@ -1,3 +1,4 @@
+import time
 import datetime
 import threading
 from asyncio import sleep
@@ -86,7 +87,7 @@ class FacebookFeed(Cog):
   
   async def checker(self):
     while True:
-      checking = await self.bot.get_channel(786128085538963476).send("Controllando nuovi feed...")
+      checking = await self.bot.get_channel(786128085538963476).send(f"""[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Controllando nuovi feed...""")
       post = next(get_posts('FortniteGameITALIA', pages=1))
       guild = self.bot.get_guild(454261607799717888)
       last_feed = await self.config.guild(guild).last_feed()
@@ -110,7 +111,7 @@ class FacebookFeed(Cog):
             embed.set_image(url = post["image"])
           msg = await self.bot.get_channel(454264582622412801).send(embed = embed)
           await self.config.guild(guild).last_feed.set(post["post_id"])
-          await checking.edit(content = f"""Nuovo post (`{str(post["post_id"])}`) inviato in <#454264582622412801>""", embed = embed)
+          await checking.edit(content = f"""[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nuovo post (`{str(post["post_id"])}`) inviato in <#454264582622412801>""", embed = embed)
       else:
-        await checking.channel.send("Nessun nuovo feed trovato")
+        await checking.channel.send(f"""[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nessun nuovo feed trovato""")
       await sleep(600)
