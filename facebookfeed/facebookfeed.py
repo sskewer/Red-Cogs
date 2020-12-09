@@ -35,6 +35,23 @@ class FacebookFeed(Cog):
         pass
   
   @_fb.command()
+  async def current(self, ctx: commands.Context):
+    """Visionare i valori impostati nel database"""
+    epicstaff = ctx.guild.get_role(454262403819896833)
+    moderatori = ctx.guild.get_role(454262524955852800)
+    if epicstaff in ctx.author.roles or moderatori in ctx.author.roles:
+      last_feed = await self.config.guild(ctx.guild).last_feed()
+      color = await self.config.guild(ctx.guild).color()
+      avatar = await self.config.guild(ctx.guild).avatar()
+      hex_int = int(color.replace("#", "0x"), 16)
+      embed = discord.Embed(colour = hex_int, title = "Impostazioni Feed", timestamp = datetime.datetime.utcnow())
+      embed.add_field(name = "Color", value = f"`{color}`", inline = True)
+      embed.add_field(name = "Avatar", value = f"[`Clicca qui`]({avatar})", inline = True)
+      embed.add_field(name = "Last Feed", value = f"`{last_feed}`", inline = True)
+      embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url())
+      await ctx.channel.send(embed = embed)
+        
+  @_fb.command()
   async def color(self, ctx: commands.Context, value):
     """Modificare il colore del feed nel database"""
     epicstaff = ctx.guild.get_role(454262403819896833)
