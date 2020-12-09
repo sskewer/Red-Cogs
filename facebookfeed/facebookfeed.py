@@ -86,7 +86,7 @@ class FacebookFeed(Cog):
   
   async def checker(self):
     while True:
-      checking = await self.bot.get_channel(603955376286728226).send("Controllando nuovi post su Facebook...")
+      checking = await self.bot.get_channel(786128085538963476).send("Controllando nuovi feed...")
       post = next(get_posts('FortniteGameITALIA', pages=1))
       guild = self.bot.get_guild(454261607799717888)
       last_feed = await self.config.guild(guild).last_feed()
@@ -108,9 +108,9 @@ class FacebookFeed(Cog):
           embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/CxFZfzGM/Facebook-Icon.png")
           if post["image"] != None:
             embed.set_image(url = post["image"])
-          msg = await self.bot.get_channel(454264582622412801).send(embed=embed)
+          msg = await self.bot.get_channel(454264582622412801).send(embed = embed)
           await self.config.guild(guild).last_feed.set(post["post_id"])
-          await checking.edit(content = f"""**Nuovo post (`{str(post["post_id"])}`) inviato in <#454264582622412801>**""")
+          await checking.edit(content = f"""Nuovo post (`{str(post["post_id"])}`) inviato in <#454264582622412801>""", embed = embed)
       else:
-        await checking.delete()
-      await sleep(300)
+        await checking.channel.send("Nessun nuovo feed trovato")
+      await sleep(600)
