@@ -1,4 +1,3 @@
-import asyncio
 from redbot.core.bot import Red
 
 from .facebookfeed import FacebookFeed
