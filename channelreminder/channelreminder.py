@@ -13,7 +13,7 @@ BaseCog = getattr(commands, "Cog", object)
 class ChannelReminder(BaseCog):
   """Lasciare un reminder come ultimo messaggio del canale"""
   
-  def __init__(self, bot: Red):
+  def __init__(self, bot):
     self.bot = bot
         
   @commands.Cog.listener()
