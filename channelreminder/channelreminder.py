@@ -20,7 +20,7 @@ class ChannelReminder(BaseCog):
   async def on_message(self, message):
     #---------# Bug Traduzione #---------#
     if message.channel.id == 674689662509514752 and message.author.id != 710078958036582471:
-      bug_traduzione = embeds[674689662509514752]
+      bug_traduzione = embeds[message.channel.id]
       async for msg in message.channel.history(limit=10):
         if msg.author.id == 710078958036582471 and len(msg.embeds) > 0:
           if msg.embeds[0].title == bug_traduzione.title:
