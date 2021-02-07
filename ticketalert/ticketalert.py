@@ -20,6 +20,9 @@ class TicketAlert(BaseCog):
       sent_message = await channel.send(content = f"{referente_vindertech_role.mention} {vindertech_role.mention}", embed = embed)
       await sent_message.add_reaction("✅")
       await sent_message.pin(reason="Nuova richiesa di supporto")
+      def system_pin_check(msg):
+        return msg.type == "pins_add"
+      await channel.purge(limit=100, check=system_pin_check)
       def check(reaction, user):
         return reaction.message.id == sent_message.id and user.id != self.bot.user.id and str(reaction.emoji) == "✅"
       reaction, member = await self.bot.wait_for('reaction_add', check=check)
