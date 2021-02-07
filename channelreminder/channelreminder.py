@@ -3,9 +3,15 @@ from contextlib import suppress
 from redbot.core import commands
 
 #---------# Reminder Embed #---------#
+
 embeds = {
-  674689662509514752: discord.Embed(title = "Errore di traduzione da segnalare?", description = "In questo canale, puoi segnalare solo errori di traduzione in lingua :flag_it: italiana.\nNel farlo, si prega di **taggare <@!623929121482735637>** e allegare uno screenshot in cui sia ben visibile l'errore che si vuole segnalare. Tutti i post che non sono rilevanti saranno rimossi.", color = discord.Colour.from_rgb(19, 123, 196))
+  674689662509514752: discord.Embed(
+    title = "Errore di traduzione da segnalare?",
+    description = "In questo canale, puoi segnalare solo errori di traduzione in lingua :flag_it: italiana.\nNel farlo, si prega di **taggare <@!623929121482735637>** e allegare uno screenshot in cui sia ben visibile l'errore che si vuole segnalare. Tutti i post che non sono rilevanti saranno rimossi.",
+    color = discord.Colour.from_rgb(19, 123, 196)
+  )
 }
+
 #------------------------------------#
 
 BaseCog = getattr(commands, "Cog", object)
