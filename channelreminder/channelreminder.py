@@ -29,7 +29,7 @@ class ChannelReminder(BaseCog):
       
   @commands.guild_only()
   @commands.command()
-  async def reminder(self, ctx):
+  async def restart(self, ctx):
     """Avviare il reminder associato al canale"""
     epicstaff = ctx.guild.get_role(454262403819896833)
     moderatori = ctx.guild.get_role(454262524955852800)
