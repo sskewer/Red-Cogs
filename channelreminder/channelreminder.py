@@ -18,7 +18,6 @@ class ChannelReminder(BaseCog):
         
   @commands.Cog.listener()
   async def on_message(self, message):
-    
     #---------# Bug Traduzione #---------#
     if message.channel.id == 674689662509514752 and message.author.id != 710078958036582471:
       bug_traduzione = embeds[674689662509514752]
