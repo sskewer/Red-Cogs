@@ -39,6 +39,6 @@ class ChannelReminder(BaseCog):
         await ctx.channel.send(embed=embeds[ctx.channel.id])
         await ctx.message.delete()
       except:
-        ctx.message.add_reaction("🚫")
+        await ctx.message.add_reaction("🚫")
     else:
       await ctx.message.delete()
