@@ -37,5 +37,6 @@ class ChannelReminder(BaseCog):
     guardiani = ctx.guild.get_role(454268394464870401)
     if epicstaff in ctx.author.roles or moderatori in ctx.author.roles or guardiani in ctx.author.roles:
       await ctx.channel.send(embed=embeds[ctx.channel.id])
+      await ctx.message.delete()
     else:
       await ctx.message.delete()
