@@ -9,7 +9,11 @@ embeds = {
     title = "Errore di traduzione da segnalare?",
     description = "In questo canale, puoi segnalare solo errori di traduzione in lingua :flag_it: italiana.\nNel farlo, si prega di **taggare <@!623929121482735637>** e allegare uno screenshot in cui sia ben visibile l'errore che si vuole segnalare. Tutti i post che non sono rilevanti saranno rimossi.",
     color = discord.Colour.from_rgb(19, 123, 196)
-  )
+  ),
+  454261608324268063: discord.Embed(
+    description = "**Unisciti al nostro canale [>> Crea Canali <<](https://discord.gg/mdxtrbr) per creare in automatico un tuo canale completamente personalizzabile. Il canale si autodistruggerà quando si svuoterà, ma potrai crearne uno nuovo. Buon game!**  :kitbash_sound:",
+    color = 0x00e3ff
+  ),
 }
 
 #------------------------------------#
@@ -29,7 +33,7 @@ class ChannelReminder(BaseCog):
       bug_traduzione = embeds[message.channel.id]
       async for msg in message.channel.history(limit=10):
         if msg.author.id == 710078958036582471 and len(msg.embeds) > 0:
-          if msg.embeds[0].title == bug_traduzione.title:
+          if msg.embeds[0].description == bug_traduzione.description:
             await msg.delete()
       await message.channel.send(embed=bug_traduzione)
       
