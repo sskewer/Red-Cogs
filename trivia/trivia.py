@@ -69,13 +69,7 @@ class trivia(commands.Cog):
             role = ctx.guild.get_role(role)
             allowed_roles[n] = role
         if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            question = {
-                "question" : question,
-                "correct_answer" : "",
-                "incorrect_answers" : []
-            }
-
-            await ctx.send("Qual'è la risposta corretta?")
+            await ctx.send("Qual è la risposta corretta?")
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
             correct_answer = await self.bot.wait_for('message', check=check)
