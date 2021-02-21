@@ -80,9 +80,9 @@ class trivia(commands.Cog):
                 return m.author == ctx.author and m.channel == ctx.channel
             correct_answer = await self.bot.wait_for('message', check=check)
 
-            await ctx.send("Scrivi ora le risposte errate, seprarate da una `,`")
+            await ctx.send("Scrivi ora le risposte errate, separate da una `,`")
             incorrect_answers_raw = await self.bot.wait_for('message', check=check)
-            incorrect_answers = incorrect_answers_raw.split(",")
+            incorrect_answers = incorrect_answers_raw.content.split(",")
             for n, answer in enumerate(incorrect_answers):
                 incorrect_answers[n] = answer.strip()
             question = {
