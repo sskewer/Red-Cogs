@@ -208,7 +208,7 @@ class trivia(commands.Cog):
                 await ctx.message.add_reaction("🚫")
     
     @trivia.command()
-    async def channel(self, ctx: commands.Context, value : discord.Channel):
+    async def channel(self, ctx: commands.Context, value : discord.TextChannel):
         """Modificare il canale in cui viene inviato il quiz"""
         allowed_roles = [454262524955852800, 454262403819896833]
         for n, role in enumerate(allowed_roles):
