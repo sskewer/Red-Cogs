@@ -170,8 +170,8 @@ class trivia(commands.Cog):
             hex_int = int(color.replace("#", "0x"), 16)
             embed = discord.Embed(colour = hex_int, title = "Impostazioni Trivia", timestamp = datetime.datetime.utcnow())
             embed.add_field(name = "Color", value = f"`{color}`", inline = True)
-            embed.add_field(name = "Time", value = f"La domanda viene postata alle {setup['time']}:00", inline = True)
-            embed.add_field(name = "Channel", value = f"Nel canale {setup['channel']}", inline = True)
+            embed.add_field(name = "Time", value = f"{setup['time']}:00", inline = True)
+            embed.add_field(name = "Channel", value = f"<#{setup['channel']}>", inline = True)
             embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
             await ctx.channel.send(embed = embed)
     
