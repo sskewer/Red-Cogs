@@ -28,14 +28,13 @@ class ChannelReminder(BaseCog):
         
   @commands.Cog.listener()
   async def on_message(self, message):
-    #---------# Bug Traduzione #---------#
-    if message.channel.id == 674689662509514752 and message.author.id != 710078958036582471:
-      bug_traduzione = embeds[message.channel.id]
+    to_send = embeds[message.channel.id]
+    if to_send != None and message.author.id != 710078958036582471:
       async for msg in message.channel.history(limit=10):
         if msg.author.id == 710078958036582471 and len(msg.embeds) > 0:
-          if msg.embeds[0].description == bug_traduzione.description:
+          if msg.embeds[0].description == to_send.description:
             await msg.delete()
-      await message.channel.send(embed=bug_traduzione)
+      await message.channel.send(embed=to_send)
       
   @commands.guild_only()
   @commands.command()
