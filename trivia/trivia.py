@@ -81,7 +81,7 @@ class trivia(commands.Cog):
                 incorrect_answers[n] = answer.strip()
             question = {
                 "question" : question,
-                "correct_answer" : correct_answer,
+                "correct_answer" : correct_answer.content,
                 "incorrect_answers" : incorrect_answers
             }
             await ctx.send("Invia ora l'immagine, rispondi con `No` se vuoi che la domanda non contenga alcuna immagine.")
@@ -92,14 +92,16 @@ class trivia(commands.Cog):
                 else:
                     question.update({"image" : image.content})
 
-            description = f"**Risposta Corretta**\n{question['correct_answer']}\n**Risposte Errate**"
+            user_incorrect = ""
             for incorrect in question["incorrect_answers"]:
-                description += f"\n{incorrect}"
+                user_incorrect += f"{incorrect}\n"
             setup = await self.config.guild(ctx.guild).setup()
             hex_int = int(setup["color"].replace("#", "0x"), 16)
             embed = discord.Embed(
                 title = question["question"], description = description, color = hex_int
             )
+            embed.set_field(name = "Risposta Corretta", value = question["correct_answer"])
+            embed.set_field(name = "Risposte Errate", value = user_incorrect)
             try:
                 embed.set_image(url = question["image"])
             except:
