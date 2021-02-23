@@ -113,8 +113,7 @@ class trivia(commands.Cog):
                 questions.append(question)
                 await self.config.guild(ctx.guild).questions.set(questions)
                 await ctx.send("Domanda aggiunta!")
-            else:
-                await msg.clear_reactions()
+            await msg.clear_reactions()
             
     @commands.group(name="trivia")
     @commands.guild_only()
