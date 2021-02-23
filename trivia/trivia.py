@@ -95,8 +95,8 @@ class trivia(commands.Cog):
             embed = discord.Embed(
                 description = f"**{question['question']}**", color = hex_int
             )
-            embed.set_field(name = "Risposta Corretta", value = question["correct_answer"])
-            embed.set_field(name = "Risposte Errate", value = user_incorrect)
+            embed.add_field(name = "Risposta Corretta", value = question["correct_answer"])
+            embed.add_field(name = "Risposte Errate", value = user_incorrect)
             try:
                 embed.set_image(url = question["image"])
             except:
