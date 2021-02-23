@@ -7,12 +7,6 @@ from requests.api import post
 from redbot.core import Config, commands
 from redbot.core.bot import Red
 
-a = requests.get("https://opentdb.com/api.php?amount=1&category=15&difficulty=medium&type=multiple").json()
-a = a["results"][0]
-del a["category"]
-del a["type"]
-del a["difficulty"]
-
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
 
 class trivia(commands.Cog):
@@ -28,6 +22,7 @@ class trivia(commands.Cog):
         self.config.register_guild(**default_guild)
   
     async def post(self, guild):
+        await self.config.guild(guild).score.set({})
         setup = await self.config.guild(guild).setup()
         hex_int = int(setup['color'].replace("#", "0x"), 16)
         questions = await self.config.guild(guild).questions()
@@ -98,7 +93,7 @@ class trivia(commands.Cog):
             setup = await self.config.guild(ctx.guild).setup()
             hex_int = int(setup["color"].replace("#", "0x"), 16)
             embed = discord.Embed(
-                title = question["question"], description = description, color = hex_int
+                description = f"**{question['question']}**", color = hex_int
             )
             embed.set_field(name = "Risposta Corretta", value = question["correct_answer"])
             embed.set_field(name = "Risposte Errate", value = user_incorrect)
