@@ -213,6 +213,7 @@ class trivia(commands.Cog):
   #------------# EVENT #------------#
   
     async def checker(self):
+        await guild.get_channel(454268474534133762).send("ciao")
         guild = self.bot.get_guild(454261607799717888)
         setup = await self.config.guild(guild).setup()
         time = setup["time"]
@@ -233,14 +234,12 @@ class trivia(commands.Cog):
     async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
         guild = self.bot.get_guild(454261607799717888)
         data = await self.config.guild(guild).reaction()
-        await guild.get_channel(454268474534133762).send("REAZIONE")
         if guild.get_member(payload.user_id).bot == False:
                 if data["message"] == payload.message_id:
                     if payload.user_id not in data["users"]:
                         if str(payload.emoji) in reactions:
                             await guild.get_channel(454268474534133762).send("ab")
                             if reactions.index(str(payload.emoji)) == data["correct"]:
-                                await guild.get_channel(454268474534133762).send("rap futuristico")
                                 score = await self.config.guild(guild).score()
                                 try:
                                     old_score = score[str(payload.user_id)]
@@ -251,8 +250,6 @@ class trivia(commands.Cog):
                             users = data["users"]
                             users.append(payload.user_id)
                             data.update({"users" : users})
-                            await guild.get_channel(454268474534133762).send(str(users))
                             await self.config.guild(guild).reaction.set(data)
-                    await guild.get_channel(454268474534133762).send("abab")
                     msg = await guild.get_channel(payload.channel_id).fetch_message(payload.message_id)
                     await msg.remove_reaction(payload.emoji, guild.get_member(payload.user_id))
