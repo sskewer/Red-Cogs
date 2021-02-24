@@ -135,7 +135,7 @@ class trivia(BaseCog):
             pass
         
     @trivia.command()
-    async def force_post(self, ctx: commands.Context):
+    async def force(self, ctx: commands.Context):
         """Posta forzatamente il quiz"""
         allowed_roles = [454262524955852800, 454262403819896833, 454268394464870401]
         for n, role in enumerate(allowed_roles):
