@@ -44,7 +44,7 @@ async def post(self, guild):
     await self.config.guild(guild).reaction.set(data)
 
 async def checker(self):
-    raise Exception("Sono un cornuto!")
+    await self.client.get_channel(454268474534133762).send("ciao"))
     guild = self.bot.get_guild(454261607799717888)
     setup = await self.config.guild(guild).setup()
     time = setup["time"]
