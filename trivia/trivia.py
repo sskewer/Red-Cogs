@@ -258,7 +258,7 @@ class trivia(commands.Cog):
         await sleep(delta_time.seconds)
         self.daily_post.start()
                             
-    @tasks.loop(days=1)
+    @tasks.loop(hours=24)
     async def daily_post(self, guild):
         await post(self, guild)
                     
