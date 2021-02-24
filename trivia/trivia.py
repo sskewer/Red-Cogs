@@ -163,7 +163,7 @@ class trivia(BaseCog):
             ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url))
     
     @trivia.command()
-    async def leaderboard_reset(self, ctx: commands.Context):
+    async def cleardb(self, ctx: commands.Context):
         allowed_roles = [454262524955852800, 454262403819896833]
         for n, role in enumerate(allowed_roles):
             role = ctx.guild.get_role(role)
