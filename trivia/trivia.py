@@ -56,25 +56,6 @@ class trivia(commands.Cog):
         self.config.register_guild(**default_guild)
         
     #--------------# COMMANDS #--------------#
-                          
-    async def checker(self):
-        await self.bot.get_channel(454268474534133762).send("ciao")
-        guild = self.bot.get_guild(454261607799717888)
-        setup = await self.config.guild(guild).setup()
-        time = setup["time"]
-        now = datetime.datetime.now()
-        if now.hour < time:
-            post_time = datetime.datetime(now.year, now.month, now.day, time)
-        else:
-            hop = now + datetime.timedelta(day = 1) - datetime.timedelta(hours = now.hour - time)
-            post_time = datetime.datetime(hop.year, hop.month, hop.day, hop.hour)
-        delta_time = post_time - now
-        await self.bot.get_channel(454268474534133762).send(str(delta_time))
-        await sleep(delta_time.seconds)
-        while True:
-            await post(self, guild)
-            await sleep(86400) #1 day
-
 
     @commands.guild_only()
     @commands.command()
@@ -230,7 +211,26 @@ class trivia(commands.Cog):
             await self.config.guild(ctx.guild).setup.set(setup)
             await ctx.message.add_reaction("✅")
 
-  #------------# EVENT #------------#
+                            
+    #------------# EVENT #------------#
+                            
+    async def checker(self):
+        await self.bot.get_channel(454268474534133762).send("ciao")
+        guild = self.bot.get_guild(454261607799717888)
+        setup = await self.config.guild(guild).setup()
+        time = setup["time"]
+        now = datetime.datetime.now()
+        if now.hour < time:
+            post_time = datetime.datetime(now.year, now.month, now.day, time)
+        else:
+            hop = now + datetime.timedelta(day = 1) - datetime.timedelta(hours = now.hour - time)
+            post_time = datetime.datetime(hop.year, hop.month, hop.day, hop.hour)
+        delta_time = post_time - now
+        await self.bot.get_channel(454268474534133762).send(str(delta_time))
+        await sleep(delta_time.seconds)
+        while True:
+            await post(self, guild)
+            await sleep(86400) #1 day
                     
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
