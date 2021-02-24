@@ -9,6 +9,8 @@ from redbot.core import Config, commands
 from redbot.core.bot import Red
 import asyncio
 
+BaseCog = getattr(commands, "Cog", object)
+
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
 
 async def post(self, guild):
@@ -42,7 +44,7 @@ async def post(self, guild):
     }
     await self.config.guild(guild).reaction.set(data)
 
-class trivia(commands.Cog):
+class trivia(BaseCog):
     """Pubblicare domande quotidianamente"""
     # Cog creato da MettiusHyper#2100
 
