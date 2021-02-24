@@ -1,17 +1,20 @@
+import asyncio
 import datetime
-from asyncio import sleep
 import discord
 import requests
 import random
+
+from asyncio import sleep
 from requests.api import post
 from discord.ext import tasks
 from redbot.core import Config, commands
 from redbot.core.bot import Red
-import asyncio
+
 
 BaseCog = getattr(commands, "Cog", object)
 
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
+
 
 async def post(self, guild):
     setup = await self.config.guild(guild).setup()
