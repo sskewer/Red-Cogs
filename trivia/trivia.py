@@ -16,7 +16,7 @@ async def post(self, guild):
     hex_int = int(setup['color'].replace("#", "0x"), 16)
     questions = await self.config.guild(guild).questions()
     if len(questions) < 1:
-        #nessuna domanda memorizzata, va inviato un avviso
+        # Nessuna domanda memorizzata, va inviato un avviso
         return await guild.get_channel(680459534463926294).send(":warning: **Attenzione:** Le domande memorizzate nel DB sono finite, usate il comando **`?domanda`** per aggiungerne altre.")
     question = random.choice(questions)
     all_answers = question['incorrect_answers']
@@ -54,6 +54,10 @@ class trivia(commands.Cog):
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
         self.checker.start()
+        
+    def cog_unload(self):
+        self.checker.cancel()
+        self.daily_post.cancel()
         
         
     #--------------# COMMANDS #--------------#
@@ -252,9 +256,11 @@ class trivia(commands.Cog):
             post_time = datetime.datetime(hop.year, hop.month, hop.day, hop.hour)
         delta_time = post_time - now
         await sleep(delta_time.seconds)
-        while True:
-            await post(self, guild)
-            await sleep(86400) #1 day
+        self.daily_post.start()
+                            
+    @tasks.loop(seconds=86400.0)
+    async def daily_post(self, guild):
+        await post(self, guild)
                     
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
