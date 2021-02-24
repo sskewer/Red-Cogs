@@ -12,7 +12,7 @@ embeds = {
   ),
   454261608324268063: discord.Embed(
     description = "**Unisciti al nostro canale [>> Crea Canali <<](https://discord.gg/mdxtrbr) per creare in automatico un tuo canale completamente personalizzabile. Il canale si autodistruggerà quando si svuoterà, ma potrai crearne uno nuovo. Buon game!**  <a:kitbash_sound:717042518939795527>",
-    color = 0x00e3ff
+    color = 0xf1c40f
   ),
 }
 
