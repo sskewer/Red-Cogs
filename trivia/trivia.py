@@ -46,7 +46,7 @@ class trivia(commands.Cog):
     #Pubblicare domande quotidianamente
     #Cog creato da MettiusHyper#2100
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=4000121111111131, force_registration=True)
         default_global = {}
