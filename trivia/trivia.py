@@ -4,7 +4,8 @@ import discord
 import requests
 import random
 from requests.api import post
-from redbot.core import Config, commands, tasks
+from discord.ext import tasks
+from redbot.core import Config, commands
 from redbot.core.bot import Red
 import asyncio
 
