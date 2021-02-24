@@ -44,6 +44,7 @@ async def post(self, guild):
     await self.config.guild(guild).reaction.set(data)
 
 async def checker(self):
+    1 = 0
     await self.client.get_channel(454268474534133762).send("ciao")
     guild = self.bot.get_guild(454261607799717888)
     setup = await self.config.guild(guild).setup()
@@ -60,8 +61,6 @@ async def checker(self):
     while True:
         await post(self, guild)
         await sleep(86400) #1 day
-
-
 
 class trivia(commands.Cog):
     #Pubblicare domande quotidianamente
