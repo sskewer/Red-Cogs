@@ -46,16 +46,13 @@ class trivia(commands.Cog):
     #Pubblicare domande quotidianamente
     #Cog creato da MettiusHyper#2100
   
-    def __init__(self, bot: Red):
+    async def __init__(self, bot: Red):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=4000121111111131, force_registration=True)
         default_global = {}
         default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294}, "reaction" : {}}
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
-        
-    async def setup(self):
-        await self.client.get_channel(454268474534133762).send("ciao")
 
     #--------------# COMMANDS #--------------#
 
