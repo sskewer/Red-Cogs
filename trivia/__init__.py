@@ -5,4 +5,4 @@ from .trivia import trivia
 async def setup(bot: Red):
     quiz = trivia(bot)
     bot.add_cog(quiz)
-    await quiz.checker()
+    bot.loop.create_task(quiz.checker())
