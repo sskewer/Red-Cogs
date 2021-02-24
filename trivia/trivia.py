@@ -223,7 +223,7 @@ class trivia(commands.Cog):
         if now.hour < time:
             post_time = datetime.datetime(now.year, now.month, now.day, time)
         else:
-            hop = now + datetime.timedelta(day = 1) - datetime.timedelta(hours = now.hour - time)
+            hop = now + datetime.timedelta(days = 1) - datetime.timedelta(hours = now.hour - time)
             post_time = datetime.datetime(hop.year, hop.month, hop.day, hop.hour)
         delta_time = post_time - now
         await self.bot.get_channel(454268474534133762).send(str(delta_time))
