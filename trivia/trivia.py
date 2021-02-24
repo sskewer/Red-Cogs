@@ -54,8 +54,8 @@ class trivia(commands.Cog):
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
         
-    def setup(self):
-        1 = 0
+    async def setup(self):
+        await self.client.get_channel(454268474534133762).send("ciao")
 
     #--------------# COMMANDS #--------------#
 
