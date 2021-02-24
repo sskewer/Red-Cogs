@@ -128,11 +128,14 @@ class trivia(commands.Cog):
     @trivia.command()
     async def force_post(self, ctx: commands.Context):
         """Posta forzatamente il quiz"""
+        await ctx.send("a")
         allowed_roles = [454262524955852800, 454262403819896833]
         for n, role in enumerate(allowed_roles):
+            await ctx.send("b")
             role = ctx.guild.get_role(role)
             allowed_roles[n] = role
         if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
+            await ctx.send("c")
             await post(ctx.guild)
     
     @trivia.command(aliases = ["lb"])
