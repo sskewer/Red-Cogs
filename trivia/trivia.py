@@ -7,6 +7,9 @@ from requests.api import post
 from redbot.core import Config, commands
 from redbot.core.bot import Red
 import asyncio
+import nest_asyncio
+nest_asyncio.apply()
+__import__('IPython').embed()
 
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
 
