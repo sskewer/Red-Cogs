@@ -10,15 +10,12 @@ from redbot.core.bot import Red
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
 
 async def post(self, guild):
-        await guild.get_channel(454268474534133762).send("1")
-        await self.config.guild(guild).score.set({})
         setup = await self.config.guild(guild).setup()
         hex_int = int(setup['color'].replace("#", "0x"), 16)
         questions = await self.config.guild(guild).questions()
         if len(questions) < 1:
             #nessuna domanda memorizzata, va inviato un avviso
             return await guild.get_channel(680459534463926294).send(":warning: Le domande memorizzate nel database sono finite, usate il comando `?domanda` per aggiungerne altre :warning:")
-        await guild.get_channel(454268474534133762).send("2")
         question = random.choice(questions)
         embed = discord.Embed(description = f"**{question['question']}**", color = hex_int)
         embed.set_footer(text = guild.name, icon_url = guild.icon_url)
@@ -26,7 +23,6 @@ async def post(self, guild):
             embed.set_image(url = question['image'])
         except:
             pass
-        await guild.get_channel(454268474534133762).send("3")
         all_answers = question['incorrect_answers']
         all_answers.append(question['correct_answer'])
         await guild.get_channel(454268474534133762).send(str(all_answers))
@@ -37,7 +33,6 @@ async def post(self, guild):
             value += f"**{n + 1}.** `{answer}`"
         embed.add_field(name = "Risposte:", value = value.strip())
         msg = await guild.get_channel(setup['channel']).send(embed = embed)
-        await guild.get_channel(454268474534133762).send("4")
         for n, answer in enumerate(all_answers):
             await msg.add_reaction(reactions[n])
         data = {
@@ -46,7 +41,6 @@ async def post(self, guild):
             "users" : []
         }
         await self.config.guild(guild).reaction.set(data)
-        await guild.get_channel(454268474534133762).send("5")
 
 class trivia(commands.Cog):
     #Pubblicare domande quotidianamente
@@ -240,22 +234,25 @@ class trivia(commands.Cog):
         guild = self.bot.get_guild(454261607799717888)
         data = await self.config.guild(guild).reaction()
         await guild.get_channel(454268474534133762).send("REAZIONE")
-        if data["message"] == payload.message_id:
-            if payload.user_id not in data["users"]:
-                if str(payload.emoji) in reactions:
-                    await guild.get_channel(454268474534133762).send("ab")
-                    if reactions.index(str(payload.emoji)) == data["correct"]:
-                        await guild.get_channel(454268474534133762).send("rap futuristico")
-                        score = await self.config.guild(guild).score()
-                        try:
-                            old_score = score[str(payload.user_id)]
-                        except:
-                            old_score = 0
-                        score.update({payload.user_id : old_score + 1})
-                    users = data["users"]
-                    users.append(payload.user_id)
-                    data.update({"users" : users})
-                    await self.config.guild(guild).reaction().set(data)
-            await guild.get_channel(454268474534133762).send("abab")
-            msg = await guild.get_channel(payload.channel_id).fetch_message(payload.message_id)
-            await msg.remove_reaction(payload.emoji, guild.get_member(payload.user_id))
+        if guild.get_member(payload.user_id).bot == False:
+                if data["message"] == payload.message_id:
+                    if payload.user_id not in data["users"]:
+                        if str(payload.emoji) in reactions:
+                            await guild.get_channel(454268474534133762).send("ab")
+                            if reactions.index(str(payload.emoji)) == data["correct"]:
+                                await guild.get_channel(454268474534133762).send("rap futuristico")
+                                score = await self.config.guild(guild).score()
+                                try:
+                                    old_score = score[str(payload.user_id)]
+                                except:
+                                    old_score = 0
+                                score.update({payload.user_id : old_score + 1})
+                                await self.config.guild(guild).score().set(score)
+                            users = data["users"]
+                            users.append(payload.user_id)
+                            data.update({"users" : users})
+                            await guild.get_channel(454268474534133762).send(str(users))
+                            await self.config.guild(guild).reaction().set(data)
+                    await guild.get_channel(454268474534133762).send("abab")
+                    msg = await guild.get_channel(payload.channel_id).fetch_message(payload.message_id)
+                    await msg.remove_reaction(payload.emoji, guild.get_member(payload.user_id))
