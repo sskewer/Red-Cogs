@@ -6,6 +6,7 @@ import random
 from requests.api import post
 from redbot.core import Config, commands
 from redbot.core.bot import Red
+import asyncio
 
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
 
@@ -45,17 +46,24 @@ async def post(self, guild):
 class trivia(commands.Cog):
     #Pubblicare domande quotidianamente
     #Cog creato da MettiusHyper#2100
-  
-    async def __init__(self, bot: Red):
+
+    def run_and_get(coro):
+            task = asyncio.create_task(coro)
+            asyncio.get_running_loop().run_until_complete(task)
+            return task.result()
+
+    def __init__(self, bot: Red):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=4000121111111131, force_registration=True)
         default_global = {}
         default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294}, "reaction" : {}}
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
-        await self.client.get_channel(454268474534133762).send("ciao")
-        return None
-
+        super().__init__(bot: Red)
+        run_and_get(checker(self))
+  
+    def __init__(self, bot: Red):
+        
     #--------------# COMMANDS #--------------#
 
     @commands.guild_only()
