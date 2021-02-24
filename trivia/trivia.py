@@ -61,8 +61,6 @@ class trivia(commands.Cog):
         self.config.register_guild(**default_guild)
         super().__init__(bot)
         run_and_get(checker(self))
-  
-    def __init__(self, bot: Red):
         
     #--------------# COMMANDS #--------------#
 
