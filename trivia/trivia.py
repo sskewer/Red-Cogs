@@ -53,6 +53,9 @@ class trivia(commands.Cog):
         default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294}, "reaction" : {}}
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
+        
+    def setup(self):
+        1 = 0
 
     #--------------# COMMANDS #--------------#
 
