@@ -53,13 +53,13 @@ class trivia(commands.Cog):
         return task.result()
 
     def __init__(self, bot: Red):
+        super().__init__()
         self.bot = bot
         self.config = Config.get_conf(self, identifier=4000121111111131, force_registration=True)
         default_global = {}
         default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294}, "reaction" : {}}
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
-        super().__init__(bot)
         run_and_get(checker(self))
         
     #--------------# COMMANDS #--------------#
