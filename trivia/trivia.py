@@ -242,7 +242,7 @@ class trivia(commands.Cog):
                             
     #------------# EVENT #------------#
     
-    @tasks.loop(seconds=1.0, count=1)
+    @tasks.loop(seconds=1, count=1)
     async def checker(self):
         guild = self.bot.get_guild(454261607799717888)
         await guild.get_channel(710078958036582471).send("Test")
@@ -258,7 +258,7 @@ class trivia(commands.Cog):
         await sleep(delta_time.seconds)
         self.daily_post.start()
                             
-    @tasks.loop(seconds=86400.0)
+    @tasks.loop(days=1)
     async def daily_post(self, guild):
         await post(self, guild)
                     
