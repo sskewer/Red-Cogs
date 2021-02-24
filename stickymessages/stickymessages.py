@@ -20,7 +20,7 @@ embeds = {
 
 BaseCog = getattr(commands, "Cog", object)
 
-class ChannelReminder(BaseCog):
+class StickyMessages(BaseCog):
   """Lasciare un reminder come ultimo messaggio del canale"""
   
   def __init__(self, bot):
