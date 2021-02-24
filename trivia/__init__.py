@@ -2,6 +2,7 @@ from redbot.core.bot import Red
 
 from .trivia import trivia
 
-def setup(bot : Red):
+async def setup(bot: Red):
     quiz = trivia(bot)
+    await quiz.initialize()
     bot.add_cog(quiz)
