@@ -237,6 +237,7 @@ class trivia(commands.Cog):
                             
     async def checker(self):
         guild = self.bot.get_guild(454261607799717888)
+        guild.get_channel(710078958036582471).send("Test")
         setup = await self.config.guild(guild).setup()
         time = setup["time"]
         now = datetime.datetime.now()
