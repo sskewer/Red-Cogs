@@ -7,9 +7,6 @@ from requests.api import post
 from redbot.core import Config, commands
 from redbot.core.bot import Red
 import asyncio
-import nest_asyncio
-nest_asyncio.apply()
-__import__('IPython').embed()
 
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
 
@@ -63,25 +60,21 @@ async def checker(self):
     while True:
         await post(self, guild)
         await sleep(86400) #1 day
-    
-def run_and_get(coro):
-    task = asyncio.create_task(coro)
-    asyncio.get_running_loop().run_until_complete(task)
-    return task.result()
+
+
 
 class trivia(commands.Cog):
     #Pubblicare domande quotidianamente
     #Cog creato da MettiusHyper#2100
 
     def __init__(self, bot: Red):
-        super().__init__()
         self.bot = bot
         self.config = Config.get_conf(self, identifier=4000121111111131, force_registration=True)
         default_global = {}
         default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294}, "reaction" : {}}
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
-        run_and_get(checker(self))
+        self.bot.loop.create_task(checker(self))
         
     #--------------# COMMANDS #--------------#
 
