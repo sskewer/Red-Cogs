@@ -43,8 +43,8 @@ async def post(self, guild):
     await self.config.guild(guild).reaction.set(data)
 
 class trivia(commands.Cog):
-    #Pubblicare domande quotidianamente
-    #Cog creato da MettiusHyper#2100
+    """Pubblicare domande quotidianamente"""
+    # Cog creato da MettiusHyper#2100
 
     def __init__(self, bot):
         self.bot = bot
@@ -54,9 +54,7 @@ class trivia(commands.Cog):
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
         self.checker.start()
-
-    def cog_unload(self):
-        self.checker.cancel()
+        
         
     #--------------# COMMANDS #--------------#
 
