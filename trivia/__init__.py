@@ -4,5 +4,3 @@ from .trivia import trivia
 def setup(bot : Red):
     quiz = trivia(bot)
     bot.add_cog(quiz)
-    self.bot = bot
-    trivia.checker(self)
