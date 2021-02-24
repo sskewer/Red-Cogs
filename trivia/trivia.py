@@ -9,19 +9,7 @@ from redbot.core.bot import Red
 
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
 
-class trivia(commands.Cog):
-    #Pubblicare domande quotidianamente
-    #Cog creato da MettiusHyper#2100
-  
-    def __init__(self, bot: Red):
-        self.bot = bot
-        self.config = Config.get_conf(self, identifier=4000121111111131, force_registration=True)
-        default_global = {}
-        default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294}, "reaction" : {}}
-        self.config.register_global(**default_global)
-        self.config.register_guild(**default_guild)
-  
-    async def post(self, guild):
+async def post(self, guild):
         await guild.get_channel(454268474534133762).send("1")
         await self.config.guild(guild).score.set({})
         setup = await self.config.guild(guild).setup()
@@ -57,6 +45,18 @@ class trivia(commands.Cog):
         }
         await self.config.guild(guild).reaction.set(data)
         await guild.get_channel(454268474534133762).send("5")
+
+class trivia(commands.Cog):
+    #Pubblicare domande quotidianamente
+    #Cog creato da MettiusHyper#2100
+  
+    def __init__(self, bot: Red):
+        self.bot = bot
+        self.config = Config.get_conf(self, identifier=4000121111111131, force_registration=True)
+        default_global = {}
+        default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294}, "reaction" : {}}
+        self.config.register_global(**default_global)
+        self.config.register_guild(**default_guild)
 
     #--------------# COMMANDS #--------------#
 
@@ -128,15 +128,13 @@ class trivia(commands.Cog):
     @trivia.command()
     async def force_post(self, ctx: commands.Context):
         """Posta forzatamente il quiz"""
-        await ctx.send("a")
         allowed_roles = [454262524955852800, 454262403819896833]
         for n, role in enumerate(allowed_roles):
-            await ctx.send("b")
             role = ctx.guild.get_role(role)
             allowed_roles[n] = role
         if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
             await ctx.send("c")
-            await post(ctx.guild)
+            await post(self, ctx.guild)
     
     @trivia.command(aliases = ["lb"])
     async def leaderboard(self, ctx: commands.Context):
