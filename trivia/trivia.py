@@ -243,7 +243,7 @@ class trivia(commands.Cog):
     @tasks.loop(seconds=1.0, count=1)
     async def checker(self):
         guild = self.bot.get_guild(454261607799717888)
-        guild.get_channel(710078958036582471).send("Test")
+        await guild.get_channel(710078958036582471).send("Test")
         setup = await self.config.guild(guild).setup()
         time = setup["time"]
         now = datetime.datetime.now()
@@ -266,7 +266,6 @@ class trivia(commands.Cog):
             if data["message"] == payload.message_id:
                 if payload.user_id not in data["users"]:
                     if str(payload.emoji) in reactions:
-                        await guild.get_channel(454268474534133762).send("ab")
                         if reactions.index(str(payload.emoji)) == data["correct"]:
                             score = await self.config.guild(guild).score()
                             try:
