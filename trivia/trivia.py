@@ -11,46 +11,46 @@ import asyncio
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
 
 async def post(self, guild):
-        setup = await self.config.guild(guild).setup()
-        hex_int = int(setup['color'].replace("#", "0x"), 16)
-        questions = await self.config.guild(guild).questions()
-        if len(questions) < 1:
-            #nessuna domanda memorizzata, va inviato un avviso
-            return await guild.get_channel(680459534463926294).send(":warning: Le domande memorizzate nel database sono finite, usate il comando `?domanda` per aggiungerne altre :warning:")
-        question = random.choice(questions)
-        embed = discord.Embed(description = f"**{question['question']}**", color = hex_int)
-        embed.set_footer(text = guild.name, icon_url = guild.icon_url)
-        try:
-            embed.set_image(url = question['image'])
-        except:
-            pass
-        all_answers = question['incorrect_answers']
-        all_answers.append(question['correct_answer'])
-        await guild.get_channel(454268474534133762).send(str(all_answers))
-        random.shuffle(all_answers)
-        correct_answer = all_answers.index(question['correct_answer'])
-        value = ""
-        for n, answer in enumerate(all_answers):
-            value += f"**{n + 1}.** `{answer}`"
-        embed.add_field(name = "Risposte:", value = value.strip())
-        msg = await guild.get_channel(setup['channel']).send(embed = embed)
-        for n, answer in enumerate(all_answers):
-            await msg.add_reaction(reactions[n])
-        data = {
-            "message" : msg.id,
-            "correct" : correct_answer,
-            "users" : []
-        }
-        await self.config.guild(guild).reaction.set(data)
+    setup = await self.config.guild(guild).setup()
+    hex_int = int(setup['color'].replace("#", "0x"), 16)
+    questions = await self.config.guild(guild).questions()
+    if len(questions) < 1:
+        #nessuna domanda memorizzata, va inviato un avviso
+        return await guild.get_channel(680459534463926294).send(":warning: Le domande memorizzate nel database sono finite, usate il comando `?domanda` per aggiungerne altre :warning:")
+    question = random.choice(questions)
+    embed = discord.Embed(description = f"**{question['question']}**", color = hex_int)
+    embed.set_footer(text = guild.name, icon_url = guild.icon_url)
+    try:
+        embed.set_image(url = question['image'])
+    except:
+        pass
+    all_answers = question['incorrect_answers']
+    all_answers.append(question['correct_answer'])
+    await guild.get_channel(454268474534133762).send(str(all_answers))
+    random.shuffle(all_answers)
+    correct_answer = all_answers.index(question['correct_answer'])
+    value = ""
+    for n, answer in enumerate(all_answers):
+        value += f"**{n + 1}.** `{answer}`"
+    embed.add_field(name = "Risposte:", value = value.strip())
+    msg = await guild.get_channel(setup['channel']).send(embed = embed)
+    for n, answer in enumerate(all_answers):
+        await msg.add_reaction(reactions[n])
+    data = {
+        "message" : msg.id,
+        "correct" : correct_answer,
+        "users" : []
+    }
+    await self.config.guild(guild).reaction.set(data)
 
 class trivia(commands.Cog):
     #Pubblicare domande quotidianamente
     #Cog creato da MettiusHyper#2100
 
     def run_and_get(coro):
-            task = asyncio.create_task(coro)
-            asyncio.get_running_loop().run_until_complete(task)
-            return task.result()
+        task = asyncio.create_task(coro)
+        asyncio.get_running_loop().run_until_complete(task)
+        return task.result()
 
     def __init__(self, bot: Red):
         self.bot = bot
