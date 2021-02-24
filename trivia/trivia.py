@@ -146,7 +146,7 @@ class trivia(commands.Cog):
                 description += f"**{n + 1}.** {ctx.guild.get_member(el)}(`{el}`)\n"
             await ctx.send(embed = discord.Embed(
                 title = "LeaderBoard",description = description.strip(), color = hex_int
-            )).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
+            ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url))
 
     @trivia.command()
     async def current(self, ctx: commands.Context):
