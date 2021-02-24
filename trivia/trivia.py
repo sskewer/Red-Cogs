@@ -22,13 +22,15 @@ class trivia(commands.Cog):
         self.config.register_guild(**default_guild)
   
     async def post(self, guild):
+        await guild.get_channel(454268474534133762).send("1")
         await self.config.guild(guild).score.set({})
         setup = await self.config.guild(guild).setup()
         hex_int = int(setup['color'].replace("#", "0x"), 16)
         questions = await self.config.guild(guild).questions()
-        if len(questions) == 0:
-            #nessuna immagine memorizzata, va inviato un avviso
+        if len(questions) < 1:
+            #nessuna domanda memorizzata, va inviato un avviso
             return await guild.get_channel(680459534463926294).send(":warning: Le domande memorizzate nel database sono finite, usate il comando `?domanda` per aggiungerne altre :warning:")
+        await guild.get_channel(454268474534133762).send("2")
         question = random.choice(questions)
         embed = discord.Embed(description = f"**{question['question']}**", color = hex_int)
         embed.set_footer(text = guild.name, icon_url = guild.icon_url)
@@ -36,15 +38,16 @@ class trivia(commands.Cog):
             embed.set_image(url = question['image'])
         except:
             pass
+        await guild.get_channel(454268474534133762).send("3")
         all_answers = question['incorrect_answers'].append(question['correct_answer'])
         random.shuffle(all_answers)
+        correct_answer = all_answers.index(question['correct_answer'])
         value = ""
         for n, answer in enumerate(all_answers):
             value += f"**{n + 1}.** `{answer}`"
-            if answer == question['correct_answer']:
-                correct_answer = n
         embed.add_field(name = "Risposte:", value = value.strip())
         msg = await guild.get_channel(setup['channel']).send(embed = embed)
+        await guild.get_channel(454268474534133762).send("4")
         for n, answer in enumerate(all_answers):
             await msg.add_reaction(reactions[n])
         data = {
@@ -53,6 +56,7 @@ class trivia(commands.Cog):
             "users" : []
         }
         await self.config.guild(guild).reaction.set(data)
+        await guild.get_channel(454268474534133762).send("5")
 
     #--------------# COMMANDS #--------------#
 
