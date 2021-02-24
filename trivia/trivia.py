@@ -27,7 +27,9 @@ async def post(self, guild):
         except:
             pass
         await guild.get_channel(454268474534133762).send("3")
-        all_answers = question['incorrect_answers'].append(question['correct_answer'])
+        all_answers = question['incorrect_answers']
+        all_answers.append(question['correct_answer'])
+        await guild.get_channel(454268474534133762).send(str(all_answers))
         random.shuffle(all_answers)
         correct_answer = all_answers.index(question['correct_answer'])
         value = ""
@@ -133,7 +135,6 @@ class trivia(commands.Cog):
             role = ctx.guild.get_role(role)
             allowed_roles[n] = role
         if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            await ctx.send("c")
             await post(self, ctx.guild)
     
     @trivia.command(aliases = ["lb"])
@@ -230,7 +231,7 @@ class trivia(commands.Cog):
         delta_time = post_time - now
         await sleep(delta_time.seconds)
         while True:
-            await post(guild)
+            await post(self, guild)
             await sleep(86400) #1 day
     
     @commands.Cog.listener()
