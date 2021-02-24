@@ -4,7 +4,7 @@ import discord
 import requests
 import random
 from requests.api import post
-from redbot.core import Config, commands
+from redbot.core import Config, commands, tasks
 from redbot.core.bot import Red
 import asyncio
 
@@ -52,6 +52,10 @@ class trivia(commands.Cog):
         default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294}, "reaction" : {}}
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
+        self.checker.start()
+
+    def cog_unload(self):
+        self.checker.cancel()
         
     #--------------# COMMANDS #--------------#
 
@@ -234,7 +238,8 @@ class trivia(commands.Cog):
 
                             
     #------------# EVENT #------------#
-                            
+    
+    @tasks.loop(seconds=1.0, count=1)
     async def checker(self):
         guild = self.bot.get_guild(454261607799717888)
         guild.get_channel(710078958036582471).send("Test")
