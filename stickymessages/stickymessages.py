@@ -28,13 +28,16 @@ class StickyMessages(BaseCog):
         
   @commands.Cog.listener()
   async def on_message(self, message):
-    to_send = embeds[message.channel.id]
-    if to_send != None and message.author.id != 710078958036582471:
-      async for msg in message.channel.history(limit=10):
-        if msg.author.id == 710078958036582471 and len(msg.embeds) > 0:
-          if msg.embeds[0].description == to_send.description:
-            await msg.delete()
-      await message.channel.send(embed=to_send)
+    try:
+      to_send = embeds[message.channel.id]
+      if to_send != None and message.author.id != 710078958036582471:
+        async for msg in message.channel.history(limit=10):
+          if msg.author.id == 710078958036582471 and len(msg.embeds) > 0:
+            if msg.embeds[0].description == to_send.description:
+              await msg.delete()
+        await message.channel.send(embed=to_send)
+    except:
+      pass
       
   @commands.guild_only()
   @commands.command()
