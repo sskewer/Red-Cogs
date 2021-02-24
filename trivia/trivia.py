@@ -58,7 +58,7 @@ class trivia(commands.Cog):
     #--------------# COMMANDS #--------------#
                           
     async def checker(self):
-        await self.client.get_channel(454268474534133762).send("ciao")
+        await self.bot.get_channel(454268474534133762).send("ciao")
         guild = self.bot.get_guild(454261607799717888)
         setup = await self.config.guild(guild).setup()
         time = setup["time"]
@@ -69,7 +69,7 @@ class trivia(commands.Cog):
             hop = now + datetime.timedelta(day = 1) - datetime.timedelta(hours = now.hour - time)
             post_time = datetime.datetime(hop.year, hop.month, hop.day, hop.hour)
         delta_time = post_time - now
-        await self.client.get_channel(454268474534133762).send(str(delta_time))
+        await self.bot.get_channel(454268474534133762).send(str(delta_time))
         await sleep(delta_time.seconds)
         while True:
             await post(self, guild)
