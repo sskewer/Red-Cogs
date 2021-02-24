@@ -247,12 +247,12 @@ class trivia(commands.Cog):
                                 except:
                                     old_score = 0
                                 score.update({payload.user_id : old_score + 1})
-                                await self.config.guild(guild).score().set(score)
+                                await self.config.guild(guild).score.set(score)
                             users = data["users"]
                             users.append(payload.user_id)
                             data.update({"users" : users})
                             await guild.get_channel(454268474534133762).send(str(users))
-                            await self.config.guild(guild).reaction().set(data)
+                            await self.config.guild(guild).reaction.set(data)
                     await guild.get_channel(454268474534133762).send("abab")
                     msg = await guild.get_channel(payload.channel_id).fetch_message(payload.message_id)
                     await msg.remove_reaction(payload.emoji, guild.get_member(payload.user_id))
