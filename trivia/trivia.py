@@ -42,15 +42,15 @@ async def post(self, guild):
         "users" : []
     }
     await self.config.guild(guild).reaction.set(data)
+    
+def run_and_get(coro):
+    task = asyncio.create_task(coro)
+    asyncio.get_running_loop().run_until_complete(task)
+    return task.result()
 
 class trivia(commands.Cog):
     #Pubblicare domande quotidianamente
     #Cog creato da MettiusHyper#2100
-
-    def run_and_get(coro):
-        task = asyncio.create_task(coro)
-        asyncio.get_running_loop().run_until_complete(task)
-        return task.result()
 
     def __init__(self, bot: Red):
         super().__init__()
