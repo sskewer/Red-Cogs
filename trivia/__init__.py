@@ -4,4 +4,4 @@ from .trivia import trivia
 def setup(bot : Red):
     quiz = trivia(bot)
     bot.add_cog(quiz)
-    bot.loop.create_task(quiz.checker())
+    quiz.checker()
