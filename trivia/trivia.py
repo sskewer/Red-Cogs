@@ -249,7 +249,6 @@ class trivia(BaseCog):
     @tasks.loop(seconds=10, count=1)
     async def checker(self):
         guild = self.bot.get_guild(454261607799717888)
-        await guild.get_channel(454268474534133762).send(content="Test 1")
         setup = await self.config.guild(guild).setup()
         time = setup["time"]
         now = datetime.datetime.now()
@@ -259,13 +258,13 @@ class trivia(BaseCog):
             hop = now + datetime.timedelta(days = 1) - datetime.timedelta(hours = now.hour - time)
             post_time = datetime.datetime(hop.year, hop.month, hop.day, hop.hour)
         delta_time = post_time - now
-        await sleep(delta_time.seconds)
+        await sleep(30) #delta_time.seconds
         self.daily_post.start()
                             
     @tasks.loop(hours=24)
     async def daily_post(self):
         guild = self.bot.get_guild(454261607799717888)
-        await guild.get_channel(454268474534133762).send(content="Test 2")
+        await guild.get_channel(454268474534133762).send(content="Siiiiiii")
         await post(self, guild)
                     
     @commands.Cog.listener()
