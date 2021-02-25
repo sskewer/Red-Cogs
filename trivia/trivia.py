@@ -47,6 +47,7 @@ async def post(self, guild):
     }
     await self.config.guild(guild).reaction.set(data)
 
+    
 class trivia(BaseCog):
     """Pubblicare domande quotidianamente"""
     # Cog creato da MettiusHyper#2100
@@ -54,9 +55,7 @@ class trivia(BaseCog):
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=4000121111111131, force_registration=True)
-        default_global = {}
         default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294}, "reaction" : {}}
-        self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
         self.checker.start()
         
@@ -247,7 +246,7 @@ class trivia(BaseCog):
                             
     #------------# EVENT #------------#
     
-    @tasks.loop(seconds=1, count=1)
+    @tasks.loop(seconds=10, count=1)
     async def checker(self):
         guild = self.bot.get_guild(454261607799717888)
         await guild.get_channel(710078958036582471).send("Test")
