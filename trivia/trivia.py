@@ -16,7 +16,8 @@ BaseCog = getattr(commands, "Cog", object)
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
 
 
-async def post(self, guild):
+async def post(self):
+    guild = self.bot.get_guild(454261607799717888)
     setup = await self.config.guild(guild).setup()
     hex_int = int(setup['color'].replace("#", "0x"), 16)
     questions = await self.config.guild(guild).questions()
@@ -24,6 +25,9 @@ async def post(self, guild):
         # Nessuna domanda memorizzata, va inviato un avviso
         return await guild.get_channel(680459534463926294).send(":warning: **Attenzione:** Le domande memorizzate nel DB sono finite, usate il comando **`?domanda`** per aggiungerne altre.")
     question = random.choice(questions)
+    questions.remove(question)
+    await self.config.guild(guild).questions.set(questions)
+    time = datetime.datetime.now() + datetime.timedelta(hours = question['time'][0], minutes = question['time'][0])
     all_answers = question['incorrect_answers']
     all_answers.append(question['correct_answer'])
     random.shuffle(all_answers)
@@ -31,8 +35,8 @@ async def post(self, guild):
     value = ""
     for n, answer in enumerate(all_answers):
         value += f"**{n + 1}.** {answer}\n"
-    embed = discord.Embed(title = question['question'], description = value.strip() ,color = hex_int)
-    embed.set_footer(text = guild.name, icon_url = guild.icon_url)
+    embed = discord.Embed(title = question['question'], description = value.strip() ,color = hex_int, timestamp = time)
+    embed.set_footer(text = "Quiz in svolgimento", icon_url = guild.icon_url)
     try:
         embed.set_image(url = question['image'])
     except:
@@ -43,9 +47,25 @@ async def post(self, guild):
     data = {
         "message" : msg.id,
         "correct" : correct_answer,
-        "users" : []
+        "users" : [],
+        "time" : time
     }
     await self.config.guild(guild).reaction.set(data)
+
+async def close(self, post_message = None):
+    guild = self.bot.get_guild(454261607799717888)
+    setup = await self.config.guild(guild).setup()
+    reaction = await self.config.guild(guild).reaction()
+    if post_message == None:
+        post_message = reaction['message']
+    msg = await guild.get_channel(setup['channel']).fetch_message(int(post_message))
+    await msg.clear_reactions()
+    description = msg.embeds[0].description.split()
+    correct_answer = description[reaction['correct']]
+    correct_answer = correct_answer[7:]
+    embed = discord.Embed(title = msg.embeds[0].title, description = correct_answer, color = msg.embeds[0].color, timestamp = reaction['time'])
+    embed.set_footer(icon_url = guild.icon_url, text = "Quiz terminato")
+    await self.config.guild(guild).reaction.set({})
 
     
 class trivia(BaseCog):
@@ -101,6 +121,16 @@ class trivia(BaseCog):
             if image.attachments != []:
                 question.update({"image" : image.attachments[0].url})
 
+            await ctx.send("Quanto sarà il **tempo disponibile** per rispondere alla domanda? usa il formato `ore:minuti`.")
+            time = await self.bot.wait_for('message', check=check)
+            time = time.content.split(":")
+            try:
+                for n, el in enumerate(time):
+                    time[n] = int(time[n])
+            except:
+                return await ctx.send("Specifica un'orario nel **formato corretto** (`ore:minuti`), riprovare!")
+            question.update({"time" : time})
+            
             user_incorrect = ""
             for incorrect in question["incorrect_answers"]:
                 user_incorrect += f"• {incorrect}\n"
@@ -143,7 +173,21 @@ class trivia(BaseCog):
             role = ctx.guild.get_role(role)
             allowed_roles[n] = role
         if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            await post(self, ctx.guild)
+            await post(self)
+            await ctx.message.add_reaction("✅")
+    
+    @trivia.command()
+    async def close(self, ctx: commands.Context, msg_id : int = None):
+        """Posta forzatamente il quiz"""
+        allowed_roles = [454262524955852800, 454262403819896833, 454268394464870401]
+        for n, role in enumerate(allowed_roles):
+            role = ctx.guild.get_role(role)
+            allowed_roles[n] = role
+        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
+            if msg_id != None:
+                await close(self, msg_id)
+            else:
+                await close(self)
             await ctx.message.add_reaction("✅")
     
     @trivia.command(aliases = ["lb"])
@@ -266,11 +310,14 @@ class trivia(BaseCog):
     @tasks.loop(hours=24)
     async def daily_post(self):
         guild = self.bot.get_guild(454261607799717888)
-        await post(self, guild)
+        await post(self)
                             
     @tasks.loop(minutes=10)
     async def checker(self):
         # Check if questions ended
+        reaction = await self.config.guild(guild).reaction()
+        if reaction['time'] < datetime.datetime.now():
+            await close(self)
                     
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
