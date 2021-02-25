@@ -176,7 +176,7 @@ class trivia(BaseCog):
             await ctx.message.add_reaction("✅")
     
     @trivia.command()
-    async def close(self, ctx: commands.Context, msg_id : int = None):
+    async def close(self, ctx: commands.Context, msg_id: int = None):
         """Chiude forzatamente il quiz"""
         allowed_roles = [454262524955852800, 454262403819896833, 454268394464870401]
         for n, role in enumerate(allowed_roles):
@@ -188,6 +188,30 @@ class trivia(BaseCog):
             else:
                 await close_post(self)
             await ctx.message.add_reaction("✅")
+                            
+    @trivia.command()
+    async def remove(self, ctx: commands.Context, value: int):
+        """Rimuove un quiz dal database"""
+        allowed_roles = [454262524955852800, 454262403819896833, 454268394464870401]
+        for n, role in enumerate(allowed_roles):
+            role = ctx.guild.get_role(role)
+            allowed_roles[n] = role
+        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
+            questions = await self.config.guild(ctx.guild).questions()
+            question = questions[value - 1]
+            msg = await ctx.send(f"Sicuro di **rimuovere** ia seguente quiz?\n```{question['question']}```")
+            await msg.add_reaction("✅")
+            def reaction_check(reaction, user):
+                return user.id == ctx.message.author.id and str(reaction.emoji) == "✅" and reaction.message.id == msg.id
+            try:
+                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)
+                questions.remove(question)
+                await self.config.guild(ctx.guild).questions.set(questions)
+                await msg.delete()
+                await ctx.message.add_reaction("✅")
+            except asyncio.TimeoutError:
+                await msg.delete()
+                await ctx.message.add_reaction("🚫")
                             
     @trivia.command(aliases = ["db"])
     async def list(self, ctx: commands.Context, value: int = None):
