@@ -57,11 +57,13 @@ class trivia(BaseCog):
         self.config = Config.get_conf(self, identifier=4000121111111131, force_registration=True)
         default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294}, "reaction" : {}}
         self.config.register_guild(**default_guild)
+        self.start_post.start()
         self.checker.start()
         
     def cog_unload(self):
-        self.checker.cancel()
+        self.start_post.cancel()
         self.daily_post.cancel()
+        self.checker.cancel()
         
         
     #--------------# COMMANDS #--------------#
@@ -247,7 +249,7 @@ class trivia(BaseCog):
     #------------# EVENT #------------#
     
     @tasks.loop(seconds=10, count=1)
-    async def checker(self):
+    async def start_post(self):
         guild = self.bot.get_guild(454261607799717888)
         setup = await self.config.guild(guild).setup()
         time = setup["time"]
@@ -265,6 +267,10 @@ class trivia(BaseCog):
     async def daily_post(self):
         guild = self.bot.get_guild(454261607799717888)
         await post(self, guild)
+                            
+    @tasks.loop(minutes=10)
+    async def checker(self):
+        # Check if questions ended
                     
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
