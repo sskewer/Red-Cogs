@@ -204,7 +204,7 @@ class trivia(BaseCog):
                 await ctx.send(content = "Non riesco a trovare **domande memorizzate** nel database.\nPuoi utilizzare il comando **`?domanda`** per aggiungerne altre.")
             else:          
                 if value is None:
-                    description = "```?trivia lista <numero>```"
+                    description = "```?trivia lista <numero>```\n"
                     for n, el in enumerate(questions):
                         description += f"**{n + 1}.** {el['question']}\n"
                     await ctx.send(embed = discord.Embed(
