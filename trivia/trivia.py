@@ -191,7 +191,7 @@ class trivia(BaseCog):
                             
     @trivia.command()
     async def remove(self, ctx: commands.Context, value: int):
-        """Rimuove un quiz dal database"""
+        """Rimuovere un quiz dal database"""
         allowed_roles = [454262524955852800, 454262403819896833, 454268394464870401]
         for n, role in enumerate(allowed_roles):
             role = ctx.guild.get_role(role)
@@ -201,8 +201,8 @@ class trivia(BaseCog):
             try:
                 question = questions[value - 1]
             except:
-                return await ctx.send(f"Non riesco ad **individuare la domanda** richiesta, riprovare!")
-            msg = await ctx.send(f"Sicuro di **rimuovere** ia seguente quiz?\n```{question['question']}```")
+                return await ctx.message.add_reaction("🚫")
+            msg = await ctx.send(f"Sicuro di **rimuovere** il seguente quiz?\n```{question['question']}```")
             await msg.add_reaction("✅")
             def reaction_check(reaction, user):
                 return user.id == ctx.message.author.id and str(reaction.emoji) == "✅" and reaction.message.id == msg.id
