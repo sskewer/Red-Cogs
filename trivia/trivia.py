@@ -165,6 +165,19 @@ class trivia(BaseCog):
     async def trivia(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             pass
+   
+    @trivia.command()
+    async def clear(self, ctx: commands.Context):
+        """Chiude forzatamente il quiz"""
+        allowed_roles = [454262524955852800, 454262403819896833, 454268394464870401]
+        for n, role in enumerate(allowed_roles):
+            role = ctx.guild.get_role(role)
+            allowed_roles[n] = role
+        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
+            await self.config.guild(ctx.guild).questions.set([])
+            await self.config.guild(ctx.guild).reaction.set({})
+            await self.config.guild(ctx.guild).score.set({})
+            await ctx.message.add_reaction("✅")
         
     @trivia.command()
     async def force(self, ctx: commands.Context):
@@ -209,7 +222,7 @@ class trivia(BaseCog):
             ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url))
     
     @trivia.command()
-    async def cleardb(self, ctx: commands.Context):
+    async def clearlb(self, ctx: commands.Context):
         allowed_roles = [454262524955852800, 454262403819896833]
         for n, role in enumerate(allowed_roles):
             role = ctx.guild.get_role(role)
