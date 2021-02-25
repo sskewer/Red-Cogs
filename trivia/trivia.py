@@ -165,20 +165,7 @@ class trivia(BaseCog):
     async def trivia(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             pass
-   
-    @trivia.command()
-    async def clear(self, ctx: commands.Context):
-        """Chiude forzatamente il quiz"""
-        allowed_roles = [454262524955852800, 454262403819896833, 454268394464870401]
-        for n, role in enumerate(allowed_roles):
-            role = ctx.guild.get_role(role)
-            allowed_roles[n] = role
-        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            await self.config.guild(ctx.guild).questions.set([])
-            await self.config.guild(ctx.guild).reaction.set({})
-            await self.config.guild(ctx.guild).score.set({})
-            await ctx.message.add_reaction("✅")
-        
+
     @trivia.command()
     async def force(self, ctx: commands.Context):
         """Posta forzatamente il quiz"""
@@ -206,6 +193,7 @@ class trivia(BaseCog):
     
     @trivia.command(aliases = ["lb"])
     async def leaderboard(self, ctx: commands.Context):
+        """Visualizzare la classifica in base alle risposte corrette"""
         allowed_roles = [454262524955852800, 454262403819896833, 454268394464870401]
         for n, role in enumerate(allowed_roles):
             role = ctx.guild.get_role(role)
@@ -223,6 +211,7 @@ class trivia(BaseCog):
     
     @trivia.command()
     async def clearlb(self, ctx: commands.Context):
+        """Resettare la classifica"""
         allowed_roles = [454262524955852800, 454262403819896833]
         for n, role in enumerate(allowed_roles):
             role = ctx.guild.get_role(role)
@@ -240,9 +229,32 @@ class trivia(BaseCog):
             except asyncio.TimeoutError:
                 await msg.delete()
                 await ctx.message.add_reaction("🚫")
-
+   
+    @trivia.command()
+    async def cleardb(self, ctx: commands.Context):
+        """Resettare l2 domande"""
+        allowed_roles = [454262524955852800, 454262403819896833]
+        for n, role in enumerate(allowed_roles):
+            role = ctx.guild.get_role(role)
+            allowed_roles[n] = role
+        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
+            msg = await ctx.send(":warning: Sicuro di procedere?")
+            await msg.add_reaction("✅")
+            def reaction_check(reaction, user):
+                return user.id == ctx.message.author.id and str(reaction.emoji) == "✅" and reaction.message.id == msg.id
+            try:
+                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)
+                await self.config.guild(ctx.guild).questions.set([])
+                await self.config.guild(ctx.guild).reaction.set({})
+                await msg.delete()
+                await ctx.message.add_reaction("✅")
+            except asyncio.TimeoutError:
+                await msg.delete()
+                await ctx.message.add_reaction("🚫")
+        
     @trivia.command()
     async def current(self, ctx: commands.Context):
+        """Visualizzare la impostazioni correnti"""
         allowed_roles = [454262524955852800, 454262403819896833]
         for n, role in enumerate(allowed_roles):
             role = ctx.guild.get_role(role)
