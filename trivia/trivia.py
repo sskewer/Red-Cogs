@@ -272,7 +272,7 @@ class trivia(BaseCog):
     
     @trivia.command()
     async def color(self, ctx: commands.Context, value):
-        """Modificare il colore dell'embed nel database"""
+        """Modificare il colore dell'embed del quiz"""
         allowed_roles = [454262524955852800, 454262403819896833]
         for n, role in enumerate(allowed_roles):
             role = ctx.guild.get_role(role)
