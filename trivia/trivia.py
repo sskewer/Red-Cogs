@@ -11,10 +11,7 @@ from redbot.core import Config, commands
 from redbot.core.bot import Red
 
 
-BaseCog = getattr(commands, "Cog", object)
-
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
-
 
 async def post(self):
     guild = self.bot.get_guild(454261607799717888)
@@ -67,6 +64,7 @@ async def close_post(self, post_message = None):
     embed.set_footer(icon_url = guild.icon_url, text = "Quiz terminato")
     await self.config.guild(guild).reaction.set({})
 
+BaseCog = getattr(commands, "Cog", object)
     
 class trivia(BaseCog):
     """Pubblicare domande quotidianamente"""
@@ -145,7 +143,7 @@ class trivia(BaseCog):
                 embed.set_image(url = question["image"])
             except:
                 pass
-            embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Durata del quiz impostata a: {time[0]}:{time[1]}")
+            embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Durata del quiz impostata a {time[0]}:{time[1]}")
             msg = await ctx.send(content = "Reagisci con <:FNIT_ThumbsUp:454640434380013599> per **aggiungere la domanda**", embed = embed)
             await msg.add_reaction("<:FNIT_ThumbsUp:454640434380013599>")
             await msg.add_reaction("<:FNIT_ThumbsDown:454640434610700289>")
@@ -190,6 +188,44 @@ class trivia(BaseCog):
             else:
                 await close_post(self)
             await ctx.message.add_reaction("✅")
+                            
+    @trivia.command(aliases = ["db"])
+    async def list(self, ctx: commands.Context, value: int = None):
+        """Visualizzare la lista delle domande"""
+        allowed_roles = [536214242685091860, 454268394464870401, 454262524955852800, 454262403819896833]
+        for n, role in enumerate(allowed_roles):
+            role = ctx.guild.get_role(role)
+            allowed_roles[n] = role
+        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
+            questions = await self.config.guild(ctx.guild).questions()
+            setup = await self.config.guild(ctx.guild).setup()
+            hex_int = int(setup["color"].replace("#", "0x"), 16)
+            if len(questions) < 1:
+                await ctx.send(embed = discord.Embed(
+                    title = "Lista Domande", description = "```Nessuna domanda memorizzata```", color = hex_int
+                ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url))
+            else:          
+                if value is None:
+                    description = ""
+                    for n, el in enumerate(questions):
+                        description += f"**{n + 1}.** {el['question']}\n"
+                    await ctx.send(embed = discord.Embed(
+                        title = "Lista Domande", description = description.strip(), color = hex_int
+                    ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url))
+                else:
+                    question = questions[value - 1]
+                    user_incorrect = ""
+                    for incorrect in question["incorrect_answers"]:
+                        user_incorrect += f"• {incorrect}\n"
+                    embed = discord.Embed(title = question['question'], color = hex_int)
+                    embed.add_field(name = "Risposta Corretta", value = f"• {question['correct_answer']}", inline = False)
+                    embed.add_field(name = "Risposte Errate", value = user_incorrect, inline = False)
+                    try:
+                        embed.set_image(url = question["image"])
+                    except:
+                        pass
+                    embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Durata del quiz impostata a {time[0]}:{time[1]}")
+                    await ctx.send(content = f"Domanda n° **{value}**", embed = embed)
     
     @trivia.command(aliases = ["lb"])
     async def leaderboard(self, ctx: commands.Context):
@@ -204,7 +240,7 @@ class trivia(BaseCog):
             hex_int = int(setup["color"].replace("#", "0x"), 16)
             description = ""
             for n, el in enumerate(score):
-                description += f"**{n + 1}.** {ctx.guild.get_member(int(el))}(`{el}`)\n"
+                description += f"**{n + 1}.** {ctx.guild.get_member(int(el))} (`{el}`)\n"
             await ctx.send(embed = discord.Embed(
                 title = "Leaderboard", description = description.strip(), color = hex_int
             ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url))
