@@ -201,9 +201,7 @@ class trivia(BaseCog):
             setup = await self.config.guild(ctx.guild).setup()
             hex_int = int(setup["color"].replace("#", "0x"), 16)
             if len(questions) < 1:
-                await ctx.send(embed = discord.Embed(
-                    title = "Lista Domande", description = "```Nessuna domanda memorizzata```", color = hex_int
-                ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url))
+                await ctx.send(content = "Non riesco a trovare **domande memorizzate** nel database.\nPuoi utilizzare il comando **`?domanda`** per aggiungerne altre.")
             else:          
                 if value is None:
                     description = ""
