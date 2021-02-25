@@ -288,7 +288,7 @@ class trivia(BaseCog):
             
     @trivia.command()
     async def time(self, ctx: commands.Context, value : int):
-        """Modificare l'ora nel quale il sondaggio avrà luogo"""
+        """Modificare l'ora di invio del quiz"""
         allowed_roles = [454262524955852800, 454262403819896833]
         for n, role in enumerate(allowed_roles):
             role = ctx.guild.get_role(role)
@@ -304,7 +304,7 @@ class trivia(BaseCog):
     
     @trivia.command()
     async def channel(self, ctx: commands.Context, value : discord.TextChannel):
-        """Modificare il canale in cui viene inviato il quiz"""
+        """Modificare il canale di invio del quiz"""
         allowed_roles = [454262524955852800, 454262403819896833]
         for n, role in enumerate(allowed_roles):
             role = ctx.guild.get_role(role)
