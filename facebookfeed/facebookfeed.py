@@ -1,29 +1,34 @@
 import time
 import datetime
 import threading
-from asyncio import sleep
+import discord
+
 from contextlib import suppress
 from facebook_scraper import get_posts
-
-import discord
+from discord.ext import tasks
 from redbot.core import Config, commands
 from redbot.core.bot import Red
 from redbot.core.commands import Cog
 from redbot.core.data_manager import cog_data_path
 
 
-class FacebookFeed(Cog):
+BaseCog = getattr(commands, "Cog", object)
+
+
+class FacebookFeed(BaseCog):
   """Pubblicare i post di una pagina Facebook in un canale"""
   
-  def __init__(self, bot: Red):
+  def __init__(self, bot):
     super().__init__()
     self.bot = bot    
     self.config = Config.get_conf(self, identifier=4000121111111111, force_registration=True)
-    
-    default_global = {}
     default_guild = {"color": "#1a80e4", "avatar": "https://i.postimg.cc/CxFZfzGM/Facebook-Icon.png", "last_feed": None}
-    self.config.register_global(**default_global)
     self.config.register_guild(**default_guild)
+    self.checker.start()
+    
+  def cog_unload(self):
+    self.checker.cancel()
+  
   
   #--------------# COMMANDS #--------------#
   
@@ -102,33 +107,32 @@ class FacebookFeed(Cog):
         
   #------------# FEED CHECKER #------------#
   
+  @tasks.loop(minutes=10)
   async def checker(self):
-    while True:
-      checking = await self.bot.get_channel(786128085538963476).send(f"""[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Controllando nuovi feed...""")
-      post = next(get_posts('FortniteGameITALIA', pages=1))
-      guild = self.bot.get_guild(454261607799717888)
-      last_feed = await self.config.guild(guild).last_feed()
-      if last_feed != None and last_feed != post["post_id"]:
-        if post["text"] != None:
-          color = await self.config.guild(guild).color()
-          avatar = await self.config.guild(guild).avatar()
-          if post["post_url"] != None:
-            post_url = post["post_url"]
-          else:
-            post_url = "https://www.facebook.com/FortniteGameITALIA/"
-          if post["time"] != None:
-            ts = post["time"]
-          else:
-            ts = datetime.datetime.utcnow()
-          hex_int = int(color.replace("#", "0x"), 16)
-          embed = discord.Embed(colour = hex_int, description = post["text"], timestamp = ts)
-          embed.set_author(name = "Fortnite (@FortniteGameITALIA)", icon_url = avatar, url = post_url)
-          embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/CxFZfzGM/Facebook-Icon.png")
-          if post["image"] != None:
-            embed.set_image(url = post["image"])
-          msg = await self.bot.get_channel(454264582622412801).send(embed = embed)
-          await self.config.guild(guild).last_feed.set(post["post_id"])
-          await checking.channel.send(content = f"""[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nuovo post (`{str(post["post_id"])}`) inviato in <#454264582622412801>""", embed = embed)
-      else:
-        await checking.channel.send(f"""[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nessun nuovo feed trovato""")
-      await sleep(600)
+    checking = await self.bot.get_channel(786128085538963476).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Controllando nuovi feed...")
+    post = next(get_posts('FortniteGameITALIA', pages=1))
+    guild = self.bot.get_guild(454261607799717888)
+    last_feed = await self.config.guild(guild).last_feed()
+    if last_feed != None and last_feed != post["post_id"]:
+      if post["text"] != None:
+        color = await self.config.guild(guild).color()
+        avatar = await self.config.guild(guild).avatar()
+        if post["post_url"] != None:
+          post_url = post["post_url"]
+        else:
+          post_url = "https://www.facebook.com/FortniteGameITALIA/"
+        if post["time"] != None:
+          ts = post["time"]
+        else:
+          ts = datetime.datetime.utcnow()
+        hex_int = int(color.replace("#", "0x"), 16)
+        embed = discord.Embed(colour = hex_int, description = post["text"], timestamp = ts)
+        embed.set_author(name = "Fortnite (@FortniteGameITALIA)", icon_url = avatar, url = post_url)
+        embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/CxFZfzGM/Facebook-Icon.png")
+        if post["image"] != None:
+          embed.set_image(url = post["image"])
+        msg = await self.bot.get_channel(454264582622412801).send(embed = embed)
+        await self.config.guild(guild).last_feed.set(post["post_id"])
+        await checking.channel.send(content = f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nuovo post (`{str(post["post_id"])}`) inviato in <#454264582622412801>", embed = embed)
+    else:
+      await checking.channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nessun nuovo feed trovato")
