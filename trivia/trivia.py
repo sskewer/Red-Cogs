@@ -94,6 +94,9 @@ class trivia(BaseCog):
             role = ctx.guild.get_role(role)
             allowed_roles[n] = role
         if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
+            q = await self.config.guild(ctx.guild).questions()
+            if len(q) > 15:
+                return await ctx.send("Il **limite massimo** per le domande è stato raggiunto!\nProva ad eliminarne qualcuna con il comando `?trivia remove`")
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
             await ctx.send("Qual è la **domanda**?")
