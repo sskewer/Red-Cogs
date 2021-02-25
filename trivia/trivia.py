@@ -52,7 +52,7 @@ async def post(self):
     }
     await self.config.guild(guild).reaction.set(data)
 
-async def close(self, post_message = None):
+async def close_post(self, post_message = None):
     guild = self.bot.get_guild(454261607799717888)
     setup = await self.config.guild(guild).setup()
     reaction = await self.config.guild(guild).reaction()
@@ -121,14 +121,14 @@ class trivia(BaseCog):
             if image.attachments != []:
                 question.update({"image" : image.attachments[0].url})
 
-            await ctx.send("Quanto sarà il **tempo disponibile** per rispondere alla domanda? usa il formato `ore:minuti`.")
+            await ctx.send("Quale sarà la **durata** del quiz? Usa il formato `hh:mm`.")
             time = await self.bot.wait_for('message', check=check)
             time = time.content.split(":")
             try:
                 for n, el in enumerate(time):
                     time[n] = int(time[n])
             except:
-                return await ctx.send("Specifica un'orario nel **formato corretto** (`ore:minuti`), riprovare!")
+                return await ctx.send("Specifica un'orario nel **formato corretto** (`hh:mm`), riprovare!")
             question.update({"time" : time})
             
             user_incorrect = ""
@@ -145,6 +145,7 @@ class trivia(BaseCog):
                 embed.set_image(url = question["image"])
             except:
                 pass
+            embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Durata: {time[0]}:{time[1]}")
             msg = await ctx.send(content = "Reagisci con <:FNIT_ThumbsUp:454640434380013599> per **aggiungere la domanda**", embed = embed)
             await msg.add_reaction("<:FNIT_ThumbsUp:454640434380013599>")
             await msg.add_reaction("<:FNIT_ThumbsDown:454640434610700289>")
@@ -178,16 +179,16 @@ class trivia(BaseCog):
     
     @trivia.command()
     async def close(self, ctx: commands.Context, msg_id : int = None):
-        """Posta forzatamente il quiz"""
+        """Chiude forzatamente il quiz"""
         allowed_roles = [454262524955852800, 454262403819896833, 454268394464870401]
         for n, role in enumerate(allowed_roles):
             role = ctx.guild.get_role(role)
             allowed_roles[n] = role
         if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
             if msg_id != None:
-                await close(self, msg_id)
+                await close_post(self, msg_id)
             else:
-                await close(self)
+                await close_post(self)
             await ctx.message.add_reaction("✅")
     
     @trivia.command(aliases = ["lb"])
@@ -310,7 +311,7 @@ class trivia(BaseCog):
     @tasks.loop(hours=24)
     async def daily_post(self):
         guild = self.bot.get_guild(454261607799717888)
-        await post(self)
+        await close_post(self)
                             
     @tasks.loop(minutes=10)
     async def checker(self):
