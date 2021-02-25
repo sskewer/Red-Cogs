@@ -209,9 +209,10 @@ class trivia(BaseCog):
                         description += f"**{n + 1}.** {el['question']}\n"
                     await ctx.send(embed = discord.Embed(
                         title = "Lista Domande", description = description.strip(), color = hex_int
-                    ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url))
+                    ).set_footer(text = "Usa ?trivia lista <value> per altre info")
                 else:
                     question = questions[value - 1]
+                    time = question['time']
                     user_incorrect = ""
                     for incorrect in question["incorrect_answers"]:
                         user_incorrect += f"• {incorrect}\n"
