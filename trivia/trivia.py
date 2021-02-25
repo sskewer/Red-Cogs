@@ -143,7 +143,7 @@ class trivia(BaseCog):
                 embed.set_image(url = question["image"])
             except:
                 pass
-            embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Durata del quiz impostata a {time[0]}:{time[1]}")
+            embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Durata del quiz impostata a {time[0]} ore e {time[1]} minuti")
             msg = await ctx.send(content = "Reagisci con <:FNIT_ThumbsUp:454640434380013599> per **aggiungere la domanda**", embed = embed)
             await msg.add_reaction("<:FNIT_ThumbsUp:454640434380013599>")
             await msg.add_reaction("<:FNIT_ThumbsDown:454640434610700289>")
@@ -249,7 +249,7 @@ class trivia(BaseCog):
                         embed.set_image(url = question["image"])
                     except:
                         pass
-                    embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Durata del quiz impostata a {time[0]}:{time[1]}")
+                    embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Durata del quiz impostata a {time[0]} ore e {time[1]} minuti")
                     await ctx.send(content = f"Domanda n° **{value}**", embed = embed)
     
     @trivia.command(aliases = ["lb"])
