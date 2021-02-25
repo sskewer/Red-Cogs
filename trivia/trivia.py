@@ -232,7 +232,7 @@ class trivia(BaseCog):
    
     @trivia.command()
     async def cleardb(self, ctx: commands.Context):
-        """Resettare l2 domande"""
+        """Resettare le domande"""
         allowed_roles = [454262524955852800, 454262403819896833]
         for n, role in enumerate(allowed_roles):
             role = ctx.guild.get_role(role)
