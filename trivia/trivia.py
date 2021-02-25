@@ -198,7 +198,10 @@ class trivia(BaseCog):
             allowed_roles[n] = role
         if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
             questions = await self.config.guild(ctx.guild).questions()
-            question = questions[value - 1]
+            try:
+                question = questions[value - 1]
+            except:
+                return await ctx.send(f"Non riesco ad **individuare la domanda** richiesta, riprovare!")
             msg = await ctx.send(f"Sicuro di **rimuovere** ia seguente quiz?\n```{question['question']}```")
             await msg.add_reaction("✅")
             def reaction_check(reaction, user):
