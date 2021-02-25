@@ -48,7 +48,7 @@ async def post(self):
         "message" : msg.id,
         "correct" : correct_answer,
         "users" : [],
-        "time" : time
+        "time" : datetime.datetime.timestamp(time)
     }
     await self.config.guild(guild).reaction.set(data)
 
@@ -106,7 +106,7 @@ class trivia(BaseCog):
             await ctx.send("Qual è la **risposta corretta**?")
             correct_answer = await self.bot.wait_for('message', check=check)
 
-            await ctx.send("Scrivi ora le **risposte errate**, separate da una `,`")
+            await ctx.send("Scrivi ora le **risposte errate**, separate da una `,`.")
             incorrect_answers_raw = await self.bot.wait_for('message', check=check)
             incorrect_answers = incorrect_answers_raw.content.split(",")
             for n, answer in enumerate(incorrect_answers):
@@ -121,14 +121,14 @@ class trivia(BaseCog):
             if image.attachments != []:
                 question.update({"image" : image.attachments[0].url})
 
-            await ctx.send("Quale sarà la **durata** del quiz? Usa il formato `hh:mm`.")
+            await ctx.send("Quale sarà la **durata** del quiz? Usa il formato `HH:MM`.")
             time = await self.bot.wait_for('message', check=check)
             time = time.content.split(":")
             try:
                 for n, el in enumerate(time):
                     time[n] = int(time[n])
             except:
-                return await ctx.send("Specifica un'orario nel **formato corretto** (`hh:mm`), riprovare!")
+                return await ctx.send("Specifica un'orario nel **formato corretto** (`HH:MM`), riprovare!")
             question.update({"time" : time})
             
             user_incorrect = ""
@@ -145,7 +145,7 @@ class trivia(BaseCog):
                 embed.set_image(url = question["image"])
             except:
                 pass
-            embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Durata: {time[0]}:{time[1]}")
+            embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Durata del quiz impostata a: {time[0]}:{time[1]}")
             msg = await ctx.send(content = "Reagisci con <:FNIT_ThumbsUp:454640434380013599> per **aggiungere la domanda**", embed = embed)
             await msg.add_reaction("<:FNIT_ThumbsUp:454640434380013599>")
             await msg.add_reaction("<:FNIT_ThumbsDown:454640434610700289>")
@@ -342,7 +342,7 @@ class trivia(BaseCog):
     async def checker(self):
         # Check if questions ended
         reaction = await self.config.guild(guild).reaction()
-        if reaction['time'] < datetime.datetime.now():
+        if datetime.datetime.fromtimestamp(reaction['time']) < datetime.datetime.now():
             await close(self)
                     
     @commands.Cog.listener()
