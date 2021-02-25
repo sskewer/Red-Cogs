@@ -133,6 +133,6 @@ class FacebookFeed(BaseCog):
           embed.set_image(url = post["image"])
         msg = await self.bot.get_channel(454264582622412801).send(embed = embed)
         await self.config.guild(guild).last_feed.set(post["post_id"])
-        await checking.channel.send(content = f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nuovo post (`{str(post["post_id"])}`) inviato in <#454264582622412801>", embed = embed)
+        await checking.channel.send(content = f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nuovo post (`{str(post['post_id'])}`) inviato in <#454264582622412801>", embed = embed)
     else:
       await checking.channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nessun nuovo feed trovato")
