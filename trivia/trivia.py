@@ -258,13 +258,12 @@ class trivia(BaseCog):
             hop = now + datetime.timedelta(days = 1) - datetime.timedelta(hours = now.hour - time)
             post_time = datetime.datetime(hop.year, hop.month, hop.day, hop.hour)
         delta_time = post_time - now
-        await sleep(30) #delta_time.seconds
+        await sleep(delta_time.seconds)
         self.daily_post.start()
                             
     @tasks.loop(hours=24)
     async def daily_post(self):
         guild = self.bot.get_guild(454261607799717888)
-        await guild.get_channel(454268474534133762).send(content="Siiiiiii")
         await post(self, guild)
                     
     @commands.Cog.listener()
