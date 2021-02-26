@@ -311,7 +311,7 @@ class trivia(BaseCog):
                         return await ctx.send("La **lughezza massima** per la domanda (256 caratteri) è stata superata, riprovare!")
                     if new_value.content != "No":
                         new_question.update({ "question": new_value.content })
-                    
+                    # Aggiungere qui il resto
                     if new_question == question:
                         return await ctx.send("Non hai effettuato **nessuna modifica** alla domanda!")
                     confirm = await ctx.send(content = "Reagisci con <:FNIT_ThumbsUp:454640434380013599> per **modificare la domanda**.", embed = await create_embed(self, new_question))
