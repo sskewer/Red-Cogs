@@ -305,7 +305,7 @@ class trivia(BaseCog):
                         "image": question["image"],
                         "time": question["time"]
                     }
-                    await mdg.edit(content = "Scrivi ora la domanda **aggiornata**, altrimenti rispondi `No`.")
+                    await msg.edit(content = "Scrivi ora la domanda **aggiornata**, altrimenti rispondi `No`.")
                     new_value = await self.bot.wait_for('message', check=check, timeout=300.0)
                     if len(new_value.content) > 256:
                         return await ctx.send("La **lughezza massima** per la domanda (256 caratteri) è stata superata, riprovare!")
