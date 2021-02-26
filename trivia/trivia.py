@@ -114,6 +114,19 @@ BaseCog = getattr(commands, "Cog", object)
 class trivia(BaseCog):
     """Pubblicare domande quotidianamente"""
     # Cog creato da MettiusHyper#2100
+    
+    def __init__(self, bot):
+        self.bot = bot
+        self.config = Config.get_conf(self, identifier=4000121111111131, force_registration=True)
+        default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294}, "reaction" : {}}
+        self.config.register_guild(**default_guild)
+        self.start_post.start()
+        self.checker.start()
+        
+    def cog_unload(self):
+        self.start_post.cancel()
+        self.daily_post.cancel()
+        self.checker.cancel()
 
     #------------# SETUP #------------#
 
