@@ -41,7 +41,8 @@ async def create_embed(self, question):
     return embed
 
 async def lb_embed(self, description, pos):
-    setup = await self.config.guild(ctx.guild).setup()
+    guild = self.bot.get_guild(454261607799717888)
+    setup = await self.config.guild(guild).setup()
     hex_int = int(setup["color"].replace("#", "0x"), 16)
     if len(description) == 0:
         description = "Non trovo **nessun utente** da registrare in classifica!"
@@ -49,7 +50,7 @@ async def lb_embed(self, description, pos):
         description = description[pos]
     embed = discord.Embed(
         title = "Leaderboard", description = description.strip(), color = hex_int
-    ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
+    ).set_footer(text = guild.name, icon_url = guild.icon_url)
     return embed
 
 def listify(description):
