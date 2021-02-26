@@ -40,7 +40,7 @@ async def create_embed(self, question):
     embed.set_footer(icon_url = guild.icon_url, text = f"Durata del quiz impostata a {time[0]}:{time[1]}")
     return embed
 
-async def lb_embed(setup, description, pos):
+async def lb_embed(description, pos):
     setup = await self.config.guild(ctx.guild).setup()
     hex_int = int(setup["color"].replace("#", "0x"), 16)
     if len(description) == 0:
