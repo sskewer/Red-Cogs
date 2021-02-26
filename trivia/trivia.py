@@ -165,7 +165,7 @@ class trivia(BaseCog):
     async def clearlb(self, ctx: commands.Context):
         """Resettare la classifica"""
         if role_check(ctx, [454262524955852800, 454262403819896833]):
-            msg = await ctx.send(":warning: Sicuro di procedere?")
+            msg = await ctx.send("Sicuro di **resettare** la classifica?")
             await msg.add_reaction("✅")
             await msg.add_reaction("❎")
             def reaction_check(reaction, user):
@@ -187,7 +187,7 @@ class trivia(BaseCog):
     async def cleardb(self, ctx: commands.Context):
         """Resettare le domande"""
         if role_check(ctx, [454262524955852800, 454262403819896833]):
-            msg = await ctx.send(":warning: Sicuro di procedere?")
+            msg = await ctx.send("Sicuro di **resettare** le domande?")
             await msg.add_reaction("✅")
             await msg.add_reaction("❎")
             def reaction_check(reaction, user):
