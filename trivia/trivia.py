@@ -28,7 +28,7 @@ async def create_embed(self, question):
     user_incorrect = ""
     for incorrect in question["incorrect_answers"]:
         user_incorrect += f"• {incorrect}\n"
-    setup = await self.config.guild(self.bot.get_guild(454261607799717888)).setup()
+    setup = await self.config.guild(guild).setup()
     hex_int = int(setup["color"].replace("#", "0x"), 16)
     embed = discord.Embed(title = question['question'], color = hex_int)
     embed.add_field(name = "Risposta Corretta", value = f"• {question['correct_answer']}", inline = False)
@@ -40,9 +40,10 @@ async def create_embed(self, question):
     embed.set_footer(icon_url = guild.icon_url, text = f"Durata del quiz impostata a {time[0]}:{time[1]}")
     return embed
 
-def lb_embed(description, pos):
+async def lb_embed(setup, description, pos):
+    hex_int = int(setup["color"].replace("#", "0x"), 16)
     if len(description) == 0:
-        description = "Non trovo **nessun utente** da registrare in classifica."
+        description = "Non trovo **nessun utente** da registrare in classifica!"
     else:
         description = description[pos]
     embed = discord.Embed(
@@ -296,7 +297,7 @@ class trivia(BaseCog):
             description = listify(description)
             if len(description) > 1:
                 i = 0
-                msg = await ctx.send(embed = lb_embed(description, i))
+                msg = await ctx.send(embed = lb_embed(setup, description, i))
                 for arrow in arrow_reactions:
                     await msg.add_reaction(arrow)
 
@@ -329,7 +330,7 @@ class trivia(BaseCog):
                 await message.clear_reactions()
                 
             else:
-                await ctx.send(embed = lb_embed(description, 0))
+                await ctx.send(embed = lb_embed(setup, description, 0))
 
     @commands.guild_only()
     @commands.command()
