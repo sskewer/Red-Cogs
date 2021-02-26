@@ -312,7 +312,7 @@ class trivia(BaseCog):
                     if new_value.content != "Skip":
                         new_question.update({ "question": new_value.content })
                     
-                    await ctx.send("Scrivi ora la domanda **risposta corretta aggiornata**, altrimenti rispondi `Skip`.")
+                    await ctx.send("Scrivi ora la **risposta corretta aggiornata**, altrimenti rispondi `Skip`.")
                     new_value = await self.bot.wait_for('message', check=check, timeout=300.0)
                     if new_value.content != "Skip":
                         new_question.update({ "correct_answer": new_value.content })
