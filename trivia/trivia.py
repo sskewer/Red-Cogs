@@ -340,7 +340,7 @@ class trivia(BaseCog):
                         await self.config.guild(ctx.guild).questions.set(questions)
                         await confirm.edit(content = "Domanda **modificata** con successo!")
                     else:
-                        await confirm.edit(content = "Modifica della domanda **annullata** con successo!")
+                        await confirm.edit(content = "Modifica della domanda **annullata** con successo!", embed = None)
                     await confirm.clear_reactions()
                 else:
                     await msg.delete()
