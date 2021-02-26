@@ -18,6 +18,7 @@ def role_check(ctx, roles):
     return len(set(ctx.author.roles).intersection(set(roles))) > 0
 
 async def create_embed(self, question):
+    guild = self.bot.get_guild(454261607799717888)
     time = question['time']
     for n, el in enumerate(time):
         el = str(el)
@@ -36,7 +37,7 @@ async def create_embed(self, question):
         embed.set_image(url = question["image"])
     except:
         pass
-    embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Durata del quiz impostata a {time[0]}:{time[1]}")
+    embed.set_footer(icon_url = guild.icon_url, text = f"Durata del quiz impostata a {time[0]}:{time[1]}")
     return embed
 
 def lb_embed(description, pos):
