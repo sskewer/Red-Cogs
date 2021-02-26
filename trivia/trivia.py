@@ -68,6 +68,8 @@ def listify(description):
 async def post(self):
     guild = self.bot.get_guild(454261607799717888)
     setup = await self.config.guild(guild).setup()
+    if setup["enabled"] == False:
+        return
     hex_int = int(setup['color'].replace("#", "0x"), 16)
     questions = await self.config.guild(guild).questions()
     if len(questions) < 1:
@@ -125,7 +127,7 @@ class trivia(BaseCog):
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=4000121111111131, force_registration=True)
-        default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294}, "reaction" : {}}
+        default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294, "enabled" : True}, "reaction" : {}}
         self.config.register_guild(**default_guild)
         self.start_post.start()
         self.checker.start()
