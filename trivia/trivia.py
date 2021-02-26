@@ -41,6 +41,7 @@ async def create_embed(self, question):
     return embed
 
 async def lb_embed(setup, description, pos):
+    setup = await self.config.guild(ctx.guild).setup()
     hex_int = int(setup["color"].replace("#", "0x"), 16)
     if len(description) == 0:
         description = "Non trovo **nessun utente** da registrare in classifica!"
@@ -289,8 +290,6 @@ class trivia(BaseCog):
         """Visualizzare la classifica in base alle risposte corrette"""
         if role_check(ctx, [454262524955852800, 454262403819896833, 454268394464870401]):
             score = await self.config.guild(ctx.guild).score()
-            setup = await self.config.guild(ctx.guild).setup()
-            hex_int = int(setup["color"].replace("#", "0x"), 16)
             description = ""
             for n, el in enumerate(score):
                 description += f"**{n + 1}.** {ctx.guild.get_member(int(el))} (`{score[el]}`)\n"
@@ -307,18 +306,22 @@ class trivia(BaseCog):
                 while True:
                     if str(reaction) == arrow_reactions[0]:
                         i = 0
-                        await message.edit(embed = pages[i])
+                        embed = await lb_embed(description, i)
+                        await message.edit(embed = embed)
                     elif str(reaction) == arrow_reactions[1]:
                         if i > 0:
                             i -= 1
-                            await message.edit(embed = pages[i])
+                            embed = await lb_embed(description, i)
+                            await message.edit(embed = embed)
                     elif str(reaction) == arrow_reactions[2]:
                         if i < len(description):
                             i += 1
-                            await message.edit(embed = pages[i])
+                            embed = await lb_embed(description, i)
+                            await message.edit(embed = embed)
                     elif str(reaction) == arrow_reactions[3]:
                         i = len(description)
-                        await message.edit(embed = pages[i])
+                        embed = await lb_embed(description, i)
+                        await message.edit(embed = embed)
                     
                     await message.remove_reaction(reaction.emoji, ctx.author)
 
@@ -330,7 +333,8 @@ class trivia(BaseCog):
                 await message.clear_reactions()
                 
             else:
-                await ctx.send(embed = lb_embed(setup, description, 0))
+                embed = await lb_embed(description, 0)
+                await ctx.send(embed = embed)
 
     @commands.guild_only()
     @commands.command()
