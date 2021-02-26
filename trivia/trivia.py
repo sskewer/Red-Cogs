@@ -46,7 +46,7 @@ def lb_embed(description, pos):
     ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
     return embed
 
-def listify(description)
+def listify(description):
     a_description = []
     limit = 2048
     while len(description) > 0:
