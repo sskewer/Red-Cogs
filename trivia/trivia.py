@@ -41,7 +41,10 @@ async def create_embed(self, question):
     return embed
 
 def lb_embed(description, pos):
-    description = description[pos]
+    if len(description) == 0:
+        description = "Non trovo **nessun utente** da registrare in classifica."
+    else:
+        description = description[pos]
     embed = discord.Embed(
         title = "Leaderboard", description = description.strip(), color = hex_int
     ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
