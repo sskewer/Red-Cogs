@@ -294,7 +294,6 @@ class trivia(BaseCog):
             for n, el in enumerate(score):
                 description += f"**{n + 1}.** {ctx.guild.get_member(int(el))} (`{score[el]}`)\n"
             description = listify(description)
-            await ctx.send(description)
             if len(description) > 1:
                 i = 0
                 msg = await ctx.send(embed = lb_embed(description, i))
