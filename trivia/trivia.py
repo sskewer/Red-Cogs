@@ -1,17 +1,62 @@
 import asyncio
 import datetime
 import discord
-import requests
 import random
 
 from asyncio import sleep
-from requests.api import post
 from discord.ext import tasks
 from redbot.core import Config, commands
 from redbot.core.bot import Red
 
-
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
+arrow_reactions = ["⏮", "◀", "▶", "⏭"]
+
+def role_check(ctx, roles):
+    for n, role in enumerate(roles):
+        role = ctx.guild.get_role(role)
+        roles[n] = role
+    return len(set(ctx.author.roles).intersection(set(roles))) > 0
+
+async def create_embed(self, question):
+    time = question['time']
+    for n, el in enumerate(time):
+        el = str(el)
+        if len(el) == 1:
+            el = "0" + el
+        time[n] = el
+    user_incorrect = ""
+    for incorrect in question["incorrect_answers"]:
+        user_incorrect += f"• {incorrect}\n"
+    setup = await self.config.guild(self.bot.get_guild(454261607799717888)).setup()
+    hex_int = int(setup["color"].replace("#", "0x"), 16)
+    embed = discord.Embed(title = question['question'], color = hex_int)
+    embed.add_field(name = "Risposta Corretta", value = f"• {question['correct_answer']}", inline = False)
+    embed.add_field(name = "Risposte Errate", value = user_incorrect, inline = False)
+    try:
+        embed.set_image(url = question["image"])
+    except:
+        pass
+    embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Durata del quiz impostata a {time[0]}:{time[1]}")
+    return embed
+
+def lb_embed(description, pos):
+    description = description[pos]
+    embed = discord.Embed(
+        title = "Leaderboard", description = description.strip(), color = hex_int
+    ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url))
+    return embed
+
+def listify(description)
+    a_description = []
+    limit = 2048
+    while len(description) > 0:
+        if len(description) > limit:
+            a_description.append(description[:limit])
+            description = description[limit:]
+        else:
+            a_description.append(description)
+            description = ""
+    return a_description
 
 async def post(self):
     guild = self.bot.get_guild(454261607799717888)
@@ -65,26 +110,209 @@ async def close_post(self, post_message = None):
     await self.config.guild(guild).reaction.set({})
 
 BaseCog = getattr(commands, "Cog", object)
-    
+
 class trivia(BaseCog):
     """Pubblicare domande quotidianamente"""
     # Cog creato da MettiusHyper#2100
 
-    def __init__(self, bot):
-        self.bot = bot
-        self.config = Config.get_conf(self, identifier=4000121111111131, force_registration=True)
-        default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294}, "reaction" : {}}
-        self.config.register_guild(**default_guild)
-        self.start_post.start()
-        self.checker.start()
+    #------------# SETUP #------------#
+
+    @commands.group(name="trivia")
+    @commands.guild_only()
+    async def trivia(self, ctx: commands.Context):
+        if ctx.invoked_subcommand is None:
+            pass
+
+    @trivia.command()
+    async def force(self, ctx: commands.Context):
+        """Posta forzatamente il quiz"""
+        if role_check(ctx, [454262524955852800, 454262403819896833, 454268394464870401]):
+            await post(self)
+            await ctx.message.add_reaction("✅")
+    
+    @trivia.command()
+    async def close(self, ctx: commands.Context, msg_id: int = None):
+        """Chiude forzatamente il quiz"""
+        if role_check(ctx, [454262524955852800, 454262403819896833, 454268394464870401]):
+            await close_post(self, msg_id)
+            await ctx.message.add_reaction("✅")
+    
+    @trivia.command()
+    async def clearlb(self, ctx: commands.Context):
+        """Resettare la classifica"""
+        if role_check(ctx, [454262524955852800, 454262403819896833]):
+            msg = await ctx.send(":warning: Sicuro di procedere?")
+            await msg.add_reaction("✅")
+            def reaction_check(reaction, user):
+                return user.id == ctx.message.author.id and str(reaction.emoji) == "✅" and reaction.message.id == msg.id
+            try:
+                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)
+                await self.config.guild(ctx.guild).score.set({})
+                await msg.delete()
+                await ctx.message.add_reaction("✅")
+            except asyncio.TimeoutError:
+                await msg.delete()
+                await ctx.message.add_reaction("🚫")
+   
+    @trivia.command()
+    async def cleardb(self, ctx: commands.Context):
+        """Resettare le domande"""
+        if role_check(ctx, [454262524955852800, 454262403819896833]):
+            msg = await ctx.send(":warning: Sicuro di procedere?")
+            await msg.add_reaction("✅")
+            def reaction_check(reaction, user):
+                return user.id == ctx.message.author.id and str(reaction.emoji) == "✅" and reaction.message.id == msg.id
+            try:
+                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)
+                await self.config.guild(ctx.guild).questions.set([])
+                await self.config.guild(ctx.guild).reaction.set({})
+                await msg.delete()
+                await ctx.message.add_reaction("✅")
+            except asyncio.TimeoutError:
+                await msg.delete()
+                await ctx.message.add_reaction("🚫")
         
-    def cog_unload(self):
-        self.start_post.cancel()
-        self.daily_post.cancel()
-        self.checker.cancel()
-        
-        
+    @trivia.command()
+    async def current(self, ctx: commands.Context):
+        """Visualizzare la impostazioni correnti"""
+        if role_check(ctx, [454262524955852800, 454262403819896833]):
+            setup = await self.config.guild(ctx.guild).setup()
+            color = setup["color"]
+            hex_int = int(color.replace("#", "0x"), 16)
+            embed = discord.Embed(colour = hex_int, title = "Impostazioni Trivia", timestamp = datetime.datetime.utcnow())
+            embed.add_field(name = "Color", value = f"`{color}`", inline = True)
+            embed.add_field(name = "Time", value = f"{setup['time']}:00", inline = True)
+            embed.add_field(name = "Channel", value = f"<#{setup['channel']}>", inline = True)
+            embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
+            await ctx.send(embed = embed)
+    
+    @trivia.command()
+    async def color(self, ctx: commands.Context, value):
+        """Modificare il colore dell'embed del quiz"""
+        if role_check(ctx, [454262524955852800, 454262403819896833]):
+            if value.startswith("#"):
+                setup = await self.config.guild(ctx.guild).setup()
+                setup.update({"color" : value})
+                await self.config.guild(ctx.guild).setup.set(setup)
+                await ctx.message.add_reaction("✅")
+            else:
+                await ctx.message.add_reaction("🚫")
+            
+    @trivia.command()
+    async def time(self, ctx: commands.Context, value : int):
+        """Modificare l'ora di invio del quiz"""
+        if role_check(ctx, [454262524955852800, 454262403819896833]):
+            if value < 23 and value >= 0:
+                setup = await self.config.guild(ctx.guild).setup()
+                setup.update({"time" : value})
+                await self.config.guild(ctx.guild).setup.set(setup)
+                await ctx.message.add_reaction("✅")
+            else:
+                await ctx.message.add_reaction("🚫")
+    
+    @trivia.command()
+    async def channel(self, ctx: commands.Context, value : discord.TextChannel):
+        """Modificare il canale di invio del quiz"""
+        if role_check(ctx, [454262524955852800, 454262403819896833]):
+            setup = await self.config.guild(ctx.guild).setup()
+            setup.update({"channel" : value.id})
+            await self.config.guild(ctx.guild).setup.set(setup)
+            await ctx.message.add_reaction("✅")
+    
     #--------------# COMMANDS #--------------#
+
+    @trivia.command()
+    async def remove(self, ctx: commands.Context, value: int):
+        """Rimuovere un quiz dal database"""
+        if role_check(ctx, [454262524955852800, 454262403819896833, 454268394464870401]):
+            questions = await self.config.guild(ctx.guild).questions()
+            try:
+                question = questions[value - 1]
+            except:
+                return await ctx.message.add_reaction("🚫")
+            embed = await create_embed(self, question)
+            msg = await ctx.send(content = f"Sicuro di **rimuovere** il seguente quiz?", embed = embed)
+            await msg.add_reaction("✅")
+            def reaction_check(reaction, user):
+                return user.id == ctx.message.author.id and str(reaction.emoji) == "✅" and reaction.message.id == msg.id
+            try:
+                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)
+                questions.remove(question)
+                await self.config.guild(ctx.guild).questions.set(questions)
+                await msg.delete()
+                await ctx.message.add_reaction("✅")
+            except asyncio.TimeoutError:
+                await msg.delete()
+                await ctx.message.add_reaction("🚫")
+                            
+    @trivia.command(aliases = ["db"])
+    async def list(self, ctx: commands.Context, value: int = None):
+        """Visualizzare la lista delle domande"""
+        if role_check(ctx, [536214242685091860, 454268394464870401, 454262524955852800, 454262403819896833]):
+            questions = await self.config.guild(ctx.guild).questions()
+            setup = await self.config.guild(ctx.guild).setup()
+            hex_int = int(setup["color"].replace("#", "0x"), 16)
+            if len(questions) < 1:
+                await ctx.send(content = "Non riesco a trovare **domande memorizzate** nel database.\nPuoi utilizzare il comando **`?domanda`** per aggiungerne altre.")
+            else:          
+                if value is None:
+                    embed = discord.Embed(title = "Lista Domande", description = "```?trivia lista <numero>```", color = hex_int)
+                    embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
+                    for n, el in enumerate(questions):
+                        embed.add_field(name = f"Domanda {n + 1}", value = el['question'], inline = False)
+                    await ctx.send(embed = embed)
+                else:
+                    question = questions[value - 1]
+                    embed = await create_embed(self, question)
+                    await ctx.send(content = f"Domanda n° **{value}**", embed = embed)
+    
+    @trivia.command(aliases = ["lb"])
+    async def leaderboard(self, ctx: commands.Context):
+        """Visualizzare la classifica in base alle risposte corrette"""
+        if role_check(ctx, [454262524955852800, 454262403819896833, 454268394464870401]):
+            score = await self.config.guild(ctx.guild).score()
+            setup = await self.config.guild(ctx.guild).setup()
+            hex_int = int(setup["color"].replace("#", "0x"), 16)
+            description = ""
+            for n, el in enumerate(score):
+                description += f"**{n + 1}.** {ctx.guild.get_member(int(el))} (`{score[el]}`)\n"
+            description = listify(description)
+            if len(description) > 1:
+                i = 0
+                msg = await ctx.send(embed = lb_embed(description, i))
+                for arrow in arrow_reactions:
+                    await msg.add_reaction(arrow)
+
+                def check(reaction, user):
+                    return user == ctx.author
+                reaction = None
+                while True:
+                    if str(reaction) == arrow_reactions[0]:
+                        i = 0
+                        await message.edit(embed = pages[i])
+                    elif str(reaction) == arrow_reactions[1]:
+                        if i > 0:
+                            i -= 1
+                            await message.edit(embed = pages[i])
+                    elif str(reaction) == arrow_reactions[2]:
+                        if i < len(description):
+                            i += 1
+                            await message.edit(embed = pages[i])
+                    elif str(reaction) == arrow_reactions[3]:
+                        i = len(description)
+                        await message.edit(embed = pages[i])
+                    
+                    await message.remove_reaction(reaction.emoji, ctx.author)
+
+                    try:
+                        reaction, user = await client.wait_for('reaction_add', timeout = 30.0, check = check)
+                        await message.remove_reaction(reaction, user)
+                    except:
+                        break
+                await message.clear_reactions()
+                
+            else:
+                await ctx.send(embed = lb_embed(description, 0))
 
     @commands.guild_only()
     @commands.command()
@@ -132,21 +360,8 @@ class trivia(BaseCog):
                 return await ctx.send("Specifica un'orario nel **formato corretto** (`HH:MM`), riprovare!")
             question.update({"time" : time})
             
-            user_incorrect = ""
-            for incorrect in question["incorrect_answers"]:
-                user_incorrect += f"• {incorrect}\n"
-            setup = await self.config.guild(ctx.guild).setup()
-            hex_int = int(setup["color"].replace("#", "0x"), 16)
-            embed = discord.Embed(
-                title = question['question'], color = hex_int
-            )
-            embed.add_field(name = "Risposta Corretta", value = f"• {question['correct_answer']}", inline = False)
-            embed.add_field(name = "Risposte Errate", value = user_incorrect, inline = False)
-            try:
-                embed.set_image(url = question["image"])
-            except:
-                pass
-            embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Durata del quiz impostata a {time[0]} ore e {time[1]} minuti")
+            embed = await create_embed(self, question)
+
             msg = await ctx.send(content = "Reagisci con <:FNIT_ThumbsUp:454640434380013599> per **aggiungere la domanda**", embed = embed)
             await msg.add_reaction("<:FNIT_ThumbsUp:454640434380013599>")
             await msg.add_reaction("<:FNIT_ThumbsDown:454640434610700289>")
@@ -160,226 +375,7 @@ class trivia(BaseCog):
                 await self.config.guild(ctx.guild).questions.set(questions)
                 await msg.edit(content = "Domanda **aggiunta** con successo!")
             await msg.clear_reactions()
-            
-    @commands.group(name="trivia")
-    @commands.guild_only()
-    async def trivia(self, ctx: commands.Context):
-        if ctx.invoked_subcommand is None:
-            pass
-
-    @trivia.command()
-    async def force(self, ctx: commands.Context):
-        """Posta forzatamente il quiz"""
-        allowed_roles = [454262524955852800, 454262403819896833, 454268394464870401]
-        for n, role in enumerate(allowed_roles):
-            role = ctx.guild.get_role(role)
-            allowed_roles[n] = role
-        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            await post(self)
-            await ctx.message.add_reaction("✅")
     
-    @trivia.command()
-    async def close(self, ctx: commands.Context, msg_id: int = None):
-        """Chiude forzatamente il quiz"""
-        allowed_roles = [454262524955852800, 454262403819896833, 454268394464870401]
-        for n, role in enumerate(allowed_roles):
-            role = ctx.guild.get_role(role)
-            allowed_roles[n] = role
-        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            if msg_id != None:
-                await close_post(self, msg_id)
-            else:
-                await close_post(self)
-            await ctx.message.add_reaction("✅")
-                            
-    @trivia.command()
-    async def remove(self, ctx: commands.Context, value: int):
-        """Rimuovere un quiz dal database"""
-        allowed_roles = [454262524955852800, 454262403819896833, 454268394464870401]
-        for n, role in enumerate(allowed_roles):
-            role = ctx.guild.get_role(role)
-            allowed_roles[n] = role
-        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            questions = await self.config.guild(ctx.guild).questions()
-            try:
-                question = questions[value - 1]
-            except:
-                return await ctx.message.add_reaction("🚫")
-            msg = await ctx.send(f"Sicuro di **rimuovere** il seguente quiz?\n```{question['question']}```")
-            await msg.add_reaction("✅")
-            def reaction_check(reaction, user):
-                return user.id == ctx.message.author.id and str(reaction.emoji) == "✅" and reaction.message.id == msg.id
-            try:
-                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)
-                questions.remove(question)
-                await self.config.guild(ctx.guild).questions.set(questions)
-                await msg.delete()
-                await ctx.message.add_reaction("✅")
-            except asyncio.TimeoutError:
-                await msg.delete()
-                await ctx.message.add_reaction("🚫")
-                            
-    @trivia.command(aliases = ["db"])
-    async def list(self, ctx: commands.Context, value: int = None):
-        """Visualizzare la lista delle domande"""
-        allowed_roles = [536214242685091860, 454268394464870401, 454262524955852800, 454262403819896833]
-        for n, role in enumerate(allowed_roles):
-            role = ctx.guild.get_role(role)
-            allowed_roles[n] = role
-        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            questions = await self.config.guild(ctx.guild).questions()
-            setup = await self.config.guild(ctx.guild).setup()
-            hex_int = int(setup["color"].replace("#", "0x"), 16)
-            if len(questions) < 1:
-                await ctx.send(content = "Non riesco a trovare **domande memorizzate** nel database.\nPuoi utilizzare il comando **`?domanda`** per aggiungerne altre.")
-            else:          
-                if value is None:
-                    embed = discord.Embed(title = "Lista Domande", description = "```?trivia lista <numero>```", color = hex_int)
-                    embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
-                    for n, el in enumerate(questions):
-                        embed.add_field(name = f"Domanda {n + 1}", value = el['question'], inline = False)
-                    await ctx.send(embed = embed)
-                else:
-                    question = questions[value - 1]
-                    time = question['time']
-                    user_incorrect = ""
-                    for incorrect in question["incorrect_answers"]:
-                        user_incorrect += f"• {incorrect}\n"
-                    embed = discord.Embed(title = question['question'], color = hex_int)
-                    embed.add_field(name = "Risposta Corretta", value = f"• {question['correct_answer']}", inline = False)
-                    embed.add_field(name = "Risposte Errate", value = user_incorrect, inline = False)
-                    try:
-                        embed.set_image(url = question["image"])
-                    except:
-                        pass
-                    embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Durata del quiz impostata a {time[0]} ore e {time[1]} minuti")
-                    await ctx.send(content = f"Domanda n° **{value}**", embed = embed)
-    
-    @trivia.command(aliases = ["lb"])
-    async def leaderboard(self, ctx: commands.Context):
-        """Visualizzare la classifica in base alle risposte corrette"""
-        allowed_roles = [454262524955852800, 454262403819896833, 454268394464870401]
-        for n, role in enumerate(allowed_roles):
-            role = ctx.guild.get_role(role)
-            allowed_roles[n] = role
-        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            score = await self.config.guild(ctx.guild).score()
-            setup = await self.config.guild(ctx.guild).setup()
-            hex_int = int(setup["color"].replace("#", "0x"), 16)
-            description = ""
-            for n, el in enumerate(score):
-                description += f"**{n + 1}.** {ctx.guild.get_member(int(el))} (`{el}`)\n"
-            await ctx.send(embed = discord.Embed(
-                title = "Leaderboard", description = description.strip(), color = hex_int
-            ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url))
-    
-    @trivia.command()
-    async def clearlb(self, ctx: commands.Context):
-        """Resettare la classifica"""
-        allowed_roles = [454262524955852800, 454262403819896833]
-        for n, role in enumerate(allowed_roles):
-            role = ctx.guild.get_role(role)
-            allowed_roles[n] = role
-        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            msg = await ctx.send(":warning: Sicuro di procedere?")
-            await msg.add_reaction("✅")
-            def reaction_check(reaction, user):
-                return user.id == ctx.message.author.id and str(reaction.emoji) == "✅" and reaction.message.id == msg.id
-            try:
-                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)
-                await self.config.guild(ctx.guild).score.set({})
-                await msg.delete()
-                await ctx.message.add_reaction("✅")
-            except asyncio.TimeoutError:
-                await msg.delete()
-                await ctx.message.add_reaction("🚫")
-   
-    @trivia.command()
-    async def cleardb(self, ctx: commands.Context):
-        """Resettare le domande"""
-        allowed_roles = [454262524955852800, 454262403819896833]
-        for n, role in enumerate(allowed_roles):
-            role = ctx.guild.get_role(role)
-            allowed_roles[n] = role
-        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            msg = await ctx.send(":warning: Sicuro di procedere?")
-            await msg.add_reaction("✅")
-            def reaction_check(reaction, user):
-                return user.id == ctx.message.author.id and str(reaction.emoji) == "✅" and reaction.message.id == msg.id
-            try:
-                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)
-                await self.config.guild(ctx.guild).questions.set([])
-                await self.config.guild(ctx.guild).reaction.set({})
-                await msg.delete()
-                await ctx.message.add_reaction("✅")
-            except asyncio.TimeoutError:
-                await msg.delete()
-                await ctx.message.add_reaction("🚫")
-        
-    @trivia.command()
-    async def current(self, ctx: commands.Context):
-        """Visualizzare la impostazioni correnti"""
-        allowed_roles = [454262524955852800, 454262403819896833]
-        for n, role in enumerate(allowed_roles):
-            role = ctx.guild.get_role(role)
-            allowed_roles[n] = role
-        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            setup = await self.config.guild(ctx.guild).setup()
-            color = setup["color"]
-            hex_int = int(color.replace("#", "0x"), 16)
-            embed = discord.Embed(colour = hex_int, title = "Impostazioni Trivia", timestamp = datetime.datetime.utcnow())
-            embed.add_field(name = "Color", value = f"`{color}`", inline = True)
-            embed.add_field(name = "Time", value = f"{setup['time']}:00", inline = True)
-            embed.add_field(name = "Channel", value = f"<#{setup['channel']}>", inline = True)
-            embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
-            await ctx.send(embed = embed)
-    
-    @trivia.command()
-    async def color(self, ctx: commands.Context, value):
-        """Modificare il colore dell'embed del quiz"""
-        allowed_roles = [454262524955852800, 454262403819896833]
-        for n, role in enumerate(allowed_roles):
-            role = ctx.guild.get_role(role)
-            allowed_roles[n] = role
-        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            if value.startswith("#"):
-                setup = await self.config.guild(ctx.guild).setup()
-                setup.update({"color" : value})
-                await self.config.guild(ctx.guild).setup.set(setup)
-                await ctx.message.add_reaction("✅")
-            else:
-                await ctx.message.add_reaction("🚫")
-            
-    @trivia.command()
-    async def time(self, ctx: commands.Context, value : int):
-        """Modificare l'ora di invio del quiz"""
-        allowed_roles = [454262524955852800, 454262403819896833]
-        for n, role in enumerate(allowed_roles):
-            role = ctx.guild.get_role(role)
-            allowed_roles[n] = role
-        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            if value < 23 and value >= 0:
-                setup = await self.config.guild(ctx.guild).setup()
-                setup.update({"time" : value})
-                await self.config.guild(ctx.guild).setup.set(setup)
-                await ctx.message.add_reaction("✅")
-            else:
-                await ctx.message.add_reaction("🚫")
-    
-    @trivia.command()
-    async def channel(self, ctx: commands.Context, value : discord.TextChannel):
-        """Modificare il canale di invio del quiz"""
-        allowed_roles = [454262524955852800, 454262403819896833]
-        for n, role in enumerate(allowed_roles):
-            role = ctx.guild.get_role(role)
-            allowed_roles[n] = role
-        if len(set(ctx.author.roles).intersection(set(allowed_roles))) > 0:
-            setup = await self.config.guild(ctx.guild).setup()
-            setup.update({"channel" : value.id})
-            await self.config.guild(ctx.guild).setup.set(setup)
-            await ctx.message.add_reaction("✅")
-
-                            
     #------------# EVENT #------------#
     
     @tasks.loop(seconds=10, count=1)
