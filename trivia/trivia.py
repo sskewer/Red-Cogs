@@ -276,6 +276,62 @@ class trivia(BaseCog):
             setup.update({"channel" : value.id})
             await self.config.guild(ctx.guild).setup.set(setup)
             await ctx.message.add_reaction("✅")
+                            
+    @trivia.command()
+    async def edit(self, ctx: commands.Context, value: int):
+        """Modificare un quiz del database"""
+        if role_check(ctx, [454262524955852800, 454262403819896833, 454268394464870401]):
+            questions = await self.config.guild(ctx.guild).questions()
+            try:
+                question = questions[value - 1]
+            except:
+                return await ctx.message.add_reaction("🚫")
+            embed = await create_embed(self, question)
+            msg = await ctx.send(content = f"Sicuro di **modificare** il seguente quiz?", embed = embed)
+            await msg.add_reaction("✅")
+            await msg.add_reaction("❎")
+            def reaction_check(reaction, user):
+                return user.id == ctx.message.author.id and ["✅", "❎"].count(str(reaction.emoji)) > 0 and reaction.message.id == msg.id
+            try:
+                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)        
+                if str(reaction.emoji) == "✅":
+                    def check(m):
+                        return m.author == ctx.author and m.channel == ctx.channel
+                    await msg.delete()
+                    new_question = {
+                        "question" : question["question"],
+                        "correct_answer" : question["correct_answer"],
+                        "incorrect_answers" : question["incorrect_answers"],
+                        "image": question["image"],
+                        "time": question["time"]
+                    }
+                    await mdg.edit(content = "Scrivi ora la domanda **aggiornata**, altrimenti rispondi `No`.")
+                    new_value = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    if len(new_value.content) > 256:
+                        return await ctx.send("La **lughezza massima** per la domanda (256 caratteri) è stata superata, riprovare!")
+                    if new_value.content != "No":
+                        new_question.update({ "question": new_value.content })
+                    
+                    confirm = await ctx.send(content = "Reagisci con <:FNIT_ThumbsUp:454640434380013599> per **modificare la domanda**.", embed = await create_embed(self, new_question))
+                    await confirm.add_reaction("<:FNIT_ThumbsUp:454640434380013599>")
+                    await confirm.add_reaction("<:FNIT_ThumbsDown:454640434610700289>")
+                    def reaction_confirm(reaction, user):
+                        return user == ctx.message.author and (str(reaction.emoji) == "<:FNIT_ThumbsUp:454640434380013599>" or str(reaction.emoji) == "<:FNIT_ThumbsDown:454640434610700289>") and reaction.message.id == confirm.id
+                    reaction, user = await self.bot.wait_for('reaction_add', check=reaction_confirm, timeout=60.0)
+                    if str(reaction.emoji) == "<:FNIT_ThumbsUp:454640434380013599>":
+                        questions.remove(question)
+                        questions.append(new_question)
+                        await self.config.guild(ctx.guild).questions.set(questions)
+                        await confirm.edit(content = "Domanda **modificata** con successo!")
+                    else:
+                        await confirm.edit(content = "Modifica della domanda **annullata** con successo!")
+                    await confirm.clear_reactions()
+                else:
+                    await msg.delete()
+                    await ctx.message.add_reaction("🚫")
+            except asyncio.TimeoutError:
+                await msg.delete()
+                await ctx.message.add_reaction("🚫")
 
     @trivia.command()
     async def remove(self, ctx: commands.Context, value: int):
@@ -395,15 +451,15 @@ class trivia(BaseCog):
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
             await ctx.send("Qual è la **domanda**?")
-            question = await self.bot.wait_for('message', check=check)
+            question = await self.bot.wait_for('message', check=check, timeout=300.0)
             if len(question.content) > 256:
                 return await ctx.send("La **lughezza massima** per la domanda (256 caratteri) è stata superata, riprovare!")
             
             await ctx.send("Qual è la **risposta corretta**?")
-            correct_answer = await self.bot.wait_for('message', check=check)
+            correct_answer = await self.bot.wait_for('message', check=check, timeout=300.0)
 
             await ctx.send("Scrivi ora le **risposte errate**, separate da una `,`.")
-            incorrect_answers_raw = await self.bot.wait_for('message', check=check)
+            incorrect_answers_raw = await self.bot.wait_for('message', check=check, timeout=300.0)
             incorrect_answers = incorrect_answers_raw.content.split(",")
             for n, answer in enumerate(incorrect_answers):
                 incorrect_answers[n] = answer.strip()
@@ -413,12 +469,12 @@ class trivia(BaseCog):
                 "incorrect_answers" : incorrect_answers
             }
             await ctx.send("Invia ora l'immagine come **allegato**, altrimenti rispondi `No`.")
-            image = await self.bot.wait_for('message', check=check)
+            image = await self.bot.wait_for('message', check=check, timeout=300.0)
             if image.attachments != []:
                 question.update({"image" : image.attachments[0].url})
 
             await ctx.send("Quale sarà la **durata** del quiz? Usa il formato `HH:MM`.")
-            time = await self.bot.wait_for('message', check=check)
+            time = await self.bot.wait_for('message', check=check, timeout=300.0)
             time = time.content.split(":")
             try:
                 for n, el in enumerate(time):
@@ -429,13 +485,13 @@ class trivia(BaseCog):
             
             embed = await create_embed(self, question)
 
-            msg = await ctx.send(content = "Reagisci con <:FNIT_ThumbsUp:454640434380013599> per **aggiungere la domanda**", embed = embed)
+            msg = await ctx.send(content = "Reagisci con <:FNIT_ThumbsUp:454640434380013599> per **aggiungere la domanda**.", embed = embed)
             await msg.add_reaction("<:FNIT_ThumbsUp:454640434380013599>")
             await msg.add_reaction("<:FNIT_ThumbsDown:454640434610700289>")
             
             def reaction_check(reaction, user):
-                return user == ctx.message.author and (str(reaction.emoji) == "<:FNIT_ThumbsUp:454640434380013599>" or str(reaction.emoji) == "<:FNIT_ThumbsDown:454640434610700289>")
-            reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check)
+                return user == ctx.message.author and (str(reaction.emoji) == "<:FNIT_ThumbsUp:454640434380013599>" or str(reaction.emoji) == "<:FNIT_ThumbsDown:454640434610700289>") and reaction.message.id == msg.id
+            reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)
             if str(reaction.emoji) == "<:FNIT_ThumbsUp:454640434380013599>":
                 questions = await self.config.guild(ctx.guild).questions()
                 questions.append(question)
