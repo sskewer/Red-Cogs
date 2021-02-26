@@ -43,7 +43,7 @@ def lb_embed(description, pos):
     description = description[pos]
     embed = discord.Embed(
         title = "Leaderboard", description = description.strip(), color = hex_int
-    ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url))
+    ).set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
     return embed
 
 def listify(description)
