@@ -40,7 +40,7 @@ async def create_embed(self, question):
     embed.set_footer(icon_url = guild.icon_url, text = f"Durata del quiz impostata a {time[0]}:{time[1]}")
     return embed
 
-async def lb_embed(description, pos):
+async def lb_embed(self, description, pos):
     setup = await self.config.guild(ctx.guild).setup()
     hex_int = int(setup["color"].replace("#", "0x"), 16)
     if len(description) == 0:
@@ -306,21 +306,21 @@ class trivia(BaseCog):
                 while True:
                     if str(reaction) == arrow_reactions[0]:
                         i = 0
-                        embed = await lb_embed(description, i)
+                        embed = await lb_embed(self, description, i)
                         await message.edit(embed = embed)
                     elif str(reaction) == arrow_reactions[1]:
                         if i > 0:
                             i -= 1
-                            embed = await lb_embed(description, i)
+                            embed = await lb_embed(self, description, i)
                             await message.edit(embed = embed)
                     elif str(reaction) == arrow_reactions[2]:
                         if i < len(description):
                             i += 1
-                            embed = await lb_embed(description, i)
+                            embed = await lb_embed(self, description, i)
                             await message.edit(embed = embed)
                     elif str(reaction) == arrow_reactions[3]:
                         i = len(description)
-                        embed = await lb_embed(description, i)
+                        embed = await lb_embed(self, description, i)
                         await message.edit(embed = embed)
                     elif str(reaction) == arrow_reactions[4]:
                         await message.clear_reactions()
@@ -336,7 +336,7 @@ class trivia(BaseCog):
                 await message.clear_reactions()
                 
             else:
-                embed = await lb_embed(description, 0)
+                embed = await lb_embed(self, description, 0)
                 await ctx.send(embed = embed)
 
     @commands.guild_only()
