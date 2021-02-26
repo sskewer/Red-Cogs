@@ -9,7 +9,7 @@ from redbot.core import Config, commands
 from redbot.core.bot import Red
 
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
-arrow_reactions = ["⏮", "◀", "▶", "⏭"]
+arrow_reactions = ["⏮", "◀", "▶", "⏭", "🛑"]
 
 def role_check(ctx, roles):
     for n, role in enumerate(roles):
@@ -322,6 +322,9 @@ class trivia(BaseCog):
                         i = len(description)
                         embed = await lb_embed(description, i)
                         await message.edit(embed = embed)
+                    elif str(reaction) == arrow_reactions[4]:
+                        await message.clear_reactions()
+                        break
                     
                     await message.remove_reaction(reaction.emoji, ctx.author)
 
