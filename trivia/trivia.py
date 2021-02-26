@@ -193,6 +193,30 @@ class trivia(BaseCog):
             except asyncio.TimeoutError:
                 await msg.delete()
                 await ctx.message.add_reaction("🚫")
+                    
+    @trivia.command()
+    async def enable(self, ctx: commands.Context):
+        """Attivare il post automatico dei quiz"""
+        if role_check(ctx, [454262524955852800, 454262403819896833]):
+            setup = await self.config.guild(ctx.guild).setup()
+            if setup["enabled"] == False:
+                setup.update({ "enabled" : True })
+                await self.config.guild(ctx.guild).setup.set(setup)
+                await ctx.message.add_reaction("✅")
+            else:
+                await ctx.message.add_reaction("🚫")
+                    
+    @trivia.command()
+    async def enable(self, ctx: commands.Context):
+        """Disattivare il post automatico dei quiz"""
+        if role_check(ctx, [454262524955852800, 454262403819896833]):
+            setup = await self.config.guild(ctx.guild).setup()
+            if setup["enabled"] == True:
+                setup.update({ "enabled" : False })
+                await self.config.guild(ctx.guild).setup.set(setup)
+                await ctx.message.add_reaction("✅")
+            else:
+                await ctx.message.add_reaction("🚫")
         
     @trivia.command()
     async def current(self, ctx: commands.Context):
