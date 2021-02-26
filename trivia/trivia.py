@@ -123,6 +123,8 @@ BaseCog = getattr(commands, "Cog", object)
 class trivia(BaseCog):
     """Pubblicare domande quotidianamente"""
     # Cog creato da MettiusHyper#2100
+                    
+    #---------------# SETUP #---------------#
     
     def __init__(self, bot):
         self.bot = bot
@@ -137,7 +139,7 @@ class trivia(BaseCog):
         self.daily_post.cancel()
         self.checker.cancel()
 
-    #------------# SETUP #------------#
+    #--------------# COMMANDS #--------------#
 
     @commands.group(name="trivia")
     @commands.guild_only()
@@ -165,13 +167,18 @@ class trivia(BaseCog):
         if role_check(ctx, [454262524955852800, 454262403819896833]):
             msg = await ctx.send(":warning: Sicuro di procedere?")
             await msg.add_reaction("✅")
+            await msg.add_reaction("❎")
             def reaction_check(reaction, user):
-                return user.id == ctx.message.author.id and str(reaction.emoji) == "✅" and reaction.message.id == msg.id
+                return user.id == ctx.message.author.id and ["✅", "❎"].count(str(reaction.emoji)) > 0 and reaction.message.id == msg.id
             try:
-                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)
-                await self.config.guild(ctx.guild).score.set({})
-                await msg.delete()
-                await ctx.message.add_reaction("✅")
+                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)        
+                if str(reaction.emoji) == "✅":
+                    await self.config.guild(ctx.guild).score.set({})
+                    await msg.delete()
+                    await ctx.message.add_reaction("✅")
+                else:
+                    await msg.delete()
+                    await ctx.message.add_reaction("🚫")
             except asyncio.TimeoutError:
                 await msg.delete()
                 await ctx.message.add_reaction("🚫")
@@ -182,14 +189,19 @@ class trivia(BaseCog):
         if role_check(ctx, [454262524955852800, 454262403819896833]):
             msg = await ctx.send(":warning: Sicuro di procedere?")
             await msg.add_reaction("✅")
+            await msg.add_reaction("❎")
             def reaction_check(reaction, user):
-                return user.id == ctx.message.author.id and str(reaction.emoji) == "✅" and reaction.message.id == msg.id
+                return user.id == ctx.message.author.id and ["✅", "❎"].count(str(reaction.emoji)) > 0 and reaction.message.id == msg.id
             try:
-                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)
-                await self.config.guild(ctx.guild).questions.set([])
-                await self.config.guild(ctx.guild).reaction.set({})
-                await msg.delete()
-                await ctx.message.add_reaction("✅")
+                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)        
+                if str(reaction.emoji) == "✅":
+                    await self.config.guild(ctx.guild).questions.set([])
+                    await self.config.guild(ctx.guild).reaction.set({})
+                    await msg.delete()
+                    await ctx.message.add_reaction("✅")
+                else:
+                    await msg.delete()
+                    await ctx.message.add_reaction("🚫")
             except asyncio.TimeoutError:
                 await msg.delete()
                 await ctx.message.add_reaction("🚫")
@@ -264,8 +276,6 @@ class trivia(BaseCog):
             setup.update({"channel" : value.id})
             await self.config.guild(ctx.guild).setup.set(setup)
             await ctx.message.add_reaction("✅")
-    
-    #--------------# COMMANDS #--------------#
 
     @trivia.command()
     async def remove(self, ctx: commands.Context, value: int):
@@ -279,14 +289,19 @@ class trivia(BaseCog):
             embed = await create_embed(self, question)
             msg = await ctx.send(content = f"Sicuro di **rimuovere** il seguente quiz?", embed = embed)
             await msg.add_reaction("✅")
+            await msg.add_reaction("❎")
             def reaction_check(reaction, user):
-                return user.id == ctx.message.author.id and str(reaction.emoji) == "✅" and reaction.message.id == msg.id
+                return user.id == ctx.message.author.id and ["✅", "❎"].count(str(reaction.emoji)) > 0 and reaction.message.id == msg.id
             try:
-                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)
-                questions.remove(question)
-                await self.config.guild(ctx.guild).questions.set(questions)
-                await msg.delete()
-                await ctx.message.add_reaction("✅")
+                reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)        
+                if str(reaction.emoji) == "✅":
+                    questions.remove(question)
+                    await self.config.guild(ctx.guild).questions.set(questions)
+                    await msg.delete()
+                    await ctx.message.add_reaction("✅")
+                else:
+                    await msg.delete()
+                    await ctx.message.add_reaction("🚫")
             except asyncio.TimeoutError:
                 await msg.delete()
                 await ctx.message.add_reaction("🚫")
@@ -428,7 +443,7 @@ class trivia(BaseCog):
                 await msg.edit(content = "Domanda **aggiunta** con successo!")
             await msg.clear_reactions()
     
-    #------------# EVENT #------------#
+    #---------------# EVENT #---------------#
     
     @tasks.loop(seconds=10, count=1)
     async def start_post(self):
