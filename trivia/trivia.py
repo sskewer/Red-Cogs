@@ -312,6 +312,8 @@ class trivia(BaseCog):
                     if new_value.content != "No":
                         new_question.update({ "question": new_value.content })
                     
+                    if new_question == question:
+                        return await ctx.send("Non hai effettuato **nessuna modifica** alla domanda!")
                     confirm = await ctx.send(content = "Reagisci con <:FNIT_ThumbsUp:454640434380013599> per **modificare la domanda**.", embed = await create_embed(self, new_question))
                     await confirm.add_reaction("<:FNIT_ThumbsUp:454640434380013599>")
                     await confirm.add_reaction("<:FNIT_ThumbsDown:454640434610700289>")
