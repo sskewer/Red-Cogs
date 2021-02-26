@@ -207,7 +207,7 @@ class trivia(BaseCog):
                 await ctx.message.add_reaction("🚫")
                     
     @trivia.command()
-    async def enable(self, ctx: commands.Context):
+    async def disable(self, ctx: commands.Context):
         """Disattivare il post automatico dei quiz"""
         if role_check(ctx, [454262524955852800, 454262403819896833]):
             setup = await self.config.guild(ctx.guild).setup()
