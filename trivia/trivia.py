@@ -381,7 +381,7 @@ class trivia(BaseCog):
                 else:
                     question = questions[value - 1]
                     embed = await create_embed(self, question)
-                    await ctx.send(content = f"Domanda N° **{value}**", embed = embed)
+                    await ctx.send(content = f"Domanda **{value}** di {str(len(questions))}", embed = embed)
     
     @trivia.command(aliases = ["lb"])
     async def leaderboard(self, ctx: commands.Context):
