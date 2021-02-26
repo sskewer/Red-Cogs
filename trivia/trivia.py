@@ -305,12 +305,26 @@ class trivia(BaseCog):
                         "image": question["image"],
                         "time": question["time"]
                     }
-                    await ctx.send(content = "Scrivi ora la domanda **aggiornata**, altrimenti rispondi `No`.")
+                    await ctx.send(content = "Scrivi ora la **domanda aggiornata**, altrimenti rispondi `Skip`.")
                     new_value = await self.bot.wait_for('message', check=check, timeout=300.0)
                     if len(new_value.content) > 256:
                         return await ctx.send("La **lughezza massima** per la domanda (256 caratteri) è stata superata, riprovare!")
-                    if new_value.content != "No":
+                    if new_value.content != "Skip":
                         new_question.update({ "question": new_value.content })
+                    
+                    await ctx.send("Scrivi ora la domanda **risposta corretta aggiornata**, altrimenti rispondi `Skip`.")
+                    new_value = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    if new_value.content != "Skip":
+                        new_question.update({ "correct_answer": new_value.content })
+                    
+                    await ctx.send("Scrivi ora le **risposte errate aggiornate**, separate da una `,` o altrimenti rispondi `Skip`.")
+                    incorrect_answers_raw = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    if incorrect_answers_raw.content != "Skip":
+                        new_value = incorrect_answers_raw.content.split(",")
+                        for n, answer in enumerate(new_value):
+                            new_value[n] = answer.strip()
+                        new_question.update({ "incorrect_answers": new_value })
+                    
                     # Aggiungere qui il resto
                     if new_question == question:
                         return await ctx.send("Non hai effettuato **nessuna modifica** alla domanda!")
