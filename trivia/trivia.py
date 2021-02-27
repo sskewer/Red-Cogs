@@ -302,9 +302,12 @@ class trivia(BaseCog):
                         "question" : question["question"],
                         "correct_answer" : question["correct_answer"],
                         "incorrect_answers" : question["incorrect_answers"],
-                        "image": question["image"],
                         "time": question["time"]
                     }
+                    try:
+                        new_question.update({ "image": question["image"] })
+                    except:
+                        pass
                     await ctx.send(content = "Scrivi ora la **domanda aggiornata**, altrimenti rispondi `Skip`.")
                     new_value = await self.bot.wait_for('message', check=check, timeout=300.0)
                     if len(new_value.content) > 256:
