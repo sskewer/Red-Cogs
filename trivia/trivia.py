@@ -328,14 +328,20 @@ class trivia(BaseCog):
                             new_value[n] = answer.strip()
                         new_question.update({ "incorrect_answers": new_value })
                     
-                    await ctx.send("Invia ora l'**immagine aggiornata**, altrimenti rispondi `Skip`.")
+                    await ctx.send("Invia ora l'**immagine aggiornata**, altrimenti rispondi `No` per rimuovere o `Skip`.")
                     image = await self.bot.wait_for('message', check=check, timeout=300.0)
-                    if image.attachments != [] and image.content != "Skip":
-                        format_check = image.attachments[0].filename.lower()
-                        if format_check.endswith((".png", ".jpg", ".jpeg", ".gif", ".tiff", ".bmp")) == True:
-                            new_question.update({ "image": image.attachments[0].url })
-                        else:
-                            return await ctx.send("L'allegato non appartiene a un **formato immagine**, riprovare!")
+                    if image.content != "Skip":
+                        if image.content == "No":
+                            try:
+                                del new_questione["image"]
+                            except:
+                                pass
+                        if image.attachments != [] and image.content != "No":
+                            format_check = image.attachments[0].filename.lower()
+                            if format_check.endswith((".png", ".jpg", ".jpeg", ".gif", ".tiff", ".bmp")) == True:
+                                new_question.update({ "image": image.attachments[0].url })
+                            else:
+                                return await ctx.send("L'allegato non appartiene a un **formato immagine**, riprovare!")
                             
                     await ctx.send("Scrivi ora la **nuova durata** del quiz usando il formato `HH:MM`, altrimenti rispondi `Skip`.")
                     time = await self.bot.wait_for('message', check=check, timeout=300.0)
