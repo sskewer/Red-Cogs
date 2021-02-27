@@ -331,7 +331,11 @@ class trivia(BaseCog):
                     await ctx.send("Invia ora l'**immagine aggiornata**, altrimenti rispondi `Skip`.")
                     image = await self.bot.wait_for('message', check=check, timeout=300.0)
                     if image.attachments != [] and image.content != "Skip":
-                        new_question.update({ "image": image.attachments[0].url })
+                        format_check = image.attachments[0].filename.lower()
+                        if format_check.endswith(".png" or ".jpg" or ".jpeg" or ".gif"):
+                            new_question.update({ "image": image.attachments[0].url })
+                        else:
+                            return await ctx.send("L'allegato non appartiene a un **formato immagine**, riprovare!")
                             
                     await ctx.send("Scrivi ora la **nuova durata** del quiz usando il formato `HH:MM`, altrimenti rispondi `Skip`.")
                     time = await self.bot.wait_for('message', check=check, timeout=300.0)
@@ -506,7 +510,11 @@ class trivia(BaseCog):
             await ctx.send("Invia ora l'immagine come **allegato**, altrimenti rispondi `No`.")
             image = await self.bot.wait_for('message', check=check, timeout=300.0)
             if image.attachments != []:
-                question.update({"image" : image.attachments[0].url})
+                format_check = image.attachments[0].filename.lower()
+                if format_check.endswith(".png" or ".jpg" or ".jpeg" or ".gif"):
+                    question.update({"image" : image.attachments[0].url})
+                else:
+                    return await ctx.send("L'allegato non appartiene a un **formato immagine**, riprovare!")
 
             await ctx.send("Quale sarà la **durata** del quiz? Usa il formato `HH:MM`.")
             time = await self.bot.wait_for('message', check=check, timeout=300.0)
