@@ -397,7 +397,7 @@ class trivia(BaseCog):
     @trivia.command(aliases = ["db"])
     async def list(self, ctx: commands.Context, value: int = None):
         """Visualizzare la lista delle domande"""
-        if role_check(ctx, [536214242685091860, 454268394464870401, 454262524955852800, 720221658501087312, 659513332218331155]):
+        if role_check(ctx, [659513332218331155, 454268394464870401, 454262524955852800, 720221658501087312, 659513332218331155]):
             questions = await self.config.guild(ctx.guild).questions()
             setup = await self.config.guild(ctx.guild).setup()
             hex_int = int(setup["color"].replace("#", "0x"), 16)
@@ -472,7 +472,7 @@ class trivia(BaseCog):
     @commands.guild_only()
     @commands.command()
     async def domanda(self, ctx : commands.Context):
-        allowed_roles = [536214242685091860, 454268394464870401, 454262524955852800, 720221658501087312, 659513332218331155]
+        allowed_roles = [659513332218331155, 454268394464870401, 454262524955852800, 720221658501087312, 659513332218331155]
         for n, role in enumerate(allowed_roles):
             role = ctx.guild.get_role(role)
             allowed_roles[n] = role
