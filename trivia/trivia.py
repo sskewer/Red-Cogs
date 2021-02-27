@@ -333,7 +333,7 @@ class trivia(BaseCog):
                     if image.content != "Skip":
                         if image.content == "No":
                             try:
-                                del new_questione["image"]
+                                del new_question["image"]
                             except:
                                 pass
                         if image.attachments != [] and image.content != "No":
