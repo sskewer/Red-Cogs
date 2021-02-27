@@ -332,7 +332,7 @@ class trivia(BaseCog):
                     image = await self.bot.wait_for('message', check=check, timeout=300.0)
                     if image.attachments != [] and image.content != "Skip":
                         format_check = image.attachments[0].filename.lower()
-                        if format_check.endswith(".png" or ".jpg" or ".jpeg" or ".gif") == True:
+                        if format_check.endswith((".png", ".jpg", ".jpeg", ".gif", ".tiff", ".bmp")) == True:
                             new_question.update({ "image": image.attachments[0].url })
                         else:
                             return await ctx.send("L'allegato non appartiene a un **formato immagine**, riprovare!")
@@ -511,10 +511,10 @@ class trivia(BaseCog):
             image = await self.bot.wait_for('message', check=check, timeout=300.0)
             if image.attachments != []:
                 format_check = image.attachments[0].filename.lower()
-                if format_check.endswith(".png" or ".jpg" or ".jpeg" or ".gif") == True:
+                if format_check.endswith((".png", ".jpg", ".jpeg", ".gif", ".tiff", ".bmp")) == True:
                     question.update({"image" : image.attachments[0].url})
                 else:
-                    return await ctx.send("L'allegato non appartiene a un **formato immagine**, riprovare!")
+                    return await ctx.send("L'immagine allegata non è un **formato valido**, riprovare!")
 
             await ctx.send("Quale sarà la **durata** del quiz? Usa il formato `HH:MM`.")
             time = await self.bot.wait_for('message', check=check, timeout=300.0)
