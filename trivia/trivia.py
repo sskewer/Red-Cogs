@@ -325,9 +325,25 @@ class trivia(BaseCog):
                             new_value[n] = answer.strip()
                         new_question.update({ "incorrect_answers": new_value })
                     
-                    # Aggiungere qui il resto
+                    await ctx.send("Invia ora l'**immagine aggiornata**, altrimenti rispondi `Skip`.")
+                    image = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    if image.attachments != [] and image.content != "Skip":
+                        new_question.update({ "image": image.attachments[0].url })
+                            
+                    await ctx.send("Scrivi ora la **nuova durata** del quiz usando il formato `HH:MM`, altrimenti rispondi `Skip`.")
+                    time = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    if time.content != "Skip":
+                        time = time.content.split(":")
+                        try:
+                            for n, el in enumerate(time):
+                                time[n] = int(time[n])
+                        except:
+                            return await ctx.send("Specifica una durata nel **formato corretto** (`HH:MM`), riprovare!")
+                        new_question.update({ "time": time })
+                            
                     if new_question == question:
                         return await ctx.send("Non hai effettuato **nessuna modifica** alla domanda!")
+                    
                     confirm = await ctx.send(content = "Reagisci con <:FNIT_ThumbsUp:454640434380013599> per **modificare la domanda**.", embed = await create_embed(self, new_question))
                     await confirm.add_reaction("<:FNIT_ThumbsUp:454640434380013599>")
                     await confirm.add_reaction("<:FNIT_ThumbsDown:454640434610700289>")
@@ -381,7 +397,7 @@ class trivia(BaseCog):
     @trivia.command(aliases = ["db"])
     async def list(self, ctx: commands.Context, value: int = None):
         """Visualizzare la lista delle domande"""
-        if role_check(ctx, [536214242685091860, 454268394464870401, 454262524955852800, 454262403819896833]):
+        if role_check(ctx, [536214242685091860, 454268394464870401, 454262524955852800, 720221658501087312, 659513332218331155]):
             questions = await self.config.guild(ctx.guild).questions()
             setup = await self.config.guild(ctx.guild).setup()
             hex_int = int(setup["color"].replace("#", "0x"), 16)
@@ -456,7 +472,7 @@ class trivia(BaseCog):
     @commands.guild_only()
     @commands.command()
     async def domanda(self, ctx : commands.Context):
-        allowed_roles = [536214242685091860, 454268394464870401, 454262524955852800, 454262403819896833]
+        allowed_roles = [536214242685091860, 454268394464870401, 454262524955852800, 720221658501087312, 659513332218331155]
         for n, role in enumerate(allowed_roles):
             role = ctx.guild.get_role(role)
             allowed_roles[n] = role
