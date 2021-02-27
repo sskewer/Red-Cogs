@@ -308,20 +308,30 @@ class trivia(BaseCog):
                         new_question.update({ "image": question["image"] })
                     except:
                         pass
+                    
                     await ctx.send(content = "Scrivi ora la **domanda aggiornata**, altrimenti rispondi `Skip`.")
-                    new_value = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    try:
+                        new_value = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    except:
+                        return
                     if len(new_value.content) > 256:
                         return await ctx.send("La **lughezza massima** per la domanda (256 caratteri) è stata superata, riprovare!")
                     if new_value.content != "Skip":
                         new_question.update({ "question": new_value.content })
                     
                     await ctx.send("Scrivi ora la **risposta corretta aggiornata**, altrimenti rispondi `Skip`.")
-                    new_value = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    try:
+                        new_value = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    except:
+                        return
                     if new_value.content != "Skip":
                         new_question.update({ "correct_answer": new_value.content })
                     
                     await ctx.send("Scrivi ora le **risposte errate aggiornate**, separate da una `,` o altrimenti rispondi `Skip`.")
-                    incorrect_answers_raw = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    try:
+                        incorrect_answers_raw = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    except:
+                        return
                     if incorrect_answers_raw.content != "Skip":
                         new_value = incorrect_answers_raw.content.split(",")
                         for n, answer in enumerate(new_value):
@@ -329,7 +339,10 @@ class trivia(BaseCog):
                         new_question.update({ "incorrect_answers": new_value })
                     
                     await ctx.send("Invia ora l'**immagine aggiornata**, altrimenti rispondi `No` per rimuovere o `Skip`.")
-                    image = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    try:
+                        image = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    except:
+                        return
                     if image.content != "Skip":
                         if image.content == "No":
                             try:
@@ -344,7 +357,10 @@ class trivia(BaseCog):
                                 return await ctx.send("L'allegato non appartiene a un **formato immagine**, riprovare!")
                             
                     await ctx.send("Scrivi ora la **nuova durata** del quiz usando il formato `HH:MM`, altrimenti rispondi `Skip`.")
-                    time = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    try:
+                        time = await self.bot.wait_for('message', check=check, timeout=300.0)
+                    except:
+                        return
                     if time.content != "Skip":
                         time = time.content.split(":")
                         try:
@@ -496,15 +512,24 @@ class trivia(BaseCog):
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
             await ctx.send("Qual è la **domanda**?")
-            question = await self.bot.wait_for('message', check=check, timeout=300.0)
+            try:
+                question = await self.bot.wait_for('message', check=check, timeout=300.0)
+            except:
+                return
             if len(question.content) > 256:
                 return await ctx.send("La **lughezza massima** per la domanda (256 caratteri) è stata superata, riprovare!")
             
             await ctx.send("Qual è la **risposta corretta**?")
-            correct_answer = await self.bot.wait_for('message', check=check, timeout=300.0)
+            try:
+                correct_answer = await self.bot.wait_for('message', check=check, timeout=300.0)
+            except:
+                return
 
             await ctx.send("Scrivi ora le **risposte errate**, separate da una `,`.")
-            incorrect_answers_raw = await self.bot.wait_for('message', check=check, timeout=300.0)
+            try:
+                incorrect_answers_raw = await self.bot.wait_for('message', check=check, timeout=300.0)
+            except:
+                return
             incorrect_answers = incorrect_answers_raw.content.split(",")
             for n, answer in enumerate(incorrect_answers):
                 incorrect_answers[n] = answer.strip()
@@ -514,7 +539,10 @@ class trivia(BaseCog):
                 "incorrect_answers" : incorrect_answers
             }
             await ctx.send("Invia ora l'immagine come **allegato**, altrimenti rispondi `No`.")
-            image = await self.bot.wait_for('message', check=check, timeout=300.0)
+            try:
+                image = await self.bot.wait_for('message', check=check, timeout=300.0)
+            except:
+                return
             if image.attachments != []:
                 format_check = image.attachments[0].filename.lower()
                 if format_check.endswith((".png", ".jpg", ".jpeg", ".gif", ".tiff", ".bmp")) == True:
@@ -523,7 +551,10 @@ class trivia(BaseCog):
                     return await ctx.send("L'immagine allegata non è un **formato valido**, riprovare!")
 
             await ctx.send("Quale sarà la **durata** del quiz? Usa il formato `HH:MM`.")
-            time = await self.bot.wait_for('message', check=check, timeout=300.0)
+            try:
+                time = await self.bot.wait_for('message', check=check, timeout=300.0)
+            except:
+                return
             time = time.content.split(":")
             try:
                 for n, el in enumerate(time):
