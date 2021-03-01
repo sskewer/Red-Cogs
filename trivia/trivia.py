@@ -240,13 +240,6 @@ class trivia(BaseCog):
                 await ctx.message.add_reaction("🚫")
     
     @trivia.command()
-    async def test(self, ctx: commands.Context):
-        """Testare gli errori di Mettius"""
-        if role_check(ctx, [454262524955852800, 454262403819896833]):
-            update_db(ctx.author.id, ctx.guild.id, 100)
-            await ctx.message.add_reaction("✅")
-    
-    @trivia.command()
     async def enable(self, ctx: commands.Context):
         """Attivare il post automatico dei quiz"""
         if role_check(ctx, [454262524955852800, 454262403819896833]):
