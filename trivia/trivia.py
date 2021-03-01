@@ -151,8 +151,16 @@ class trivia(BaseCog):
     async def force(self, ctx: commands.Context):
         """Posta forzatamente il quiz"""
         if role_check(ctx, [454262524955852800, 454262403819896833, 454268394464870401]):
-            await post(self)
-            await ctx.message.add_reaction("✅")
+            try:
+                setup = await self.config.guild(ctx.guild).setup()
+                temp = setup
+                temp.update({ "enabled" : True })
+                await self.config.guild(ctx.guild).setup.set(temp)
+                await post(self)
+                await self.config.guild(ctx.guild).setup.set(setup)
+                await ctx.message.add_reaction("✅")
+            except:
+                await ctx.message.add_reaction("🚫")
     
     @trivia.command()
     async def close(self, ctx: commands.Context, msg_id: int = None):
