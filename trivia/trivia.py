@@ -7,9 +7,24 @@ from asyncio import sleep
 from discord.ext import tasks
 from redbot.core import Config, commands
 from redbot.core.bot import Red
+from pymongo import MongoClient
 
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
 arrow_reactions = ["⏮", "◀", "▶", "⏭", "🛑"]
+
+client = MongoClient("URI")
+db = client.FortniteITA
+coll = db["level-system"]
+
+def getUserLevel(user, guild):
+    data = coll.find_one({ "guild": guild.id, "user": userID })
+    if data == None:
+      data = {
+        points: 0,
+        level: 0,
+        timestamp: (datetime.datetime.now().timestamp() - 60) * 1000
+      };
+    return data
 
 def role_check(ctx, roles):
     for n, role in enumerate(roles):
