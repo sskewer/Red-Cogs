@@ -17,14 +17,14 @@ db = client.FortniteITA
 coll = db["level-system"]
 
 def update_db(userID, guildID, point):
-    data = coll.find_one({ "guild": guildID, "user": userID })
-    if data == None:
-      data = {
+    userLevel = coll.find_one({ "guild": guildID, "user": userID })
+    if userLevel == None:
+      userLevel = {
         "points": 0,
         "level": 0,
         "timestamp": (datetime.datetime.now().timestamp() - 60) * 1000
       };
-    levelUser = data["level"]
+    levelUser = userLevel["level"]
     toNextLevel = 8 * ((levelUser + 1) ** 2) + 85 * levelUser + 110 + levelUser*100;
     toPreviousLevel = 8 * (levelUser ** 2) + 85 * (levelUser - 1) + 110 + (levelUser - 1)*100;
     while (userLevel["points"] + point) >= toNextLevel:
