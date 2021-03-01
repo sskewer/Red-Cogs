@@ -238,7 +238,14 @@ class trivia(BaseCog):
             except asyncio.TimeoutError:
                 await msg.delete()
                 await ctx.message.add_reaction("🚫")
-                    
+    
+    @trivia.command()
+    async def test(self, ctx: commands.Context):
+        """Testare gli errori di Mettius"""
+        if role_check(ctx, [454262524955852800, 454262403819896833]):
+            update_db(ctx.guild.id, ctx.author.id, 100)
+            await ctx.message.add_reaction("✅")
+    
     @trivia.command()
     async def enable(self, ctx: commands.Context):
         """Attivare il post automatico dei quiz"""
@@ -261,7 +268,7 @@ class trivia(BaseCog):
                 await self.config.guild(ctx.guild).setup.set(setup)
                 await ctx.message.add_reaction("✅")
             else:
-                await ctx.message.add_reaction("🚫")
+                await ctx.message.add_reaction("🚫") 
         
     @trivia.command()
     async def current(self, ctx: commands.Context):
@@ -649,8 +656,8 @@ class trivia(BaseCog):
             if data["message"] == payload.message_id:
                 if payload.user_id not in data["users"]:
                     if str(payload.emoji) in reactions:
-                        if reactions.index(str(payload.emoji)) == data["correct"]:
-                            update_db(guild.id, payload.user_id, 100)
+                        #if reactions.index(str(payload.emoji)) == data["correct"]:
+                            #update_db(guild.id, payload.user_id, 100)
                         users = data["users"]
                         users.append(payload.user_id)
                         data.update({"users" : users})
