@@ -16,7 +16,7 @@ client = MongoClient("URI")
 db = client.FortniteITA
 coll = db["level-system"]
 
-def getUserLevel(user, guild):
+def updateDB(user, guild, point):
     data = coll.find_one({ "guild": guild.id, "user": userID })
     if data == None:
       data = {
@@ -24,7 +24,7 @@ def getUserLevel(user, guild):
         level: 0,
         timestamp: (datetime.datetime.now().timestamp() - 60) * 1000
       };
-    return data
+    levelUser = data["level"]
 
 def role_check(ctx, roles):
     for n, role in enumerate(roles):
