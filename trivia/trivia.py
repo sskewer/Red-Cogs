@@ -25,6 +25,12 @@ def updateDB(user, guild, point):
         timestamp: (datetime.datetime.now().timestamp() - 60) * 1000
       };
     levelUser = data["level"]
+    toNextLevel = 8 * ((levelUser + 1) ** 2)) + 85 * levelUser + 110 + levelUser*100;
+    toPreviousLevel = 8 * (levelUser ** 2)) + 85 * (levelUser - 1) + 110 + (levelUser - 1)*100;
+    while (userLevel["points"] + point) >= toNextLevel:
+      levelUser += 1
+      toNextLevel = 8 * ((levelUser + 1) ** 2)) + 85 * levelUser + 110 + levelUser*100;
+    
 
 def role_check(ctx, roles):
     for n, role in enumerate(roles):
