@@ -16,7 +16,7 @@ client = MongoClient("URI")
 db = client.FortniteITA
 coll = db["level-system"]
 
-def updateDB(userID, guildID, point):
+def update_db(userID, guildID, point):
     data = coll.find_one({ "guild": guildID, "user": userID })
     if data == None:
       data = {
@@ -663,3 +663,4 @@ class trivia(BaseCog):
                         await self.config.guild(guild).reaction.set(data)
                 msg = await guild.get_channel(payload.channel_id).fetch_message(payload.message_id)
                 await msg.remove_reaction(payload.emoji, guild.get_member(payload.user_id))
+                update_db(guild.id, payload.user_id, 100)
