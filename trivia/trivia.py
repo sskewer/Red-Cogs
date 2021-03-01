@@ -651,7 +651,7 @@ class trivia(BaseCog):
                 if payload.user_id not in data["users"]:
                     if str(payload.emoji) in reactions:
                         if reactions.index(str(payload.emoji)) == data["correct"]:
-                            update_db(guild.id, payload.user_id, 100)
+                            update_db(payload.user_id, guild.id, 100)
                             score = await self.config.guild(guild).score()
                             try:
                                 old_score = score[str(payload.user_id)]
