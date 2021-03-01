@@ -22,7 +22,7 @@ class Memes(BaseCog):
                 embed.set_footer(text = f"Richiesto da {message.author}")
             if message.content.lower() == "theredheat":
                 theredheat = message.guild.get_member(423572109684637708)
-                if ctx.author == theredheat:
+                if message.author == theredheat:
                     embed = discord.Embed(title = "Error 404: qualcosa non va...", description = "O mio supremo maestro!\nCi inchineremo tutti alla sua presenza.", timestamp = datetime.datetime.now(), color = discord.Colour.blue())
                     embed.set_footer(text = "Richiesto dal Maestro Supremo")
                 else:
@@ -31,7 +31,7 @@ class Memes(BaseCog):
                     embed.set_footer(text = f"Richiesto da {message.author}")
             if message.content.lower() == "mettiushyper":
                 mettius = message.guild.get_member(707165674845241344)
-                if ctx.author == mettius:
+                if message.author == mettius:
                     embed = discord.Embed(title = "Error 404: qualcosa non va...", description = "O mio supremo maestro!\nCi inchineremo tutti alla sua presenza.", timestamp = datetime.datetime.now(), color = discord.Colour.orange())
                     embed.set_footer(text = "Richiesto dal Maestro Supremo")
                 else:
@@ -40,4 +40,4 @@ class Memes(BaseCog):
                     embed.set_footer(text = f"Richiesto da {message.author}")
             if embed != None:
                 await message.delete()
-                await ctx.send(embed = embed)
+                await message.channel.send(embed = embed)
