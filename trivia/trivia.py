@@ -20,9 +20,9 @@ def update_db(userID, guildID, point):
     data = coll.find_one({ "guild": guildID, "user": userID })
     if data == None:
       data = {
-        points: 0,
-        level: 0,
-        timestamp: (datetime.datetime.now().timestamp() - 60) * 1000
+        "points": 0,
+        "level": 0,
+        "timestamp": (datetime.datetime.now().timestamp() - 60) * 1000
       };
     levelUser = data["level"]
     toNextLevel = 8 * ((levelUser + 1) ** 2) + 85 * levelUser + 110 + levelUser*100;
