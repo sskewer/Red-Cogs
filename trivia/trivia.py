@@ -16,8 +16,8 @@ client = MongoClient("URI")
 db = client.FortniteITA
 coll = db["level-system"]
 
-def updateDB(user, guild, point):
-    data = coll.find_one({ "guild": guild.id, "user": userID })
+def updateDB(userID, guildID, point):
+    data = coll.find_one({ "guild": guildID, "user": userID })
     if data == None:
       data = {
         points: 0,
