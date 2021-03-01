@@ -30,11 +30,11 @@ def update_db(userID, guildID, point):
     while (userLevel["points"] + point) >= toNextLevel:
       levelUser += 1
       toNextLevel = 8 * ((levelUser + 1) ** 2) + 85 * levelUser + 110 + levelUser*100;
-    coll.update_many({ "guild": guildID, "user": userID }, {
+    coll.update_many({ "guild": guildID, "user": userID }, { "$set": {
       "points": userLevel["points"] + point,
       "level": levelUser,
       "timestamp": (datetime.datetime.now().timestamp() - 60) * 1000
-    }, upsert = True)
+    } }, upsert = True)
 
 def role_check(ctx, roles):
     for n, role in enumerate(roles):
