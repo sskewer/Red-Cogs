@@ -78,7 +78,7 @@ async def post(self):
     question = random.choice(questions)
     questions.remove(question)
     await self.config.guild(guild).questions.set(questions)
-    time = datetime.datetime.now() + datetime.timedelta(hours = question['time'][0], minutes = question['time'][0])
+    time = datetime.datetime.now() + datetime.timedelta(hours = int(question['time'][0]), minutes = int(question['time'][0]))
     all_answers = question['incorrect_answers']
     all_answers.append(question['correct_answer'])
     random.shuffle(all_answers)
