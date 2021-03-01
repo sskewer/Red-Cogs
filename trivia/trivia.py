@@ -644,6 +644,7 @@ class trivia(BaseCog):
     @tasks.loop(minutes=10)
     async def checker(self):
         # Check if questions ended
+        guild = self.bot.get_guild(454261607799717888)
         reaction = await self.config.guild(guild).reaction()
         if datetime.datetime.fromtimestamp(reaction['time']) < datetime.datetime.now():
             await close(self)
