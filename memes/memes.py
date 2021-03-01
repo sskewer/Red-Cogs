@@ -17,7 +17,7 @@ class Memes(BaseCog):
     def __init__(self, bot):
         self.bot = bot
 
-@commands.Cog.listener()
+    @commands.Cog.listener()
     async def on_message(self, message):
         if role_check(ctx, [454262524955852800, 454268394464870401, 659513332218331155, 720221658501087312, 676408167063879715, 454262729620848641, 793163338007707679]):
             embed = None
