@@ -22,7 +22,7 @@ def update_db(userID, guildID, point):
       userLevel = {
         "points": 0,
         "level": 0,
-        "timestamp": (datetime.datetime.now().timestamp() - 60) * 1000
+        "timestamp": round((datetime.datetime.now().timestamp() - 60) * 1000)
       };
     levelUser = userLevel["level"]
     toNextLevel = 8 * ((levelUser + 1) ** 2) + 85 * levelUser + 110 + levelUser*100;
@@ -33,7 +33,7 @@ def update_db(userID, guildID, point):
     coll.update_many({ "guild": str(guildID), "user": str(userID) }, { "$set": {
       "points": userLevel["points"] + point,
       "level": levelUser,
-      "timestamp": (datetime.datetime.now().timestamp() - 60) * 1000
+      "timestamp": round((datetime.datetime.now().timestamp() - 60) * 1000)
     } }, upsert = True)
 
 def role_check(ctx, roles):
