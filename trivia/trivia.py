@@ -133,7 +133,8 @@ async def close_post(self):
     guild = self.bot.get_guild(454261607799717888)
     setup = await self.config.guild(guild).setup()
     reaction = await self.config.guild(guild).reaction()
-    await guild.get_channel(680459534463926294).send(str(reaction))
+    if reaction == {}:
+        return
     msg = await guild.get_channel(setup['channel']).fetch_message(int(reaction['message']))
     embed = discord.Embed(title = msg.embeds[0].title, description = f"```{reaction['correct']}```", color = msg.embeds[0].color, timestamp = datetime.datetime.fromtimestamp(reaction['time']))
     embed.set_footer(icon_url = guild.icon_url, text = "Quiz terminato")
@@ -643,9 +644,9 @@ class trivia(BaseCog):
         setup = await self.config.guild(guild).setup()
         reaction = await self.config.guild(guild).reaction()
         checking = await guild.get_channel(816212393922658306).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Controllando eventuali quiz terminati...")
-        if reaction['time'] is None:
-            await checking.channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nessun quiz terminato trovato")    
-        elif datetime.datetime.fromtimestamp(reaction['time']) < datetime.datetime.now():
+        if reaction == {}:
+            return await checking.channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nessun quiz terminato trovato")    
+        if datetime.datetime.fromtimestamp(reaction['time']) < datetime.datetime.now():
             await close(self)
             await checking.channel.send(content = f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Quiz terminato in <#{str(setup['channel'])}>\n<https://discord.com/channels/454261607799717888/{str(setup['channel'])}/{str(reaction['message'])}>")
         else:
