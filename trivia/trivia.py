@@ -133,16 +133,17 @@ async def close_post(self, post_message = None):
     guild = self.bot.get_guild(454261607799717888)
     setup = await self.config.guild(guild).setup()
     reaction = await self.config.guild(guild).reaction()
-    print(reaction)
     if post_message == None:
         post_message = reaction['message']
     msg = await guild.get_channel(setup['channel']).fetch_message(int(post_message))
     await msg.clear_reactions()
-    description = msg.embeds[0].description.split()
-    correct_answer = description[reaction['correct']]
-    correct_answer = correct_answer[7:]
-    embed = discord.Embed(title = msg.embeds[0].title, description = correct_answer, color = msg.embeds[0].color, timestamp =  datetime.datetime.fromtimestamp(reaction['time']))
+    correct_answer = reaction['correct']
+    embed = discord.Embed(title = msg.embeds[0].title, description = correct_answer, color = msg.embeds[0].color, timestamp = datetime.datetime.fromtimestamp(reaction['time']))
     embed.set_footer(icon_url = guild.icon_url, text = "Quiz terminato")
+    try:
+        embed.set_image(url = msg.embeds[0].image.url)
+    except:
+        pass
     await msg.edit(embed = embed)
     await self.config.guild(guild).reaction.set({})
 
@@ -242,6 +243,16 @@ class trivia(BaseCog):
                 await msg.delete()
                 await ctx.message.add_reaction("🚫")
     
+    @trivia.command()
+    async def test(self, ctx: commands.Context):
+        data = {
+            "message" : 815917147246690327,
+            "correct" : "Capitolo 1 Stagione 7",
+            "users" : [],
+            "time" : 1614650400
+        }
+        await self.config.guild(guild).reaction.set(data)
+                    
     @trivia.command()
     async def enable(self, ctx: commands.Context):
         """Attivare il post automatico dei quiz"""
