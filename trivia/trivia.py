@@ -652,6 +652,7 @@ class trivia(BaseCog):
     @tasks.loop(seconds=10, count=1)
     async def start_post(self):
         guild = self.bot.get_guild(454261607799717888)
+        await guild.get_channel(816212393922658306).send("Test")
         setup = await self.config.guild(guild).setup()
         time = setup["time"]
         now = datetime.datetime.now()
@@ -660,6 +661,7 @@ class trivia(BaseCog):
         else:
             hop = now + datetime.timedelta(days = 1) - datetime.timedelta(hours = now.hour - time)
             post_time = datetime.datetime(hop.year, hop.month, hop.day, hop.hour)
+        await guild.get_channel(816212393922658306).send("Test 1")
         delta_time = post_time - now
         minutes = str(delta_time.seconds//60)
         await guild.get_channel(816212393922658306).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Post automatico in avvio tra {minutes} minuti...")
