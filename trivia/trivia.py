@@ -194,6 +194,9 @@ class trivia(BaseCog):
     async def close(self, ctx: commands.Context):
         """Chiude forzatamente il quiz"""
         if role_check(ctx, [454262524955852800, 454262403819896833, 454268394464870401]):
+            reaction = await self.config.guild(ctx.guild).reaction()
+            if reaction == {}:
+                return await ctx.message.add_reaction("🚫")
             await close_post(self)
             await ctx.message.add_reaction("✅")
     
