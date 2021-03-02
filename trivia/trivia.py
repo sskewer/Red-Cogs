@@ -647,7 +647,6 @@ class trivia(BaseCog):
                             
     @tasks.loop(hours=24)
     async def daily_post(self):
-        guild = self.bot.get_guild(454261607799717888)
         await close_post(self)
                             
     @tasks.loop(minutes=10)
