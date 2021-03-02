@@ -94,7 +94,10 @@ def listify(description):
 async def post(self):
     guild = self.bot.get_guild(454261607799717888)
     setup = await self.config.guild(guild).setup()
+    reaction_check = await self.config.guild(guild).reaction()
     if setup["enabled"] == False:
+        return
+    if reaction_check != {}:
         return
     hex_int = int(setup['color'].replace("#", "0x"), 16)
     questions = await self.config.guild(guild).questions()
@@ -181,6 +184,9 @@ class trivia(BaseCog):
         if role_check(ctx, [454262524955852800, 454262403819896833, 454268394464870401]):
             try:
                 setup = await self.config.guild(ctx.guild).setup()
+                reaction_check = await self.config.guild(ctx.guild).reaction()
+                if reaction_check != {}:
+                    return await ctx.message.add_reaction("🚫")
                 temp = setup
                 temp.update({ "enabled" : True })
                 await self.config.guild(ctx.guild).setup.set(temp)
