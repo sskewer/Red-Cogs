@@ -665,7 +665,6 @@ class trivia(BaseCog):
                     if str(payload.emoji) in reactions:
                         if reactions.index(str(payload.emoji)) == data["correct"]:
                             update_db(payload.user_id, guild.id, 100)
-                            await guild.get_channel(816212393922658306).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Punti aggiunti a <@!{payload.user_id}> con successo")
                             score = await self.config.guild(guild).score()
                             try:
                                 old_score = score[str(payload.user_id)]
@@ -673,6 +672,7 @@ class trivia(BaseCog):
                                 old_score = 0
                             score.update({payload.user_id : old_score + 1})
                             await self.config.guild(guild).score.set(score)
+                            await guild.get_channel(816212393922658306).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Risposta corretta per <@!{payload.user_id}>\n<https://discord.com/channels/454261607799717888/{str(payload.channel_id)}/{str(payload.message_id)}>")
                         users = data["users"]
                         users.append(payload.user_id)
                         data.update({"users" : users})
