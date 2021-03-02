@@ -641,8 +641,7 @@ class trivia(BaseCog):
             hop = now + datetime.timedelta(days = 1) - datetime.timedelta(hours = now.hour - time)
             post_time = datetime.datetime(hop.year, hop.month, hop.day, hop.hour)
         delta_time = post_time - now
-        #await guild.get_channel(816212393922658306).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Post automatico in avvio tra {str(delta_time.minutes)} minuti...")
-        await guild.get_channel(816212393922658306).send(str(delta_time.seconds))
+        await guild.get_channel(816212393922658306).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Post automatico in avvio tra {str(delta_time.seconds//60)} minuti...")
         await sleep(delta_time.seconds)
         self.daily_post.start()
                             
