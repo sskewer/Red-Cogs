@@ -138,8 +138,8 @@ class FacebookFeed(BaseCog):
       else:
         await checking.channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nessun nuovo feed trovato")
     except Exception as error:
-        error_string = repr(error)
-        if len(error_string) < 1:
-          await checking.channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Si è verificato un errore")
-        else:
-          await checking.channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Si è verificato un errore\n```py\n{str(e)}\n```")
+      error_string = repr(error)
+      if len(error_string) < 1:
+        await checking.channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Si è verificato un errore")
+      else:
+        await checking.channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Si è verificato un errore\n```py\n{str(e)}\n```")
