@@ -665,6 +665,7 @@ class trivia(BaseCog):
                     if str(payload.emoji) in reactions:
                         if reactions.index(str(payload.emoji)) == data["correct"]:
                             update_db(payload.user_id, guild.id, 100)
+                            await guild.get_channel(816212393922658306).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Punti aggiunti a <@!{payload.user_id}> con successo")
                             score = await self.config.guild(guild).score()
                             try:
                                 old_score = score[str(payload.user_id)]
