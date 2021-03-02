@@ -357,7 +357,7 @@ class trivia(BaseCog):
                     except:
                         pass
                     
-                    await ctx.send(content = "Scrivi ora la **domanda aggiornata**, altrimenti rispondi `Skip`.")
+                    temp = await ctx.send(content = "Scrivi ora la **domanda aggiornata**, altrimenti rispondi `Skip`.")
                     try:
                         new_value = await self.bot.wait_for('message', check=check, timeout=300.0)
                     except:
@@ -366,16 +366,20 @@ class trivia(BaseCog):
                         return await ctx.send("La **lughezza massima** per la domanda (256 caratteri) è stata superata, riprovare!")
                     if new_value.content != "Skip":
                         new_question.update({ "question": new_value.content })
-                    
-                    await ctx.send("Scrivi ora la **risposta corretta aggiornata**, altrimenti rispondi `Skip`.")
+                    await temp.delete()
+                    await new_value.delete()        
+                            
+                    temp = await ctx.send("Scrivi ora la **risposta corretta aggiornata**, altrimenti rispondi `Skip`.")
                     try:
                         new_value = await self.bot.wait_for('message', check=check, timeout=300.0)
                     except:
                         return
                     if new_value.content != "Skip":
                         new_question.update({ "correct_answer": new_value.content })
-                    
-                    await ctx.send("Scrivi ora le **risposte errate aggiornate**, separate da una `,` o altrimenti rispondi `Skip`.")
+                    await temp.delete()
+                    await new_value.delete() 
+                            
+                    temp = await ctx.send("Scrivi ora le **risposte errate aggiornate**, separate da una `,` o altrimenti rispondi `Skip`.")
                     try:
                         incorrect_answers_raw = await self.bot.wait_for('message', check=check, timeout=300.0)
                     except:
@@ -385,8 +389,10 @@ class trivia(BaseCog):
                         for n, answer in enumerate(new_value):
                             new_value[n] = answer.strip()
                         new_question.update({ "incorrect_answers": new_value })
-                    
-                    await ctx.send("Invia ora l'**immagine aggiornata**, altrimenti rispondi `No` per rimuovere o `Skip`.")
+                    await temp.delete()
+                    await incorrect_answers_raw.delete() 
+                            
+                    temp = await ctx.send("Invia ora l'**immagine aggiornata**, altrimenti rispondi `No` per rimuovere o `Skip`.")
                     try:
                         image = await self.bot.wait_for('message', check=check, timeout=300.0)
                     except:
@@ -403,8 +409,10 @@ class trivia(BaseCog):
                                 new_question.update({ "image": image.attachments[0].url })
                             else:
                                 return await ctx.send("L'allegato non appartiene a un **formato immagine**, riprovare!")
+                    await temp.delete()
+                    await image.delete()
                             
-                    await ctx.send("Scrivi ora la **nuova durata** del quiz usando il formato `HH:MM`, altrimenti rispondi `Skip`.")
+                    temp = await ctx.send("Scrivi ora la **nuova durata** del quiz usando il formato `HH:MM`, altrimenti rispondi `Skip`.")
                     try:
                         time = await self.bot.wait_for('message', check=check, timeout=300.0)
                     except:
@@ -417,6 +425,8 @@ class trivia(BaseCog):
                         except:
                             return await ctx.send("Specifica una durata nel **formato corretto** (`HH:MM`), riprovare!")
                         new_question.update({ "time": time })
+                    await temp.delete()
+                    await time.delete()
                             
                     if new_question == question:
                         return await ctx.send("Non hai effettuato **nessuna modifica** alla domanda!")
@@ -557,23 +567,30 @@ class trivia(BaseCog):
             q = await self.config.guild(ctx.guild).questions()
             if len(q) > 15:
                 return await ctx.send("Il **limite massimo** per le domande è stato raggiunto!\nProva ad eliminarne qualcuna con il comando `?trivia remove`")
+            new_question = {}
             def check(m):
                 return m.author == ctx.author and m.channel == ctx.channel
-            await ctx.send("Qual è la **domanda**?")
+            temp = await ctx.send("Qual è la **domanda**?")
             try:
                 question = await self.bot.wait_for('message', check=check, timeout=300.0)
             except:
                 return
             if len(question.content) > 256:
                 return await ctx.send("La **lughezza massima** per la domanda (256 caratteri) è stata superata, riprovare!")
+            new_question.update({ "question": question.content })
+            await temp.delete()
+            await question.delete()
             
-            await ctx.send("Qual è la **risposta corretta**?")
+            temp = await ctx.send("Qual è la **risposta corretta**?")
             try:
                 correct_answer = await self.bot.wait_for('message', check=check, timeout=300.0)
             except:
                 return
-
-            await ctx.send("Scrivi ora le **risposte errate**, separate da una `,`.")
+            new_question.update({ "correct_answer": correct_answer.content })
+            await temp.delete()
+            await correct_answer.delete()
+                            
+            temp = await ctx.send("Scrivi ora le **risposte errate**, separate da una `,`.")
             try:
                 incorrect_answers_raw = await self.bot.wait_for('message', check=check, timeout=300.0)
             except:
@@ -581,12 +598,11 @@ class trivia(BaseCog):
             incorrect_answers = incorrect_answers_raw.content.split(",")
             for n, answer in enumerate(incorrect_answers):
                 incorrect_answers[n] = answer.strip()
-            question = {
-                "question" : question.content,
-                "correct_answer" : correct_answer.content,
-                "incorrect_answers" : incorrect_answers
-            }
-            await ctx.send("Invia ora l'immagine come **allegato**, altrimenti rispondi `No`.")
+            new_question.update({ "incorrect_answers": incorrect_answers })
+            await temp.delete()
+            await incorrect_answers_raw.delete()
+                            
+            temp = await ctx.send("Invia ora l'immagine come **allegato**, altrimenti rispondi `No`.")
             try:
                 image = await self.bot.wait_for('message', check=check, timeout=300.0)
             except:
@@ -594,24 +610,28 @@ class trivia(BaseCog):
             if image.attachments != []:
                 format_check = image.attachments[0].filename.lower()
                 if format_check.endswith((".png", ".jpg", ".jpeg", ".gif", ".tiff", ".bmp")) == True:
-                    question.update({"image" : image.attachments[0].url})
+                    new_question.update({"image" : image.attachments[0].url})
                 else:
                     return await ctx.send("L'immagine allegata non è un **formato valido**, riprovare!")
-
-            await ctx.send("Quale sarà la **durata** del quiz? Usa il formato `HH:MM`.")
+            await temp.delete()
+            await image.delete()
+                            
+            temp = await ctx.send("Quale sarà la **durata** del quiz? Usa il formato `HH:MM`.")
             try:
-                time = await self.bot.wait_for('message', check=check, timeout=300.0)
+                time_raw = await self.bot.wait_for('message', check=check, timeout=300.0)
             except:
                 return
-            time = time.content.split(":")
+            time = time_raw.content.split(":")
             try:
                 for n, el in enumerate(time):
                     time[n] = int(time[n])
             except:
                 return await ctx.send("Specifica un'orario nel **formato corretto** (`HH:MM`), riprovare!")
-            question.update({"time" : time})
+            new_question.update({"time" : time})
+            await temp.delete()
+            await time_raw.delete()
             
-            embed = await create_embed(self, question)
+            embed = await create_embed(self, new_question)
 
             msg = await ctx.send(content = "Reagisci con <:FNIT_ThumbsUp:454640434380013599> per **aggiungere la domanda**.", embed = embed)
             await msg.add_reaction("<:FNIT_ThumbsUp:454640434380013599>")
@@ -622,7 +642,7 @@ class trivia(BaseCog):
             reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)
             if str(reaction.emoji) == "<:FNIT_ThumbsUp:454640434380013599>":
                 questions = await self.config.guild(ctx.guild).questions()
-                questions.append(question)
+                questions.append(new_question)
                 await self.config.guild(ctx.guild).questions.set(questions)
                 await msg.edit(content = "Domanda **aggiunta** con successo!")
             await msg.clear_reactions()
