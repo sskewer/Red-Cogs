@@ -1,3 +1,4 @@
+import time
 import asyncio
 import datetime
 import discord
@@ -638,9 +639,14 @@ class trivia(BaseCog):
     async def checker(self):
         # Check if questions ended
         guild = self.bot.get_guild(454261607799717888)
+        setup = await self.config.guild(guild).setup()
         reaction = await self.config.guild(guild).reaction()
+        checking = await guild.get_channel(816212393922658306).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Controllando eventuali quiz terminati...")
         if datetime.datetime.fromtimestamp(reaction['time']) < datetime.datetime.now():
             await close(self)
+            await checking.channel.send(content = f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Quiz terminato in <#{str(setup['channel'])}>")
+        else:
+            await checking.channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nessun quiz terminato trovato")
                     
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
