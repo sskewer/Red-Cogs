@@ -136,10 +136,10 @@ async def close_post(self):
     if reaction['message'] is None:
         return;
     msg = await guild.get_channel(setup['channel']).fetch_message(int(reaction['message']))
-    embed = discord.Embed(title = msg.embeds[0].title, description = reaction['correct'], color = msg.embeds[0].color, timestamp = datetime.datetime.fromtimestamp(reaction['time']))
+    embed = discord.Embed(title = msg.embeds[0].title, description = f"```{reaction['correct']}```", color = msg.embeds[0].color, timestamp = datetime.datetime.fromtimestamp(reaction['time']))
     embed.set_footer(icon_url = guild.icon_url, text = "Quiz terminato")
     try:
-        embed.set_image(url = msg.embeds[0].image.url)
+        embed.set_thumbnail(url = msg.embeds[0].image.url)
     except:
         pass
     await msg.clear_reactions()
