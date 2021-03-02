@@ -162,11 +162,10 @@ class trivia(BaseCog):
         self.config = Config.get_conf(self, identifier=4000121111111131, force_registration=True)
         default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294, "enabled" : True}, "reaction" : {}}
         self.config.register_guild(**default_guild)
-        self.start_post.start()
+        self.daily_post.start()
         self.checker.start()
         
     def cog_unload(self):
-        self.start_post.cancel()
         self.daily_post.cancel()
         self.checker.cancel()
 
@@ -306,13 +305,12 @@ class trivia(BaseCog):
         """Modificare l'ora di invio del quiz"""
         if role_check(ctx, [454262524955852800, 454262403819896833]):
             if value < 23 and value >= 0:
+                self.daily_post.cancel()
                 setup = await self.config.guild(ctx.guild).setup()
                 setup.update({"time" : value})
                 await self.config.guild(ctx.guild).setup.set(setup)
                 await ctx.message.add_reaction("✅")
-                self.start_post.cancel()
-                self.daily_post.cancel()
-                self.start_post.start()
+                self.daily_post.start()
             else:
                 await ctx.message.add_reaction("🚫")
     
@@ -649,8 +647,8 @@ class trivia(BaseCog):
     
     #---------------# EVENT #---------------#
     
-    @tasks.loop(seconds=10, count=1)
-    async def start_post(self):
+    @tasks.loop(seconds=10, count=1, reconnect=True)
+    async def daily_post(self):
         await self.bot.wait_until_ready()
         guild = self.bot.get_guild(454261607799717888)
         channel = await guild.get_channel(816212393922658306)
@@ -666,11 +664,9 @@ class trivia(BaseCog):
         minutes = str(delta_time.seconds // 60)
         await channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Post automatico in avvio tra {minutes} minuti...")
         await sleep(delta_time.seconds)
-        self.daily_post.start()
-                            
-    @tasks.loop(hours=24)
-    async def daily_post(self):
-        await post(self)
+        while True:
+           await channel.send("TheFogg is noob!")
+           await sleep(30)
                             
     @tasks.loop(minutes=10)
     async def checker(self):
