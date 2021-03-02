@@ -133,8 +133,7 @@ async def close_post(self):
     guild = self.bot.get_guild(454261607799717888)
     setup = await self.config.guild(guild).setup()
     reaction = await self.config.guild(guild).reaction()
-    if reaction['message'] is None:
-        return;
+    await guild.get_channel(680459534463926294).send(str(reaction))
     msg = await guild.get_channel(setup['channel']).fetch_message(int(reaction['message']))
     embed = discord.Embed(title = msg.embeds[0].title, description = f"```{reaction['correct']}```", color = msg.embeds[0].color, timestamp = datetime.datetime.fromtimestamp(reaction['time']))
     embed.set_footer(icon_url = guild.icon_url, text = "Quiz terminato")
