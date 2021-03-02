@@ -13,7 +13,7 @@ from pymongo import MongoClient
 reactions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
 arrow_reactions = ["⏮", "◀", "▶", "⏭", "🛑"]
 
-client = MongoClient("${{ secrets.SECRET_KEY }}")
+client = MongoClient("mongodb+srv://Kitbash:6j68WjZGI3Nmvw8Q@modmail.rsxw7.mongodb.net/FortniteITA?retryWrites=true&w=majority")
 db = client.FortniteITA
 coll = db["level-system"]
 
