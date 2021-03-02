@@ -107,7 +107,7 @@ class FacebookFeed(BaseCog):
         
   #------------# FEED CHECKER #------------#
   
-  @tasks.loop(minutes=10)
+  @tasks.loop(minutes=10, reconnect=True)
   async def checker(self):
     checking = await self.bot.get_channel(786128085538963476).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Controllando nuovi feed...")
     post = next(get_posts('FortniteGameITALIA', pages=1))
