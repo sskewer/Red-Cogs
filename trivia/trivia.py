@@ -651,6 +651,7 @@ class trivia(BaseCog):
     
     @tasks.loop(seconds=10, count=1)
     async def start_post(self):
+        await self.bot.wait_until_ready()
         guild = self.bot.get_guild(454261607799717888)
         channel = await guild.get_channel(816212393922658306)
         setup = await self.config.guild(guild).setup()
