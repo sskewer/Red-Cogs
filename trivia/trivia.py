@@ -645,14 +645,14 @@ class trivia(BaseCog):
     
     #---------------# EVENT #---------------#
     
-    @tasks.loop(minutes=1, reconnect=True)
+    @tasks.loop(minutes=1)
     async def daily_post(self):
         guild = self.bot.get_guild(454261607799717888)
         setup = await self.config.guild(guild).setup()
         time = setup["time"]
         now = datetime.datetime.now()
         if now.hour != time:
-            print(f"[{now.minute}] TheFogg is noob!")
+            await guild.get_channel(816212393922658306).send(f"[{now.minute}] TheFogg is noob!")
                             
     @tasks.loop(minutes=10, reconnect=True)
     async def checker(self):
