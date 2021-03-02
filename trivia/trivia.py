@@ -133,6 +133,7 @@ async def close_post(self, post_message = None):
     guild = self.bot.get_guild(454261607799717888)
     setup = await self.config.guild(guild).setup()
     reaction = await self.config.guild(guild).reaction()
+    print(reaction)
     if post_message == None:
         post_message = reaction['message']
     msg = await guild.get_channel(setup['channel']).fetch_message(int(post_message))
