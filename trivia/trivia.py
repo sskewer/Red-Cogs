@@ -654,9 +654,6 @@ class trivia(BaseCog):
         guild = self.bot.get_guild(454261607799717888)
         channel = await guild.get_channel(816212393922658306)
         setup = await self.config.guild(guild).setup()
-        reaction = await self.config.guild(ctx.guild).reaction()
-        if reaction_check != {}:
-            return
         time = setup["time"]
         now = datetime.datetime.now()
         if now.hour < time:
