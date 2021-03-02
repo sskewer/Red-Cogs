@@ -665,7 +665,7 @@ class trivia(BaseCog):
         await channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Post automatico in avvio tra {minutes} minuti...")
         await sleep(delta_time.seconds)
         while True:
-           await channel.send("TheFogg is noob!")
+           print("TheFogg is noob!")
            await sleep(30)
                             
     @tasks.loop(minutes=10)
