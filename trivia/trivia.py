@@ -647,17 +647,14 @@ class trivia(BaseCog):
     
     @tasks.loop(minutes=1, reconnect=True)
     async def daily_post(self):
-        await self.bot.wait_until_ready()
         guild = self.bot.get_guild(454261607799717888)
         setup = await self.config.guild(guild).setup()
         time = setup["time"]
         now = datetime.datetime.now()
         if now.hour != time:
             print(f"[{now.minute}] TheFogg is noob!")
-        else:
-            pass
                             
-    @tasks.loop(minutes=10)
+    @tasks.loop(minutes=10, reconnect=True)
     async def checker(self):
         # Check if questions ended
         guild = self.bot.get_guild(454261607799717888)
