@@ -305,12 +305,10 @@ class trivia(BaseCog):
         """Modificare l'ora di invio del quiz"""
         if role_check(ctx, [454262524955852800, 454262403819896833]):
             if value < 23 and value >= 0:
-                self.daily_post.cancel()
                 setup = await self.config.guild(ctx.guild).setup()
                 setup.update({"time" : value})
                 await self.config.guild(ctx.guild).setup.set(setup)
                 await ctx.message.add_reaction("✅")
-                self.daily_post.start()
             else:
                 await ctx.message.add_reaction("🚫")
     
@@ -647,26 +645,17 @@ class trivia(BaseCog):
     
     #---------------# EVENT #---------------#
     
-    @tasks.loop(seconds=10, count=1, reconnect=True)
+    @tasks.loop(minutes=1, reconnect=True)
     async def daily_post(self):
         await self.bot.wait_until_ready()
         guild = self.bot.get_guild(454261607799717888)
-        channel = await guild.get_channel(816212393922658306)
         setup = await self.config.guild(guild).setup()
         time = setup["time"]
         now = datetime.datetime.now()
-        if now.hour < time:
-            post_time = datetime.datetime(now.year, now.month, now.day, time)
+        if now.hour != time:
+            print(f"[{now.minute}] TheFogg is noob!")
         else:
-            hop = now + datetime.timedelta(days = 1) - datetime.timedelta(hours = now.hour - time)
-            post_time = datetime.datetime(hop.year, hop.month, hop.day, hop.hour)
-        delta_time = post_time - now
-        minutes = str(delta_time.seconds // 60)
-        await channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Post automatico in avvio tra {minutes} minuti...")
-        await sleep(delta_time.seconds)
-        while True:
-           print("TheFogg is noob!")
-           await sleep(30)
+            pass
                             
     @tasks.loop(minutes=10)
     async def checker(self):
