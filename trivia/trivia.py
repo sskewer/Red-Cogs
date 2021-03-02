@@ -143,6 +143,7 @@ async def close_post(self, post_message = None):
     correct_answer = correct_answer[7:]
     embed = discord.Embed(title = msg.embeds[0].title, description = correct_answer, color = msg.embeds[0].color, timestamp =  datetime.datetime.fromtimestamp(reaction['time']))
     embed.set_footer(icon_url = guild.icon_url, text = "Quiz terminato")
+    await msg.edit(embed = embed)
     await self.config.guild(guild).reaction.set({})
 
 BaseCog = getattr(commands, "Cog", object)
