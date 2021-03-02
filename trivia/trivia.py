@@ -669,7 +669,7 @@ class trivia(BaseCog):
                             
     @tasks.loop(hours=24)
     async def daily_post(self):
-        await close_post(self)
+        await post(self)
                             
     @tasks.loop(minutes=10)
     async def checker(self):
