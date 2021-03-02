@@ -162,12 +162,12 @@ class trivia(BaseCog):
         self.config = Config.get_conf(self, identifier=4000121111111131, force_registration=True)
         default_guild = {"questions": [], "score" : {}, "setup" : {"color" : "#1a80e4", "time" : 12, "channel" : 680459534463926294, "enabled" : True}, "reaction" : {}}
         self.config.register_guild(**default_guild)
-        self.daily_post.start()
-        self.checker.start()
+        self.post_checker.start()
+        self.close_checker.start()
         
     def cog_unload(self):
-        self.daily_post.cancel()
-        self.checker.cancel()
+        self.post_checker.cancel()
+        self.close_checker.cancel()
 
     #--------------# COMMANDS #--------------#
 
@@ -645,17 +645,18 @@ class trivia(BaseCog):
     
     #---------------# EVENT #---------------#
     
-    @tasks.loop(minutes=1)
-    async def daily_post(self):
+    @tasks.loop(minutes=1, reconnect=True)
+    async def post_checker(self):
+        # Check if post a question
         guild = self.bot.get_guild(454261607799717888)
         setup = await self.config.guild(guild).setup()
-        time = setup["time"]
+        time = int(setup["time"])
         now = datetime.datetime.now()
-        if now.hour != time:
-            await guild.get_channel(816212393922658306).send(f"[{now.minute}] TheFogg is noob!")
+        if now.hour == time:
+            await post(self)
                             
     @tasks.loop(minutes=10, reconnect=True)
-    async def checker(self):
+    async def close_checker(self):
         # Check if questions ended
         guild = self.bot.get_guild(454261607799717888)
         setup = await self.config.guild(guild).setup()
