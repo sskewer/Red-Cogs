@@ -310,6 +310,9 @@ class trivia(BaseCog):
                 setup.update({"time" : value})
                 await self.config.guild(ctx.guild).setup.set(setup)
                 await ctx.message.add_reaction("✅")
+                self.start_post.cancel()
+                self.daily_post.cancel()
+                self.start_post.start()
             else:
                 await ctx.message.add_reaction("🚫")
     
