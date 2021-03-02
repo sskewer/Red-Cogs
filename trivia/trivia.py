@@ -251,7 +251,8 @@ class trivia(BaseCog):
             "users" : [],
             "time" : 1614650400
         }
-        await self.config.guild(guild).reaction.set(data)
+        await self.config.guild(ctx.guild).reaction.set(data)
+        await ctx.message.add_reaction("✅")
                     
     @trivia.command()
     async def enable(self, ctx: commands.Context):
