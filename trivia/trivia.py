@@ -141,7 +141,7 @@ async def close_post(self):
     msg = await guild.get_channel(setup['channel']).fetch_message(int(reaction['message']))
     splitted_answers = msg.embeds[0].description.split("\n")
     correct = splitted_answers[reaction['correct']]
-    embed = discord.Embed(title = msg.embeds[0].title, description = f"```{correct[correct.index(". ")+2:]}```", color = msg.embeds[0].color, timestamp = datetime.datetime.fromtimestamp(reaction['time']))
+    embed = discord.Embed(title = msg.embeds[0].title, description = f"```{correct[correct.index('. ')+2:]}```", color = msg.embeds[0].color, timestamp = datetime.datetime.fromtimestamp(reaction['time']))
     embed.set_footer(icon_url = guild.icon_url, text = "Quiz terminato")
     try:
         embed.set_thumbnail(url = msg.embeds[0].image.url)
