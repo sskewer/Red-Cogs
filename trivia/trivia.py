@@ -107,7 +107,7 @@ async def post(self):
     question = random.choice(questions)
     questions.remove(question)
     await self.config.guild(guild).questions.set(questions)
-    time = datetime.datetime.now() + datetime.timedelta(hours = int(question['time'][0]), minutes = int(question['time'][0]))
+    time = datetime.datetime.now() + datetime.timedelta(hours = int(question['time'][0]), minutes = int(question['time'][1]))
     time = datetime.datetime(time.year, time.day, time.hour)
     all_answers = question['incorrect_answers']
     all_answers.append(question['correct_answer'])
@@ -116,7 +116,7 @@ async def post(self):
     value = ""
     for n, answer in enumerate(all_answers):
         value += f"**{n + 1}.** {answer}\n"
-    embed = discord.Embed(title = question['question'], description = value.strip() ,color = hex_int, timestamp = time)
+    embed = discord.Embed(title = question['question'], description = value.strip(), color = hex_int, timestamp = time)
     embed.set_footer(text = "Quiz in svolgimento", icon_url = guild.icon_url)
     try:
         embed.set_image(url = question['image'])
@@ -140,11 +140,12 @@ async def close_post(self):
     if reaction == {}:
         return
     msg = await guild.get_channel(setup['channel']).fetch_message(int(reaction['message']))
+    ts = round(datetime.datetime.now().timestamp())
     splitted_answers = msg.embeds[0].description.split("\n")
     correct_answer = int(reaction['correct'])
     correct = splitted_answers[correct_answer]
     index = correct.index('. ') + 2
-    embed = discord.Embed(title = msg.embeds[0].title, description = f"```{str(correct[index:])}```", color = msg.embeds[0].color, timestamp = datetime.datetime.fromtimestamp(reaction['time']))
+    embed = discord.Embed(title = msg.embeds[0].title, description = f"```{str(correct[index:])}```", color = msg.embeds[0].color, timestamp = datetime.datetime.fromtimestamp(ts))
     embed.set_footer(icon_url = guild.icon_url, text = "Quiz terminato")
     try:
         embed.set_thumbnail(url = msg.embeds[0].image.url)
