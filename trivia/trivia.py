@@ -144,7 +144,7 @@ async def close_post(self):
     splitted_answers = msg.embeds[0].description.split("\n")
     correct_answer = int(reaction['correct'])
     correct = splitted_answers[correct_answer]
-    index = correct.index('. ') + 2
+    index = correct.index('.') + 4
     embed = discord.Embed(title = msg.embeds[0].title, description = f"```{str(correct[index:])}```", color = msg.embeds[0].color, timestamp = datetime.datetime.fromtimestamp(ts))
     embed.set_footer(icon_url = guild.icon_url, text = "Quiz terminato")
     try:
