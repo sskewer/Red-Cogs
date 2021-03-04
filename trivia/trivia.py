@@ -617,7 +617,9 @@ class trivia(BaseCog):
             if image.attachments != []:
                 format_check = image.attachments[0].filename.lower()
                 if format_check.endswith((".png", ".jpg", ".jpeg", ".gif", ".tiff", ".bmp")) == True:
-                    new_question.update({"image" : image.attachments[0].url})
+                    image_file = await image.attachments[0].to_file();
+                    stored_image = await ctx.guild.get_channel(816212393922658306).send(content = f"**File Image Storing**\n{new_question['question']}", file = image_file)
+                    new_question.update({ "image": stored_image.attachments[0].url })
                 else:
                     return await ctx.send("L'immagine allegata non è un **formato valido**, riprovare!")
             await temp.delete()
