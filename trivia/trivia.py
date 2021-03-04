@@ -500,9 +500,12 @@ class trivia(BaseCog):
                         embed.add_field(name = f"Domanda {n + 1}", value = el['question'], inline = False)
                     await ctx.send(embed = embed)
                 else:
-                    question = questions[value - 1]
-                    embed = await create_embed(self, question)
-                    await ctx.send(content = f"Domanda **{value}** di {str(len(questions))}", embed = embed)
+                    try:
+                        question = questions[value - 1]
+                        embed = await create_embed(self, question)
+                        await ctx.send(content = f"Domanda **{value}** di {str(len(questions))}", embed = embed)
+                    except:
+                        await ctx.message.add_reaction("🚫")
     
     @trivia.command(aliases = ["lb"])
     async def leaderboard(self, ctx: commands.Context):
