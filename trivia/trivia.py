@@ -125,11 +125,12 @@ async def post(self):
     msg = await guild.get_channel(setup['channel']).send(embed = embed)
     for n, answer in enumerate(all_answers):
         await msg.add_reaction(reactions[n])
+    end_time = datetime.datetime(time.year, time.month, time.day, time.hour + 1)
     data = {
         "message" : msg.id,
         "correct" : correct_answer,
         "users" : [],
-        "time" : datetime.datetime.timestamp(time)
+        "time" : datetime.datetime.timestamp(end_time)
     }
     await self.config.guild(guild).reaction.set(data)
 
