@@ -454,7 +454,10 @@ class trivia(BaseCog):
                     await msg.delete()
                     await ctx.message.add_reaction("🚫")
             except asyncio.TimeoutError:
-                await msg.delete()
+                try:
+                    await msg.delete()
+                except:
+                    pass
                 await ctx.message.add_reaction("🚫")
 
     @trivia.command()
