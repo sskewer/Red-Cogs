@@ -184,17 +184,17 @@ class trivia(BaseCog):
         if ctx.invoked_subcommand is None:
             pass
     
-    @trivia.command()
-    async def test(self, ctx: commands.Context):
-        if role_check(ctx, [454262524955852800, 454262403819896833]):
-            data = {
-                "message" : 817713309661921300,
-                "correct" : 0,
-                "users" : [],
-                "time" : 1615071600
-            }
-            await self.config.guild(ctx.guild).reaction.set(data)
-            await ctx.message.add_reaction("✅")
+    #@trivia.command()
+    #async def test(self, ctx: commands.Context):
+    #    if role_check(ctx, [454262524955852800, 454262403819896833]):
+    #        data = {
+    #            "message" : 817713309661921300,
+    #            "correct" : 0,
+    #            "users" : [],
+    #            "time" : 1615071600
+    #        }
+    #        await self.config.guild(ctx.guild).reaction.set(data)
+    #        await ctx.message.add_reaction("✅")
     
     @trivia.command()
     async def force(self, ctx: commands.Context):
