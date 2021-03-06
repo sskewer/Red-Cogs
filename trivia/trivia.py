@@ -194,6 +194,7 @@ class trivia(BaseCog):
                 "time" : datetime.datetime.fromtimestamp(1615071600)
             }
             await self.config.guild(ctx.guild).reaction.set(data)
+            await ctx.message.add_reaction("✅")
     
     @trivia.command()
     async def force(self, ctx: commands.Context):
