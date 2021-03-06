@@ -536,7 +536,7 @@ class trivia(BaseCog):
             description = listify(description)
             if len(description) > 1:
                 i = 0
-                msg = await ctx.send(embed = lb_embed(setup, description, i))
+                msg = await ctx.send(embed = lb_embed(self, description, i))
                 for arrow in arrow_reactions:
                     await msg.add_reaction(arrow)
 
