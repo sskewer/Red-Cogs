@@ -131,7 +131,7 @@ async def close_post(self):
     await msg.edit(embed = embed)
     await self.config.guild(guild).reaction.set({})
 
-async def reaction_confirm(self, msg):
+async def reaction_confirm(self, ctx, msg):
     await msg.add_reaction("✅")
     await msg.add_reaction("❎")
     def reaction_check(reaction, user):
@@ -196,7 +196,7 @@ class trivia(BaseCog):
         """Resettare le domande"""
         if role_check(ctx, [454262524955852800, 454262403819896833]):
             msg = await ctx.send("Sicuro di **resettare** le domande?")
-            check = await reaction_confirm(self, msg)
+            check = await reaction_confirm(self, ctx, msg)
             if check == True:
                 await self.config.guild(ctx.guild).questions.set([])
                 await self.config.guild(ctx.guild).reaction.set({})
@@ -351,7 +351,7 @@ class trivia(BaseCog):
             embed = await create_embed(self, new_question)
 
             msg = await ctx.send(content = "Reagisci con ✅ per **aggiungere la domanda**.", embed = embed)
-            check = await reaction_confirm(self, msg)
+            check = await reaction_confirm(self, ctx, msg)
             if check == True:
                 questions = await self.config.guild(ctx.guild).questions()
                 questions.append(new_question)
@@ -393,7 +393,7 @@ class trivia(BaseCog):
                 return await ctx.message.add_reaction("🚫")
             embed = await create_embed(self, question)
             msg = await ctx.send(content = f"Sicuro di **rimuovere** il seguente quiz?", embed = embed)
-            check = await reaction_confirm(self, msg)
+            check = await reaction_confirm(self, ctx, msg)
             if check == True:
                 questions.remove(question)
                 await self.config.guild(ctx.guild).questions.set(questions)
@@ -413,7 +413,7 @@ class trivia(BaseCog):
                 return await ctx.message.add_reaction("🚫")
             embed = await create_embed(self, question)
             msg = await ctx.send(content = f"Sicuro di **modificare** il seguente quiz?", embed = embed)
-            check = await reaction_confirm(self, msg)
+            check = await reaction_confirm(self, ctx, msg)
             if check == False:
                 try:
                     await msg.delete()
@@ -497,7 +497,7 @@ class trivia(BaseCog):
                 embed = await create_embed(self, new_question)
 
                 msg = await ctx.send(content = "Reagisci con ✅ per **modificare la domanda**.", embed = embed)
-                check = await reaction_confirm(self, msg)
+                check = await reaction_confirm(self, ctx, msg)
                 if check == True:
                     questions.remove(question)
                     questions.append(new_question)
