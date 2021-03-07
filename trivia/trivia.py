@@ -357,6 +357,8 @@ class trivia(BaseCog):
                 questions.append(new_question)
                 await self.config.guild(ctx.guild).questions.set(questions)
                 await msg.edit(content = "Domanda **aggiunta** con successo!")
+            else:
+                await ctx.message.add_reaction("🚫")
             await msg.clear_reactions()
 
     @trivia.command(aliases = ["db"])
@@ -456,6 +458,12 @@ class trivia(BaseCog):
                                 return await ctx.send("La **lughezza massima** per la domanda (256 caratteri) è stata superata, riprovare!")
                         
                         elif el[0] == "image":
+                            if raw.content.lower() == "no":
+                                try:
+                                    del new_question[el[0]]
+                                except:
+                                    pass
+                                stored_image = None
                             if raw.attachments == []:
                                 stored_image = None
                             else:
@@ -502,9 +510,10 @@ class trivia(BaseCog):
                     questions.remove(question)
                     questions.append(new_question)
                     await self.config.guild(ctx.guild).questions.set(questions)
-                    await confirm.edit(content = "Domanda **modificata** con successo!")
+                    await msg.edit(content = "Domanda **modificata** con successo!")
                 else:
                     await msg.edit(content = "Modifica della domanda **annullata** con successo!", embed = None)
+                    await ctx.message.add_reaction("🚫")
                 await msg.clear_reactions()
 
     #---------------# EVENTS #---------------#
