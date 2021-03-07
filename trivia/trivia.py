@@ -319,7 +319,7 @@ class trivia(BaseCog):
                         format_check = raw.attachments[0].filename.lower()
                         if format_check.endswith((".png", ".jpg", ".jpeg", ".gif", ".tiff", ".bmp")) == True:
                             image_file = await raw.attachments[0].to_file();
-                            stored_image = await ctx.guild.get_channel(764810699285069844).send(content = f"**File Image Storing**\n{new_question['question']}", file = image_file)
+                            stored_image = await ctx.guild.get_channel(816212393922658306).send(content = f"**File Image Storing**\n{new_question['question']}", file = image_file)
                         else:
                             return await ctx.send("L'immagine allegata non è un **formato valido**, riprovare!")
                 elif el[0] == "time":
@@ -462,7 +462,7 @@ class trivia(BaseCog):
                                 format_check = raw.attachments[0].filename.lower()
                                 if format_check.endswith((".png", ".jpg", ".jpeg", ".gif", ".tiff", ".bmp")) == True:
                                     image_file = await raw.attachments[0].to_file();
-                                    stored_image = await ctx.guild.get_channel(764810699285069844).send(content = f"**File Image Storing**\n{new_question['question']}", file = image_file)
+                                    stored_image = await ctx.guild.get_channel(816212393922658306).send(content = f"**File Image Storing**\n{new_question['question']}", file = image_file)
                                 else:
                                     return await ctx.send("L'immagine allegata non è un **formato valido**, riprovare!")
                         elif el[0] == "time":
