@@ -452,11 +452,9 @@ class trivia(BaseCog):
                     except:
                         return
                     if raw.content.lower() != "skip":
-                        #custom checks
                         if el[0] == "question":
                             if len(raw.content) > 256:
                                 return await ctx.send("La **lughezza massima** per la domanda (256 caratteri) è stata superata, riprovare!")
-                        
                         elif el[0] == "image":
                             if raw.content.lower() == "no":
                                 try:
@@ -485,7 +483,6 @@ class trivia(BaseCog):
                             for n, answer in enumerate(incorrect_answers):
                                 incorrect_answers[n] = answer.strip()
                         
-                        #new_question insertion, with custom stuff
                         if el[0] == "image":
                             if stored_image != None:
                                 new_question.update({ el[0]: stored_image.attachments[0].url })
