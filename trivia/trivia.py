@@ -351,7 +351,7 @@ class trivia(BaseCog):
             embed = await create_embed(self, new_question)
 
             msg = await ctx.send(content = "Reagisci con ✅ per **aggiungere la domanda**.", embed = embed)
-            check = reaction_confirm(self, msg)
+            check = await reaction_confirm(self, msg)
             if check == True:
                 questions = await self.config.guild(ctx.guild).questions()
                 questions.append(new_question)
@@ -497,7 +497,7 @@ class trivia(BaseCog):
                 embed = await create_embed(self, new_question)
 
                 msg = await ctx.send(content = "Reagisci con ✅ per **modificare la domanda**.", embed = embed)
-                check = reaction_confirm(self, msg)
+                check = await reaction_confirm(self, msg)
                 if check == True:
                     questions.remove(question)
                     questions.append(new_question)
