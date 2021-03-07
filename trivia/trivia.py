@@ -449,7 +449,7 @@ class trivia(BaseCog):
                         raw = await self.bot.wait_for('message', check=r_check, timeout=300.0)
                     except:
                         return
-                    if raw.content() != "skip":
+                    if raw.content().lower() != "skip":
                         #custom checks
                         if el[0] == "question":
                             if len(raw.content) > 256:
