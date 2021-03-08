@@ -15,6 +15,7 @@ arrow_reactions = ["⏮", "◀", "▶", "⏭", "🛑"]
 client = MongoClient("mongodb+srv://Kitbash:6j68WjZGI3Nmvw8Q@modmail.rsxw7.mongodb.net/FortniteITA?retryWrites=true&w=majority")
 db = client.FortniteITA
 coll = db["level-system"]
+setup_coll = db["level-config"]
 
 def role_check(ctx, roles):
     for n, role in enumerate(roles):
@@ -544,13 +545,18 @@ class trivia(BaseCog):
     async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
         guild = self.bot.get_guild(454261607799717888)
         data = await self.config.guild(guild).reaction()
-        if guild.get_member(payload.user_id).bot == False:
+        member = guild.get_member(payload.user_id)
+        if member.bot == False:
             if data["message"] == payload.message_id:
                 if payload.user_id not in data["users"]:
                     if str(payload.emoji) in reactions:
-                        if reactions.index(str(payload.emoji)) == data["correct"]:
-                            update_db(payload.user_id, guild.id, 100)
-                            await guild.get_channel(816212393922658306).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Risposta corretta per <@!{payload.user_id}>\n<https://discord.com/channels/454261607799717888/{str(payload.channel_id)}/{str(payload.message_id)}>")
+                        setup = setup_coll.find_one({"guild" : "454261607799717888"})
+                        users = [ int(i) for i in setup["users"] ]
+                        roles = [ guild.get_role(int(i)) for i in setup["roles"]]
+                        if member.roles not in roles and member.id not in users:  
+                            if reactions.index(str(payload.emoji)) == data["correct"]:
+                                update_db(payload.user_id, guild.id, 100)
+                                await guild.get_channel(816212393922658306).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Risposta corretta per <@!{payload.user_id}>\n<https://discord.com/channels/454261607799717888/{str(payload.channel_id)}/{str(payload.message_id)}>")
                         users = data["users"]
                         users.append(payload.user_id)
                         data.update({"users" : users})
