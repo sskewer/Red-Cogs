@@ -5,9 +5,6 @@ import random
 
 from redbot.core import commands
 from redbot.core.data_manager import bundled_data_path
-
-storage = open('./storage.json')
-data = json.load(storage)
     
 BaseCog = getattr(commands, "Cog", object)
 
