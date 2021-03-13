@@ -135,26 +135,29 @@ class FacebookFeed(BaseCog):
         embed = discord.Embed(colour = hex_int, description = post["text"], timestamp = ts)
         embed.set_author(name = "Fortnite (@FortniteGameITALIA)", icon_url = avatar, url = post_url)
         embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/CxFZfzGM/Facebook-Icon.png")
-        try:
-          if post["image"] != None:
-            image_url = post["image"]
-            try:
-              fileformat = ""
-              filename = image_url[[i for i in range(len(image_url)) if image_url.startswith("/", i)][4] + 1: image_url.find(".png") + 4]
-            except:
-              fileformat = "PNG"
-              filename = "image.png"
-            img = Image.open(requests.get(image_url, stream = True).raw)
-            image_binary = BytesIO()
-            img.save(image_binary, fileformat)
-            image_binary.seek(0)
-            try:
-              stored_image = await checking.channel.send(content = f"**File Image Storage**", file = discord.File(fp=image_binary, filename = filename))
-              embed.set_image(url = stored_image.attachments[0].url)
-            except:
-              pass
-        except:
-          pass
+        if post["image"] != None:
+          image_url = post["image"]
+          try:
+            check = ".png"
+            fileformat = "PNG"
+            filename = "image.png"
+            for e in [".png", ".jpg", ".jpeg", ".gif"]:
+              if e in image_url:
+                check = e
+            fileformat = check[1:].upper()
+            filename = image_url[[i for i in range(len(image_url)) if image_url.startswith("/", i)][4] + 1: image_url.find(check) + len(check)]
+          except:
+            fileformat = "PNG"
+            filename = "image.png"
+          img = Image.open(requests.get(image_url, stream = True).raw)
+          image_binary = BytesIO()
+          img.save(image_binary, fileformat)
+          image_binary.seek(0)
+          try:
+            stored_image = await checking.channel.send(content = f"**File Image Storage**", file = discord.File(fp = image_binary, filename = filename))
+            embed.set_image(url = stored_image.attachments[0].url)
+          except:
+            pass
         msg = await self.bot.get_channel(454264582622412801).send(embed = embed)
         await self.config.guild(guild).last_feed.set(post["post_id"])
         await checking.channel.send(content = f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nuovo post (`{str(post['post_id'])}`) inviato in <#454264582622412801>", embed = embed)
