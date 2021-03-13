@@ -145,9 +145,9 @@ class FacebookFeed(BaseCog):
               fileformat = "PNG"
               filename = "image.png"
             img = Image.open(requests.get(image_url, stream = True).raw)
-            with BytesIO() as image_binary:
-              img.save(image_binary, fileformat)
-              image_binary.seek(0)
+            image_binary = BytesIO()
+            img.save(image_binary, fileformat)
+            image_binary.seek(0)
             try:
               stored_image = await checking.channel.send(content = f"**File Image Storage**", file = discord.File(fp=image_binary, filename = filename))
               embed.set_image(url = stored_image.attachments[0].url)
