@@ -1,8 +1,11 @@
 import time
 import datetime
 import threading
+import requests
 import discord
 
+from PIL import Image
+from io import BytesIO
 from contextlib import suppress
 from facebook_scraper import get_posts
 from discord.ext import tasks
@@ -133,6 +136,19 @@ class FacebookFeed(BaseCog):
         embed.set_author(name = "Fortnite (@FortniteGameITALIA)", icon_url = avatar, url = post_url)
         embed.set_footer(text = "Facebook", icon_url = "https://i.postimg.cc/CxFZfzGM/Facebook-Icon.png")
         try:
+          if post["image"] != None:
+            image_url = post["image"]
+            try:
+              fileformat = ""
+              filename = image_url[[i for i in range(len(image_url)) if image_url.startswith("/", i)][4] + 1: image_url.find(".png") + 4]
+            except:
+              fileformat = "PNG"
+              filename = "image.png"
+            img = Image.open(requests.get(image_url, stream = True).raw)
+            with BytesIO() as image_binary:
+              img.save(image_binary, fileformat)
+              image_binary.seek(0)
+              await message.channel.send(content = f"**File Image Storage**", file = discord.File(fp=image_binary, filename = 'image.png'))
           embed.set_image(url = post["image"])
         except:
           pass
