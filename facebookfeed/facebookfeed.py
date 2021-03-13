@@ -148,8 +148,11 @@ class FacebookFeed(BaseCog):
             with BytesIO() as image_binary:
               img.save(image_binary, fileformat)
               image_binary.seek(0)
-              await message.channel.send(content = f"**File Image Storage**", file = discord.File(fp=image_binary, filename = 'image.png'))
-          embed.set_image(url = post["image"])
+            try:
+              stored_image = await checking.channel.send(content = f"**File Image Storage**", file = discord.File(fp=image_binary, filename = filename))
+              embed.set_image(url = stored_image.attachments[0].url)
+            except:
+              pass
         except:
           pass
         msg = await self.bot.get_channel(454264582622412801).send(embed = embed)
