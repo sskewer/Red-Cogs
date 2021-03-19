@@ -27,7 +27,6 @@ class TicketAlert(BaseCog):
   @commands.Cog.listener()
   async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
       guild = self.bot.get_guild(454261607799717888)
-      data = await self.config.guild(guild).reaction()
       channel = guild.get_channel(payload.channel_id)
       message = channel.fetch_message(payload.message_id)
       member = guild.get_user(payload.user_id)
