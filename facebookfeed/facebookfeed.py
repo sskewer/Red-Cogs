@@ -142,7 +142,8 @@ class FacebookFeed(BaseCog):
       else:
         post = list(get_posts('FortniteGameITALIA', pages=1))[0]
     except:
-      post = None                                              
+      post = None
+    print(post)
     if last_feed != None and post != None and last_feed != post["post_id"]:
       if post["text"] != None:
         color = await self.config.guild(guild).color()
