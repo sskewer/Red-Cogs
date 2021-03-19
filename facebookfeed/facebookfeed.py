@@ -54,7 +54,7 @@ class FacebookFeed(BaseCog):
       pinned = await self.config.guild(ctx.guild).pinned_post()
       if pinned == True:
         pinned_value = "Attivato"
-      else
+      else:
         pinned_value = "Disattivato"
       hex_int = int(color.replace("#", "0x"), 16)
       embed = discord.Embed(colour = hex_int, title = "Impostazioni Feed", timestamp = datetime.datetime.utcnow())
