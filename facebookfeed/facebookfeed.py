@@ -140,10 +140,9 @@ class FacebookFeed(BaseCog):
       if pinned == False:
         post = next(get_posts('FortniteGameITALIA', pages=1))
       else:
-        post = list(get_posts('FortniteGameITALIA', pages=1))[0]
+        post = list(get_posts('FortniteGameITALIA', pages=1))[1]
     except:
       post = None
-    print(post)
     if last_feed != None and post != None and last_feed != post["post_id"]:
       if post["text"] != None:
         color = await self.config.guild(guild).color()
