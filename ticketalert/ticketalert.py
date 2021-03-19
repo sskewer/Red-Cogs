@@ -19,18 +19,23 @@ class TicketAlert(BaseCog):
       embed.set_footer(text = "Reagisci per prendere in carico la segnalazione")
       sent_message = await channel.send(content = f"{referente_vindertech_role.mention} {vindertech_role.mention}", embed = embed)
       await sent_message.add_reaction("✅")
-      await sent_message.pin(reason="Nuova richiesa di supporto")
+      await sent_message.pin(reason = "Nuova richiesa di supporto")
       def system_pin_check(msg):
         return msg.is_system()
       await channel.purge(limit=10, check=system_pin_check)
-      def check(reaction, user):
-        return reaction.message.id == sent_message.id and user.id != self.bot.user.id and str(reaction.emoji) == "✅"
-      reaction, member = await self.bot.wait_for('reaction_add', check=check)
-      embed = discord.Embed(description = f"[`Richiesta presa in carico da {member}`]({message.jump_url})", color = discord.Colour.from_rgb(19, 123, 196))
-      await sent_message.edit(content = "", embed = embed)
-      sent_message = await channel.fetch_message(sent_message.id)
-      await sent_message.clear_reactions()
-      await sent_message.unpin(reason=f"Richiesta presa in carico da {member}")
+      
+  @commands.Cog.listener()
+  async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
+      guild = self.bot.get_guild(454261607799717888)
+      data = await self.config.guild(guild).reaction()
+      channel = guild.get_channel(payload.channel_id)
+      message = channel.fetch_message(payload.message_id)
+      member = guild.get_user(payload.user_id)
+      if member.bot == False and channel.id == 807985160703180850 and message.author.id == self.bot.user.id and payload.user_id != self.bot.user.id and str(payload.emoji) == "✅":
+        embed = discord.Embed(description = f"[`Richiesta presa in carico da {member}`]({message.jump_url})", color = discord.Colour.from_rgb(19, 123, 196))
+        await message.edit(content = "", embed = embed)
+        await message.clear_reactions()
+        await message.unpin(reason = f"Richiesta presa in carico da {member}")
 
 def setup(bot):
   bot.add_cog(TicketAlert(bot))
