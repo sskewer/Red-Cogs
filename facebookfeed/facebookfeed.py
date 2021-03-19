@@ -25,7 +25,7 @@ class FacebookFeed(BaseCog):
     super().__init__()
     self.bot = bot    
     self.config = Config.get_conf(self, identifier=4000121111111111, force_registration=True)
-    default_guild = {"color": "#1a80e4", "avatar": "https://i.postimg.cc/CxFZfzGM/Facebook-Icon.png", "last_feed": None}
+    default_guild = {"color": "#1a80e4", "avatar": "https://i.postimg.cc/CxFZfzGM/Facebook-Icon.png", "last_feed": None, "pinned_post": False}
     self.config.register_guild(**default_guild)
     self.checker.start()
     
@@ -51,11 +51,17 @@ class FacebookFeed(BaseCog):
       last_feed = await self.config.guild(ctx.guild).last_feed()
       color = await self.config.guild(ctx.guild).color()
       avatar = await self.config.guild(ctx.guild).avatar()
+      pinned = await self.config.guild(ctx.guild).pinned_post()
+      if pinned == True:
+        pinned_value = "Attivato"
+      else
+        pinned_value = "Disattivato"
       hex_int = int(color.replace("#", "0x"), 16)
       embed = discord.Embed(colour = hex_int, title = "Impostazioni Feed", timestamp = datetime.datetime.utcnow())
       embed.add_field(name = "Color", value = f"`{color}`", inline = True)
       embed.add_field(name = "Avatar", value = f"[`Clicca qui`]({avatar})", inline = True)
       embed.add_field(name = "Last Feed", value = f"`{last_feed}`", inline = True)
+      embed.add_field(name = "Pinned Post", value = pinned_value, inline = True)
       embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
       await ctx.channel.send(embed = embed)
         
@@ -108,17 +114,35 @@ class FacebookFeed(BaseCog):
       else:
         await ctx.message.add_reaction("🚫")
         
+  @_fb.command()
+  async def pinned(self, ctx: commands.Context):
+    """Attivare/disattivare il post fissato su Facebook"""
+    epicstaff = ctx.guild.get_role(454262403819896833)
+    moderatori = ctx.guild.get_role(454262524955852800)
+    if epicstaff in ctx.author.roles or moderatori in ctx.author.roles:
+      pinned = await self.config.guild(ctx.guild).pinned_post()
+      if pinned == True:
+        await ctx.message.add_reaction("✅")
+        await self.config.guild(ctx.guild).pinned_post.set(False)
+      else:
+        await ctx.message.add_reaction("✅")
+        await self.config.guild(ctx.guild).pinned_post.set(True)
+        
   #------------# FEED CHECKER #------------#
   
   @tasks.loop(minutes=10, reconnect=True)
   async def checker(self):
-    checking = await self.bot.get_channel(786128085538963476).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Controllando nuovi feed...")
-    try:
-      post = next(get_posts('FortniteGameITALIA', pages=1))
-    except:
-      post = None                         
     guild = self.bot.get_guild(454261607799717888)
     last_feed = await self.config.guild(guild).last_feed()
+    pinned = await self.config.guild(guild).pinned_post()
+    checking = await self.bot.get_channel(786128085538963476).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Controllando nuovi feed...")
+    try:
+      if pinned == False:
+        post = next(get_posts('FortniteGameITALIA', pages=1))
+      else:
+        post = list(get_posts('FortniteGameITALIA', pages=1))[0]
+    except:
+      post = None                                              
     if last_feed != None and post != None and last_feed != post["post_id"]:
       if post["text"] != None:
         color = await self.config.guild(guild).color()
