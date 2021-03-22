@@ -165,17 +165,19 @@ class FacebookFeed(BaseCog):
             check = ".png"
             fileformat = "PNG"
             filename = "image.png"
-            for e in [".png", ".jpg", ".jpeg", ".gif"]:
-              if e in image_url:
-                check = e
-            fileformat = check[1:].upper()
-            filename = image_url[[i for i in range(len(image_url)) if image_url.startswith("/", i)][4] + 1: image_url.find(check) + len(check)]
+            for img_format in [".png", ".jpg", ".jpeg", ".gif", ".tiff", ".bmp"]:
+              if img_format in image_url:
+                fileformat = img_format[1:].upper()
+            filename = image_url[[i for i in range(len(image_url)) if image_url.startswith("/", i)][4] + 1: image_url.find(fileformat.lower()) + len(fileformat)]
           except:
             fileformat = "PNG"
             filename = "image.png"
           img = Image.open(requests.get(image_url, stream = True).raw)
           image_binary = BytesIO()
-          img.save(image_binary, fileformat)
+          try:
+            img.save(image_binary, fileformat)
+          except:
+            img.save(image_binary, "PNG")
           image_binary.seek(0)
           try:
             stored_image = await checking.channel.send(content = f"**File Image Storage**", file = discord.File(fp = image_binary, filename = filename))
