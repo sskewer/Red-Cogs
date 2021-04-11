@@ -36,5 +36,6 @@ class DatabaseSharing(BaseCog):
     @commands.guild_only()
     @commands.command()
     async def test(self, ctx, member: discord.Member):
-        await ctx.send(f"```json\n{str(get_epic_account(self, ctx.guild, member))}\n```")
+        result = await get_epic_account(self, ctx.guild, member)
+        await ctx.send(f"```json\n{str(result)}\n```")
         
