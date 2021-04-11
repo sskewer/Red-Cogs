@@ -14,8 +14,7 @@ async def get_epic_account(self, guild, member_id):
         if len(epiclinking.clients) > 0:
             try:
                 epic_user = await epiclinking.clients[0].fetch_user(epic_user["id"])
-                if epic_user is not None:
-                    epic_account["name"] = epic_user.display_name
+                epic_account["name"] = epic_user.display_name if epic_user != None else None
             except:
                 pass
         return epic_account
