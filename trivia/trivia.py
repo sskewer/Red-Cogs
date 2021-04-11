@@ -146,6 +146,7 @@ async def reaction_confirm(self, ctx, msg):
     except asyncio.TimeoutError:
         return False
 
+
 BaseCog = getattr(commands, "Cog", object)
 
 class trivia(BaseCog):
@@ -547,19 +548,20 @@ class trivia(BaseCog):
         data = await self.config.guild(guild).reaction()
         member = guild.get_member(payload.user_id)
         if member.bot == False:
-            if data["message"] == payload.message_id:
-                if payload.user_id not in data["users"]:
-                    if str(payload.emoji) in reactions:
-                        setup = setup_coll.find_one({"guild" : "454261607799717888"})
-                        users = [ int(i) for i in setup["users"] ]
-                        roles = [ guild.get_role(int(i)) for i in setup["roles"]]
-                        if member.roles not in roles and member.id not in users:  
-                            if reactions.index(str(payload.emoji)) == data["correct"]:
-                                update_db(payload.user_id, guild.id, 100)
-                                await guild.get_channel(816212393922658306).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Risposta corretta per <@!{payload.user_id}>\n<https://discord.com/channels/454261607799717888/{str(payload.channel_id)}/{str(payload.message_id)}>")
-                        users = data["users"]
-                        users.append(payload.user_id)
-                        data.update({"users" : users})
-                        await self.config.guild(guild).reaction.set(data)
-                msg = await guild.get_channel(payload.channel_id).fetch_message(payload.message_id)
-                await msg.remove_reaction(payload.emoji, guild.get_member(payload.user_id))
+            if data != {} and data != None:
+                if data["message"] == payload.message_id:
+                    if payload.user_id not in data["users"]:
+                        if str(payload.emoji) in reactions:
+                            setup = setup_coll.find_one({"guild" : "454261607799717888"})
+                            users = [ int(i) for i in setup["users"] ]
+                            roles = [ guild.get_role(int(i)) for i in setup["roles"]]
+                            if member.roles not in roles and member.id not in users:  
+                                if reactions.index(str(payload.emoji)) == data["correct"]:
+                                    update_db(payload.user_id, guild.id, 100)
+                                    await guild.get_channel(816212393922658306).send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Risposta corretta per <@!{payload.user_id}>\n<https://discord.com/channels/454261607799717888/{str(payload.channel_id)}/{str(payload.message_id)}>")
+                            users = data["users"]
+                            users.append(payload.user_id)
+                            data.update({"users" : users})
+                            await self.config.guild(guild).reaction.set(data)
+                    msg = await guild.get_channel(payload.channel_id).fetch_message(payload.message_id)
+                    await msg.remove_reaction(payload.emoji, guild.get_member(payload.user_id))
