@@ -4,6 +4,25 @@ import discord
 from redbot.core import Config, commands
 from redbot.core.bot import Red
 
+#---------------# Get Epic Account #---------------#
+
+async def get_epic_account(self, guild, member_id):
+    verified_user_id = await self.epiclinking.settings.guild(guild).verified_user_id()
+    if str(member_id) in verified_user_id:
+        epic_account = { "id": verified_user_id[str(member_id)] }
+        if len(self.epiclinking.clients) > 0:
+            try:
+                epic_user = await self.epiclinking.clients[0].fetch_user(epic_user["id"])
+                if epic_user is not None:
+                    epic_account["name"] = epic_user.display_name
+            except:
+                pass
+        return epic_account
+    else:
+        return {}
+
+
+#------------------# Cog Code #------------------#
 
 BaseCog = getattr(commands, "Cog", object)
 
@@ -13,7 +32,3 @@ class DatabaseSharing(BaseCog):
         self.bot = bot
         self.epiclinking = bot.get_cog("EpicLinking")
         
-        guild = self.bot.get_guild(454261607799717888)
-        verified_user_id = await self.epiclinking.settings.guild(guild).verified_user_id()
-        if str(ctx.message.author.id) in verified_user_id:
-            epic_id = verified_user_id[str(ctx.message.author.id)]
