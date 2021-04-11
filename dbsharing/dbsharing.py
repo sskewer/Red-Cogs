@@ -11,3 +11,4 @@ class DatabaseSharing(BaseCog):
     
     def __init__(self, bot):
         self.bot = bot
+        self.epiclink = bot.get_cog("EpicLinking")
