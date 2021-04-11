@@ -146,6 +146,7 @@ async def reaction_confirm(self, ctx, msg):
     except asyncio.TimeoutError:
         return False
 
+
 BaseCog = getattr(commands, "Cog", object)
 
 class trivia(BaseCog):
