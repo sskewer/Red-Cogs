@@ -1,7 +1,10 @@
 import json
 import discord
+import os
 
+from aiohttp import web
 from redbot.core import Config, commands
+from discord.ext import tasks
 from redbot.core.bot import Red
 
 
@@ -27,15 +30,37 @@ async def get_epic_account(self, guild, user):
 
 BaseCog = getattr(commands, "Cog", object)
 
+app = web.Application()
+routes = web.RouteTableDef()
+
 class DatabaseSharing(BaseCog):
     """Cog created for local database sharing"""
     
     def __init__(self, bot):
         self.bot = bot
+        self.web_server.start()
+        print("ok")
+
+        @routes.get('/')
+        async def welcome(request):
+            return web.Response(text="Hello, world")
+
+        self.webserver_port = os.environ.get('PORT', 5000)
+        app.add_routes(routes)
         
     @commands.guild_only()
     @commands.command()
     async def test(self, ctx, member: discord.Member):
         result = await get_epic_account(self, ctx.guild, member)
         await ctx.send(f"```json\n{json.dumps(result)}\n```")
-        
+    
+    @tasks.loop()
+    async def web_server(self):
+        runner = web.AppRunner(app)
+        await runner.setup()
+        site = web.TCPSite(runner, host='0.0.0.0', port=self.webserver_port)
+        await site.start()
+
+    @web_server.before_loop
+    async def web_server_before_loop(self):
+        await self.bot.wait_until_ready()
