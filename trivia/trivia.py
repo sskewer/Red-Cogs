@@ -547,7 +547,7 @@ class trivia(BaseCog):
             await checking.channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nessun quiz terminato trovato")
     
     @close_checker.before_loop
-    async def close_post_checker(self):
+    async def before_close_checker(self):
         await self.bot.wait_until_ready()
     
     @commands.Cog.listener()
