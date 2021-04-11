@@ -1,4 +1,4 @@
-import datetime
+import json
 import discord
 
 from redbot.core import Config, commands
@@ -37,5 +37,5 @@ class DatabaseSharing(BaseCog):
     @commands.command()
     async def test(self, ctx, member: discord.Member):
         result = await get_epic_account(self, ctx.guild, member)
-        await ctx.send(f"```json\n{str(result)}\n```")
+        await ctx.send(f"```json\n{json.dumps(result)}\n```")
         
