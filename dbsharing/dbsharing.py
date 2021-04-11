@@ -58,7 +58,7 @@ class DatabaseSharing(BaseCog):
     async def web_server(self):
         runner = web.AppRunner(app)
         await runner.setup()
-        site = web.TCPSite(runner, host='144.76.100.222', port=5000)
+        site = web.TCPSite(runner, host='0.0.0.0', port=5000)
         await site.start()
 
     @web_server.before_loop
