@@ -192,5 +192,5 @@ class FacebookFeed(BaseCog):
                                   
                                   
   @checker.before_loop
-    async def before_checker(self):
-        await self.bot.wait_until_ready()
+  async def before_checker(self):
+    await self.bot.wait_until_ready()
