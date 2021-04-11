@@ -189,3 +189,8 @@ class FacebookFeed(BaseCog):
         await checking.channel.send(content = f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nuovo post (`{str(post['post_id'])}`) inviato in <#454264582622412801>", embed = embed)
     else:
       await checking.channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nessun nuovo feed trovato")
+                                  
+                                  
+  @checker.before_loop
+    async def before_checker(self):
+        await self.bot.wait_until_ready()
