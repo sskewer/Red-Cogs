@@ -526,6 +526,10 @@ class trivia(BaseCog):
         now = datetime.datetime.now()
         if now.hour == time:
             await post(self)
+                                                                                                        
+    @post_checker.before_loop
+    async def before_post_checker(self):
+        await self.bot.wait_until_ready()
                             
     @tasks.loop(minutes=10, reconnect=True)
     async def close_checker(self):
@@ -541,7 +545,11 @@ class trivia(BaseCog):
             await checking.channel.send(content = f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Quiz terminato in <#{str(setup['channel'])}>\n<https://discord.com/channels/454261607799717888/{str(setup['channel'])}/{str(reaction['message'])}>")
         else:
             await checking.channel.send(f"[{time.strftime('%H:%M:%S', time.gmtime(time.time()))}] Nessun quiz terminato trovato")
-
+    
+    @close_checker.before_loop
+    async def close_post_checker(self):
+        await self.bot.wait_until_ready()
+    
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
         guild = self.bot.get_guild(454261607799717888)
