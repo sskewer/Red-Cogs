@@ -3,7 +3,7 @@ import discord
 import os
 
 from aiohttp import web
-from redbot.core import Config, commands
+from redbot.core import Config
 from discord.ext import tasks
 from redbot.core.bot import Red
 
@@ -41,24 +41,18 @@ class DatabaseSharing(BaseCog):
         self.web_server.start()
         print("ok")
 
-        @routes.get('/')
+        @routes.get('/{id}')
         async def welcome(request):
-            return web.Response(text="Hello, world")
+            return web.Response(text = "Hello, world")
 
         self.webserver_port = os.environ.get('PORT', 5050)
         app.add_routes(routes)
-        
-    @commands.guild_only()
-    @commands.command()
-    async def test(self, ctx, member: discord.Member):
-        result = await get_epic_account(self, ctx.guild, member)
-        await ctx.send(f"```json\n{json.dumps(result)}\n```")
     
     @tasks.loop()
     async def web_server(self):
         runner = web.AppRunner(app)
         await runner.setup()
-        site = web.TCPSite(runner, host='0.0.0.0', port=5050)
+        site = web.TCPSite(runner, host = '0.0.0.0', port = self.webserver_port)
         await site.start()
 
     @web_server.before_loop
