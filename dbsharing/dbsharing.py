@@ -48,10 +48,12 @@ class DatabaseSharing(BaseCog):
                 guild_id = request.match_info['guild']
             except:
                 return web.Response(text = json.dumps({ "status": 404, "error": "Mandatory parameters not entered" }))
+            if guild_id.isdecimal() == False or user_id.isdecimal() == False:
+                return web.Response(text = json.dumps({ "status": 405, "error": "One or more invalid IDs entered" })) 
             guild = self.bot.get_guild(int(guild_id))
             if guild is None:
-                return web.Response(text = json.dumps({ "status": 405, "error": "Invalid or non-existent guild ID" }))
-            user = guild.get_member(user_id)
+                return web.Response(text = json.dumps({ "status": 504, "error": "Invalid or non-existent guild ID" }))
+            user = guild.get_member(int(user_id))
             if user is None:
                 return web.Response(text = json.dumps({ "status": 505, "error": "Invalid or non-existent user ID" })) 
             result = await get_epic_account(self, guild, int(user.id))
