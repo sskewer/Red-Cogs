@@ -38,7 +38,6 @@ class DatabaseSharing(BaseCog):
     
     def __init__(self, bot):
         self.bot = bot
-        self.web_app = app
         self.webserver_port = os.environ.get('PORT', 5050)
         self.web_server.start()
         
@@ -50,11 +49,11 @@ class DatabaseSharing(BaseCog):
             result = await get_epic_account(self, guild, int(user))
             return web.Response(text = json.dumps(result))
         
-        self.web_app.add_routes(routes)
+        app.add_routes(routes)
     
     @tasks.loop()
     async def web_server(self):
-        runner = web.AppRunner(self.web_app)
+        runner = web.AppRunner(app)
         await runner.setup()
         site = web.TCPSite(runner, host = '0.0.0.0', port = self.webserver_port)
         await site.start()
