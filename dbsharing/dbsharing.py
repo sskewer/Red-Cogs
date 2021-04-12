@@ -44,16 +44,17 @@ class DatabaseSharing(BaseCog):
         @routes.get('/epiclinking/{guild}/{user}')
         async def epic_linking(request):
             try:
-                user = request.match_info['user']
+                user_id = request.match_info['user']
                 guild_id = request.match_info['guild']
             except:
                 return web.Response(text = json.dumps({ "status": 404, "error": "Mandatory parameters not entered" }))
             guild = self.bot.get_guild(int(guild_id))
             if guild is None:
                 return web.Response(text = json.dumps({ "status": 405, "error": "Invalid or non-existent guild ID" }))
+            user = guild.get_member(user_id)
             if user is None:
                 return web.Response(text = json.dumps({ "status": 505, "error": "Invalid or non-existent user ID" })) 
-            result = await get_epic_account(self, guild, int(user))
+            result = await get_epic_account(self, guild, int(user.id))
             if result == {}:
                 return web.Response(text = json.dumps({ "status": 500, "error": "No data found for the specified user" })) 
             result["status"] = 200
