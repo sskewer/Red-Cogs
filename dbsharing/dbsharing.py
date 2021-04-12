@@ -47,12 +47,13 @@ class DatabaseSharing(BaseCog):
             guild_id = request.match_info['guild']
             guild = self.bot.get_guild(int(guild_id))
             if guild is None:
-                return web.Response(text = json.dumps({ "status": "404", "error": "Invalid or non-existent guild ID" }))
+                return web.Response(text = json.dumps({ "status": 404, "error": "Invalid or non-existent guild ID" }))
             if user is None:
-                return web.Response(text = json.dumps({ "status": "504", "error": "Invalid or non-existent user ID" })) 
+                return web.Response(text = json.dumps({ "status": 504, "error": "Invalid or non-existent user ID" })) 
             result = await get_epic_account(self, guild, int(user))
             if result == {}:
-                return web.Response(text = json.dumps({ "status": "400", "error": "No data found for the specified user" })) 
+                return web.Response(text = json.dumps({ "status": 400, "error": "No data found for the specified user" })) 
+            result["status"] = 200
             return web.Response(text = json.dumps(result))
         
         app.add_routes(routes)
