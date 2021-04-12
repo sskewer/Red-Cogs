@@ -51,7 +51,7 @@ class DatabaseSharing(BaseCog):
             if user is None:
                 return web.Response(text = json.dumps({ "status": "504", "error": "Invalid or non-existent user ID" })) 
             result = await get_epic_account(self, guild, int(user))
-            if result = {}:
+            if result == {}:
                 return web.Response(text = json.dumps({ "status": "400", "error": "No data found for the specified user" })) 
             return web.Response(text = json.dumps(result))
         
