@@ -3,7 +3,7 @@ import discord
 import os
 
 from aiohttp import web
-from redbot.core import Config
+from redbot.core import Config, commands
 from discord.ext import tasks
 from redbot.core.bot import Red
 
