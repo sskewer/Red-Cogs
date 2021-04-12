@@ -13,8 +13,8 @@ from redbot.core.bot import Red
 async def get_epic_account(self, guild, user):
     epiclinking = self.bot.get_cog("EpicLinking")
     verified_user_id = await epiclinking.settings.guild(guild).verified_user_id()
-    if str(user.id) in verified_user_id:
-        epic_account = { "id": verified_user_id[str(user.id)] }
+    if str(user) in verified_user_id:
+        epic_account = { "id": verified_user_id[str(user)] }
         if len(epiclinking.clients) > 0:
             try:
                 epic_user = await epiclinking.clients[0].fetch_user(epic_user["id"])
@@ -31,26 +31,28 @@ async def get_epic_account(self, guild, user):
 BaseCog = getattr(commands, "Cog", object)
 
 app = web.Application()
-routes = web.RouteTableDef()
 
 class DatabaseSharing(BaseCog):
     """Cog created for local database sharing"""
     
     def __init__(self, bot):
         self.bot = bot
-        self.web_server.start()
-        print("ok")
-
-        @routes.get('/{id}')
-        async def welcome(request):
-            return web.Response(text = "Hello, world")
-
+        self.web_app = app
         self.webserver_port = os.environ.get('PORT', 5050)
-        app.add_routes(routes)
+        self.web_server.start()
+        
+        async def method(request):
+            user = request.rel_url.query['user']
+            guild_id = request.rel_url.query['guild']
+            guild = self.bot.get_guild(int(guild_id))
+            result = await get_epic_account(self, guild, user):
+            return web.Response(text = json.dumps(result))
+        
+        self.web_app.router.add_route('GET', "/epiclinking", method)
     
     @tasks.loop()
     async def web_server(self):
-        runner = web.AppRunner(app)
+        runner = web.AppRunner(self.web_app)
         await runner.setup()
         site = web.TCPSite(runner, host = '0.0.0.0', port = self.webserver_port)
         await site.start()
