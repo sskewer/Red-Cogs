@@ -45,7 +45,7 @@ class DatabaseSharing(BaseCog):
         async def welcome(request):
             return web.Response(text="Hello, world")
 
-        self.webserver_port = os.environ.get('PORT', 5000)
+        self.webserver_port = os.environ.get('PORT', 5050)
         app.add_routes(routes)
         
     @commands.guild_only()
@@ -58,7 +58,7 @@ class DatabaseSharing(BaseCog):
     async def web_server(self):
         runner = web.AppRunner(app)
         await runner.setup()
-        site = web.TCPSite(runner, host='0.0.0.0', port=5000)
+        site = web.TCPSite(runner, host='0.0.0.0', port=5050)
         await site.start()
 
     @web_server.before_loop
