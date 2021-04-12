@@ -42,12 +42,12 @@ class DatabaseSharing(BaseCog):
         self.webserver_port = os.environ.get('PORT', 5050)
         self.web_server.start()
         
-        @routes.get('/')
+        @routes.get('/epiclinking/{guild}/{user}')
         async def epic_linking(request):
             user = request.rel_url.query['user']
             guild_id = request.rel_url.query['guild']
             guild = self.bot.get_guild(int(guild_id))
-            result = await get_epic_account(self, guild, user)
+            result = await get_epic_account(self, guild, int(user))
             return web.Response(text = json.dumps(result))
         
         self.web_app.add_routes(routes)
