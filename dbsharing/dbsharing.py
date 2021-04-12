@@ -45,7 +45,7 @@ class DatabaseSharing(BaseCog):
             user = request.rel_url.query['user']
             guild_id = request.rel_url.query['guild']
             guild = self.bot.get_guild(int(guild_id))
-            result = await get_epic_account(self, guild, user):
+            result = await get_epic_account(self, guild, user)
             return web.Response(text = json.dumps(result))
         
         self.web_app.router.add_route('GET', "/epiclinking", method)
