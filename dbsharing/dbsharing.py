@@ -31,6 +31,7 @@ async def get_epic_account(self, guild, user):
 BaseCog = getattr(commands, "Cog", object)
 
 app = web.Application()
+routes = web.RouteTableDef()
 
 class DatabaseSharing(BaseCog):
     """Cog created for local database sharing"""
@@ -41,14 +42,15 @@ class DatabaseSharing(BaseCog):
         self.webserver_port = os.environ.get('PORT', 5050)
         self.web_server.start()
         
-        async def method(request):
+        @routes.get('/')
+        async def epic_linking(request):
             user = request.rel_url.query['user']
             guild_id = request.rel_url.query['guild']
             guild = self.bot.get_guild(int(guild_id))
             result = await get_epic_account(self, guild, user)
             return web.Response(text = json.dumps(result))
         
-        self.web_app.router.add_route('GET', "/epiclinking", method)
+        self.web_app.add_routes(routes)
     
     @tasks.loop()
     async def web_server(self):
