@@ -41,10 +41,12 @@ class DatabaseSharing(BaseCog):
         self.webserver_port = os.environ.get('PORT', 5050)
         self.web_server.start()
         
-        @routes.get('/epiclinking/{guild}/{user}')
+        @routes.post('/epiclinking/{guild}/{user}')
         async def epic_linking(request):
             token = (await self.bot.get_shared_api_tokens('dbsharing'))['token']
             # Get Parameters
+            request_token = request.headers["Authorization"]
+            return web.Response(text = json.dumps({ "status": 200, "auth": request_token}))
             user_id = request.match_info['user']
             guild_id = request.match_info['guild']
             # Check IDs Format
