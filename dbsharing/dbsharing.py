@@ -43,7 +43,7 @@ class DatabaseSharing(BaseCog):
         
         @routes.get('/epiclinking/{guild}/{user}')
         async def epic_linking(request):
-            token = (await bot.get_shared_api_tokens('dbsharing'))['token']
+            token = (await self.bot.get_shared_api_tokens('dbsharing'))['token']
             # Get Parameters
             user_id = request.match_info['user']
             guild_id = request.match_info['guild']
