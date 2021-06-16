@@ -10,10 +10,6 @@ embeds = {
     description = "In questo canale, puoi segnalare solo errori di traduzione in lingua :flag_it: italiana.\nNel farlo, si prega di **taggare <@!623929121482735637>** e allegare uno screenshot in cui sia ben visibile l'errore che si vuole segnalare. Tutti i post che non sono rilevanti saranno rimossi.",
     color = discord.Colour.from_rgb(19, 123, 196)
   ),
-  454261608324268063: discord.Embed(
-    description = "**Unisciti al nostro canale <#709783766712713358> per creare in automatico un tuo canale completamente personalizzabile. Il canale si autodistruggerà quando si svuoterà, ma potrai crearne uno nuovo. Buon game!**  <a:kitbash_sound:717042518939795527>",
-    color = 0xf1c40f
-  ),
   702576186185875546: discord.Embed(
     description = "",
     color = 0xff6600
