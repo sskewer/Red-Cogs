@@ -39,7 +39,7 @@ class VoteSystem(BaseCog):
       # Database Update
       self.mongo.insert_one({ "guild": str(guild.id), "user": str(payload.member.id), "token": str(token) })
       link = self.vote_config["url"].format(token)
-      # Inviare DM all'utente con il link al voto
+      # Send DM
       await channel.send(link)
 
 def setup(bot):
