@@ -14,7 +14,7 @@ class VoteSystem(BaseCog):
     self.bot = bot
     self.mongo = db["vote-system"]
     self.vote_config = {
-      "url": "https://docs.google.com/forms/d/e/1FAIpQLSc_cZEdmgq23IR8_m6YjbVZTCeCqz2aS8zJ1nrLBWPL0vsmhQ/viewform?usp=pp_url&entry.1831324353={0}",
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLSc_cZEdmgq23IR8_m6YjbVZTCeCqz2aS8zJ1nrLBWPL0vsmhQ/viewform?usp=pp_url&entry.1831324353=",
       "guild": 454261607799717888,
       "channel": 454268474534133762,
       "message": 869894908767502356
@@ -39,7 +39,7 @@ class VoteSystem(BaseCog):
       # Database Update
       self.mongo.insert_one({ "guild": str(guild.id), "user": str(payload.member.id), "token": str(token) })
       print("3")
-      link = self.vote_config["url"].format(token)
+      link = self.vote_config["url"] + str(token)
       print("2")
       # Send DM
       #await channel.send(link)
