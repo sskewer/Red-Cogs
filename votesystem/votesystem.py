@@ -1,6 +1,10 @@
 import discord
 from uuid import uuid4
 from redbot.core import commands
+from pymongo import MongoClient
+
+client = MongoClient("mongodb+srv://Kitbash:6j68WjZGI3Nmvw8Q@modmail.rsxw7.mongodb.net/FortniteITA?retryWrites=true&w=majority")
+db = client.FortniteITA
 
 BaseCog = getattr(commands, "Cog", object)
 
@@ -8,6 +12,7 @@ class VoteSystem(BaseCog):
   
   def __init__(self, bot):
     self.bot = bot
+    self.mongo_db = db["vote-system"]
     self.vote_config = {
       "url": "https://docs.google.com/forms/d/e/1FAIpQLSc_cZEdmgq23IR8_m6YjbVZTCeCqz2aS8zJ1nrLBWPL0vsmhQ/viewform?usp=pp_url&entry.1831324353={0}",
       "guild": 454261607799717888,
