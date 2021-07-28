@@ -16,8 +16,8 @@ class VoteSystem(BaseCog):
     self.vote_config = {
       "url": "https://docs.google.com/forms/d/e/1FAIpQLSc_cZEdmgq23IR8_m6YjbVZTCeCqz2aS8zJ1nrLBWPL0vsmhQ/viewform?usp=pp_url&entry.1831324353={0}",
       "guild": 454261607799717888,
-      "channel": 1234,
-      "message": 1234
+      "channel": 454268474534133762,
+      "message": 869894908767502356
     }
       
   @commands.Cog.listener()
@@ -36,6 +36,8 @@ class VoteSystem(BaseCog):
     user_check = self.mongo.find({ "guild": guild.id, "user": payload.member.id })
     # Script
     if len(user_check) == 0 and payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
+      # Database Update
+      self.mongo.insert_one({ "guild": str(guild.id), "user": str(payload.member.id), "token": str(token) })
       link = self.vote_config["url"].format(token)
       # Inviare DM all'utente con il link al voto
       await channel.send(link)
