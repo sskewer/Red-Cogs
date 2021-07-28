@@ -38,9 +38,10 @@ class VoteSystem(BaseCog):
     if len(list(user_check)) == 0 and payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
       # Database Update
       self.mongo.insert_one({ "guild": str(guild.id), "user": str(payload.member.id), "token": str(token) })
-      link = self.vote_config["url"] + str(token)
       # Send DM
-      await channel.send(link)
+      link = self.vote_config["url"] + str(token)
+      embed = discord.Embed(description = f"""[**Votazione Pubblica - Concorso "Investigatore Cosmico"**]({link})\nPotrai votare una sola volta cliccando qui sopra""", color = discord.Colour.gold())
+      await payload.member.send()
 
 def setup(bot):
   bot.add_cog(VoteSystem(bot))
