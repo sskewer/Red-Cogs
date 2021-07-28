@@ -40,8 +40,9 @@ class VoteSystem(BaseCog):
       self.mongo.insert_one({ "guild": str(guild.id), "user": str(payload.member.id), "token": str(token) })
       # Send DM
       link = self.vote_config["url"] + str(token)
-      embed = discord.Embed(description = f"""[**Votazione Pubblica - Concorso "Investigatore Cosmico"**]({link})\nPotrai votare una sola volta cliccando qui sopra""", color = discord.Colour.gold())
-      await payload.member.send()
+      embed = discord.Embed(title = "Votazione Pubblica - Concorso \"Investigatore Cosmico\"", description = f"La richiesta per registrare la tua preferenza al fine di selezionare le Candidature vincitrici è stata elaborata. Il sistema di voto è anonimo e limitato ad una sola votazione per utente, in quanto il link è univoco per ognuno che decide di votare.", color = discord.Colour.gold())
+      embed.add_field(name="*Ricordati che, dopo l'invio del modulo, non sarà possibile votare nuovamente.*", value="[***Cliccando qui puoi accedere alla votazione. Grazie della collaborazione!***](https://google.com)")
+      await payload.member.send(embed=embed)
 
 def setup(bot):
   bot.add_cog(VoteSystem(bot))
