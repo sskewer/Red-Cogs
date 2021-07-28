@@ -38,6 +38,7 @@ class VoteSystem(BaseCog):
     if len(user_check) == 0 and payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
       link = self.vote_config["url"].format(token)
       # Inviare DM all'utente con il link al voto
+      await channel.send(link)
 
 def setup(bot):
   bot.add_cog(VoteSystem(bot))
