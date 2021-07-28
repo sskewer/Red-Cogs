@@ -30,6 +30,7 @@ class VoteSystem(BaseCog):
     message = await channel.fetch_message(self.vote_config["message"])
     # Token Check
     token_list = self.mongo.find({})
+    print(list(token_list))
     while len([x for x in list(token_list) if x.token == token]) > 0:
       token = uuid4()
     # User Check
