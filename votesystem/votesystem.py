@@ -30,11 +30,12 @@ class VoteSystem(BaseCog):
     channel = guild.get_channel(self.vote_config["channel"])
     message = await channel.fetch_message(self.vote_config["message"])
     # Token Check
-    #token_list = self.mongo.find({})
-    #while len([x for x in token_list if x.token == token]) > 0:
-    #  token = uuid4()
+    token_list = self.mongo.find({})
+    while len([x for x in token_list if x.token == token]) > 0:
+      token = uuid4()
     # User Check
-    #user_check = self.mongo.find({ "guild": guild.id, "user": payload.member.id })
+    user_check = self.mongo.find({ "guild": guild.id, "user": payload.member.id })
+    print("3")
     # Script
     #if len(user_check) == 0 and payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
       # Database Update
