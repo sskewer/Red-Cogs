@@ -19,9 +19,11 @@ class VoteSystem(BaseCog):
       "channel": 454268474534133762,
       "message": 869894908767502356
     }
+    print("1")
       
   @commands.Cog.listener()
   async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
+    print("2")
     # Token Generation
     token = uuid4()
     # Variables
