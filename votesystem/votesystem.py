@@ -37,12 +37,12 @@ class VoteSystem(BaseCog):
     # Script
     if len(user_check) == 0 and payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
       # Database Update
-      self.mongo.insert_one({ "guild": str(guild.id), "user": str(payload.member.id), "token": str(token) })
+      #self.mongo.insert_one({ "guild": str(guild.id), "user": str(payload.member.id), "token": str(token) })
       print("3")
       link = self.vote_config["url"] + str(token)
       print("2")
       # Send DM
-      #await channel.send(link)
+      await channel.send(link)
 
 def setup(bot):
   bot.add_cog(VoteSystem(bot))
