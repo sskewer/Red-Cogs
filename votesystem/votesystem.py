@@ -19,7 +19,6 @@ class VoteSystem(BaseCog):
       "channel": 454268474534133762,
       "message": 869894908767502356
     }
-    print("1")
       
   @commands.Cog.listener()
   async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
@@ -37,12 +36,12 @@ class VoteSystem(BaseCog):
     # User Check
     user_check = self.mongo.find({ "guild": guild.id, "user": payload.member.id })
     # Script
-    if len(user_check) == 0 and payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
+    #if len(user_check) == 0 and payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
       # Database Update
-      self.mongo.insert_one({ "guild": str(guild.id), "user": str(payload.member.id), "token": str(token) })
-      link = self.vote_config["url"].format(token)
-      # Send DM
-      await channel.send(link)
+    #  self.mongo.insert_one({ "guild": str(guild.id), "user": str(payload.member.id), "token": str(token) })
+    #  link = self.vote_config["url"].format(token)
+    #  # Send DM
+    #  await channel.send(link)
 
 def setup(bot):
   bot.add_cog(VoteSystem(bot))
