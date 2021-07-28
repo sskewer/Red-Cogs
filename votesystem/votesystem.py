@@ -33,10 +33,9 @@ class VoteSystem(BaseCog):
     while len([x for x in list(token_list) if x["_id"] == token]) > 0:
       token = uuid4()
     # User Check
-    user_check = self.mongo.find({ "user": payload.member.id })
-    print(list(user_check))
+    user_check = self.mongo.find_one({ "user": str(payload.member.id) })
     # Script
-    if len(list(user_check)) == 0 and payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
+    if user_check is None and payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
       # Database Update
       self.mongo.insert_one({ "_id": str(token), "user": str(payload.member.id) })
       # Send DM
