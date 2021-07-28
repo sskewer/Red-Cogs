@@ -40,9 +40,9 @@ class VoteSystem(BaseCog):
       #self.mongo.insert_one({ "guild": str(guild.id), "user": str(payload.member.id), "token": str(token) })
       print("3")
       link = self.vote_config["url"] + str(token)
-      print("2")
+      print(link)
       # Send DM
-      await channel.send(link)
+      #await channel.send(link)
 
 def setup(bot):
   bot.add_cog(VoteSystem(bot))
