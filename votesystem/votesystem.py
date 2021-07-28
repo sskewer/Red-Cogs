@@ -12,7 +12,7 @@ class VoteSystem(BaseCog):
   
   def __init__(self, bot):
     self.bot = bot
-    self.mongo_db = db["vote-system"]
+    self.mongo = db["vote-system"]
     self.vote_config = {
       "url": "https://docs.google.com/forms/d/e/1FAIpQLSc_cZEdmgq23IR8_m6YjbVZTCeCqz2aS8zJ1nrLBWPL0vsmhQ/viewform?usp=pp_url&entry.1831324353={0}",
       "guild": 454261607799717888,
@@ -29,6 +29,8 @@ class VoteSystem(BaseCog):
     channel = guild.get_channel(self.vote_config["channel"])
     message = await channel.fetch_message(self.vote_config["message"])
     # Database Check
+    token_list = self.mongo.find({})
+    while (userLevel["points"] + point) >= toNextLevel:
     
     # Script
     if member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
