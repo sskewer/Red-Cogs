@@ -30,8 +30,8 @@ class VoteSystem(BaseCog):
     message = await channel.fetch_message(self.vote_config["message"])
     # Database Check
     token_list = self.mongo.find({})
-    while (userLevel["points"] + point) >= toNextLevel:
-    
+    while len([x for x in token_list if x.token == token]) > 0:
+      token = uuid4()
     # Script
     if member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
       link = self.vote_config["url"].format(token)
