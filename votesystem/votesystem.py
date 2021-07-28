@@ -37,7 +37,7 @@ class VoteSystem(BaseCog):
     # Script
     if user_check is None and payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
       # Database Update
-      self.mongo.insert_one({ "_id": str(token), "user": str(payload.member.id), checked: False })
+      self.mongo.insert_one({ "_id": str(token), "user": str(payload.member.id), "voted": False })
       # Send DM
       link = self.vote_config["url"] + str(token)
       embed = discord.Embed(title = "Votazione Pubblica - Concorso \"Investigatore Cosmico\"", description = f"La richiesta per registrare la tua preferenza al fine di selezionare le Candidature vincitrici è stata elaborata. Il sistema di voto è anonimo e limitato ad una sola votazione per utente, in quanto il link è univoco per ognuno che decide di votare.", color = discord.Color.gold())
