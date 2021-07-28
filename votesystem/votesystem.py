@@ -33,12 +33,12 @@ class VoteSystem(BaseCog):
     while len([x for x in list(token_list) if x["_id"] == token]) > 0:
       token = uuid4()
     # User Check
-    user_check = self.mongo.find({ "guild": guild.id, "user": payload.member.id })
+    user_check = self.mongo.find({ "user": payload.member.id })
     print(list(user_check))
     # Script
     if len(list(user_check)) == 0 and payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
       # Database Update
-      self.mongo.insert_one({ "_id": str(token), "guild": str(guild.id), "user": str(payload.member.id) })
+      self.mongo.insert_one({ "_id": str(token), "user": str(payload.member.id) })
       # Send DM
       link = self.vote_config["url"] + str(token)
       embed = discord.Embed(title = "Votazione Pubblica - Concorso \"Investigatore Cosmico\"", description = f"La richiesta per registrare la tua preferenza al fine di selezionare le Candidature vincitrici è stata elaborata. Il sistema di voto è anonimo e limitato ad una sola votazione per utente, in quanto il link è univoco per ognuno che decide di votare.", color = discord.Color.gold())
