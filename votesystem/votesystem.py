@@ -118,6 +118,9 @@ class VoteSystem(BaseCog):
       embed = discord.Embed(title = "Votazione Pubblica - Concorso \"Investigatore Cosmico\"", description = f"La richiesta per registrare la tua preferenza al fine di selezionare le Candidature vincitrici è stata elaborata. Il sistema di voto è anonimo e limitato ad una sola votazione per utente, in quanto il link è univoco per ognuno che decide di votare.", color = discord.Color.gold())
       embed.add_field(name="*Ricordati che, dopo l'invio del modulo, non sarà possibile votare nuovamente.*", value=f"[***Cliccando qui puoi accedere alla votazione. Grazie della collaborazione!***]({link})")
       await payload.member.send(embed=embed)
+      # Reaction Remove
+      msg = await guild.get_channel(payload.channel_id).fetch_message(payload.message_id)
+      await msg.remove_reaction(payload.emoji, guild.get_member(payload.user_id))
 
 def setup(bot):
   bot.add_cog(VoteSystem(bot))
