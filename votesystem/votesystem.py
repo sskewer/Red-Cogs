@@ -39,7 +39,7 @@ class VoteSystem(BaseCog):
     url = await self.config.guild(ctx.guild).url()
     embed = discord.Embed(colour = discord.Color.gold(), title = "Impostazioni Sistema Voto", timestamp = datetime.datetime.utcnow())
     embed.add_field(name = "Canale", value = f"`<#{channel}>`", inline = True)
-    embed.add_field(name = "Messaggio", value = f"[`{message}`](https://discord.com/channels/{ctx.guild}/{channel}/{message})", inline = True)
+    embed.add_field(name = "Messaggio", value = f"[`{message}`](https://discord.com/channels/{ctx.guild.id}/{channel}/{message})", inline = True)
     embed.add_field(name = "Modulo Votazione", value = f"[*Cliccare qui per il modulo*]({url})", inline = False)
     embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
     await ctx.send(embed = embed)
