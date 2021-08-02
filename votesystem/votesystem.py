@@ -76,6 +76,7 @@ class VoteSystem(BaseCog):
     if len(str(msg)) != 18:
       return await ctx.message.add_reaction("🚫")
     if (await channel.fetch_message(msg)) is not None:
+      await (await channel.fetch_message(msg)).add_reaction("✅")
       await self.config.guild(ctx.guild).message.set(msg)
       await ctx.message.add_reaction("✅")
     else:
