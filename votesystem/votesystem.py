@@ -75,11 +75,15 @@ class VoteSystem(BaseCog):
       return ctx.send("Per impostare il **messaggio di voto**, devi aver prima impostato il canale.\nUtilizza il comando **`[p]vote channel`** per configurare il canale di voto.")
     if len(str(msg)) != 18:
       return await ctx.message.add_reaction("🚫")
-    if (await channel.fetch_message(msg)) is not None:
-      await (await channel.fetch_message(msg)).add_reaction("✅")
-      await self.config.guild(ctx.guild).message.set(msg)
-      await ctx.message.add_reaction("✅")
-    else:
+    try:
+      message = await channel.fetch_message(msg)
+      if message is not None:
+        await self.config.guild(ctx.guild).message.set(msg)
+        await ctx.message.add_reaction("✅")
+        await message.add_reaction("✅")
+      else:
+        await ctx.message.add_reaction("🚫")
+    except:
       await ctx.message.add_reaction("🚫")
 
   
