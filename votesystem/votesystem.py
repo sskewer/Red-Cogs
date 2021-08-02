@@ -1,6 +1,6 @@
 import discord
 from uuid import uuid4
-from redbot.core import Config, commands
+from redbot.core import checks, Config, commands
 from pymongo import MongoClient
 
 client = MongoClient("mongodb+srv://Kitbash:6j68WjZGI3Nmvw8Q@modmail.rsxw7.mongodb.net/FortniteITA?retryWrites=true&w=majority")
@@ -19,7 +19,7 @@ class VoteSystem(BaseCog):
     self.mongo = db["vote-system"]
   
   
-  #--------------# COMMANDS #--------------#
+  #---------------# SETUP #---------------#
   
   @commands.group(name="vote", aliases=["votesystem", "votation"])
   @commands.guild_only()
@@ -29,16 +29,44 @@ class VoteSystem(BaseCog):
         pass
       
   @_vs.command()
-  async def url(self, ctx: commands.Context, value):
+  @commands.guild_only()
+  @checks.admin_or_permissions(manage_guild = True)
+  async def url(self, ctx: commands.Context, value: str):
     """Modificare l'url del modulo di voto nel database"""
     if value.startswith("https://docs.google.com/forms/"):
       await self.config.guild(ctx.guild).url.set(value)
       await ctx.message.add_reaction("✅")
     else:
       await ctx.message.add_reaction("🚫")
+      
+  @_vs.command()
+  @commands.guild_only()
+  @checks.admin_or_permissions(manage_guild = True)
+  async def channel(self, ctx: commands.Context, channel: discord.TextChannel):
+    """Modificare l'ID del canale di voto nel database"""
+    await self.config.guild(ctx.guild).channel.set(channel.id)
+    await ctx.message.add_reaction("✅")
+    
+  @_vs.command()
+  @commands.guild_only()
+  @checks.admin_or_permissions(manage_guild = True)
+  async def message(self, ctx: commands.Context, msg: int):
+    """Modificare l'ID del messaggio di voto nel database"""
+    channel_id = await self.config.guild(ctx.guild).channel()
+    channel = ctx.guild.get_channel(channel_id)
+    # Channel Check
+    if channel_id is None or channel is None:
+      return ctx.send("Per impostare il **messaggio di voto**, devi aver prima impostato il canale.\nUtilizza il comando **`[p]vote channel`** per configurare il canale di voto.")
+    if len(str(msg)) != 18:
+      return await ctx.message.add_reaction("🚫")
+    if (await channel.fetch_message(msg)) is not None:
+      await self.config.guild(ctx.guild).message.set(msg)
+      await ctx.message.add_reaction("✅")
+    else:
+      await ctx.message.add_reaction("🚫")
+
   
-  
-  #------------# VOTE SYSTEM #-------------#
+  #------------# VOTE SYSTEM #------------#
   
   @commands.Cog.listener()
   async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
