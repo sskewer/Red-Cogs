@@ -1,6 +1,6 @@
 import discord
 from uuid import uuid4
-from redbot.core import commands
+from redbot.core import Config, commands
 from pymongo import MongoClient
 
 client = MongoClient("mongodb+srv://Kitbash:6j68WjZGI3Nmvw8Q@modmail.rsxw7.mongodb.net/FortniteITA?retryWrites=true&w=majority")
@@ -11,23 +11,26 @@ BaseCog = getattr(commands, "Cog", object)
 class VoteSystem(BaseCog):
   
   def __init__(self, bot):
-    self.bot = bot
+    super().__init__()
+    self.bot = bot    
+    self.config = Config.get_conf(self, identifier=4000121111111111, force_registration = True)
+    default_guild = { "url": None, "channel": None, "message": None }
+    self.config.register_guild(**default_guild)
     self.mongo = db["vote-system"]
-    self.vote_config = {
-      "url": "https://docs.google.com/forms/d/e/1FAIpQLSc_cZEdmgq23IR8_m6YjbVZTCeCqz2aS8zJ1nrLBWPL0vsmhQ/viewform?usp=pp_url&entry.1831324353=",
-      "guild": 454261607799717888,
-      "channel": 454268474534133762,
-      "message": 869894908767502356
-    }
       
   @commands.Cog.listener()
   async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
     # Token Generation
     token = uuid4()
     # Variables
-    guild = self.bot.get_guild(self.vote_config["guild"])
-    channel = guild.get_channel(self.vote_config["channel"])
-    message = await channel.fetch_message(self.vote_config["message"])
+    guild = self.bot.get_guild(payload.guild_id)
+    channel_id = await self.config.guild(guild).channel()
+    message_id = await self.config.guild(guild).message()
+    if channel_id is None or message_id is None:
+      return
+    # Get Object
+    channel = guild.get_channel(channel_id)
+    message = await channel.fetch_message(message_id)
     # Token Check
     token_list = self.mongo.find({})
     while len([x for x in list(token_list) if x["_id"] == token]) > 0:
