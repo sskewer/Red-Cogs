@@ -110,14 +110,15 @@ class VoteSystem(BaseCog):
     # User Check
     user_check = self.mongo.find_one({ "user": str(payload.member.id) })
     # Script
-    if user_check is None and payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
-      # Database Update
-      self.mongo.insert_one({ "_id": str(token), "user": str(payload.member.id), "voted": False })
-      # Send DM
-      link = url + str(token)
-      embed = discord.Embed(title = "Votazione Pubblica - Concorso \"Investigatore Cosmico\"", description = f"La richiesta per registrare la tua preferenza al fine di selezionare le Candidature vincitrici è stata elaborata. Il sistema di voto è anonimo e limitato ad una sola votazione per utente, in quanto il link è univoco per ognuno che decide di votare.", color = discord.Color.gold())
-      embed.add_field(name="*Ricordati che, dopo l'invio del modulo, non sarà possibile votare nuovamente.*", value=f"[***Cliccando qui puoi accedere alla votazione. Grazie della collaborazione!***]({link})")
-      await payload.member.send(embed=embed)
+    if payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
+      if user_check is None:
+        # Database Update
+        self.mongo.insert_one({ "_id": str(token), "user": str(payload.member.id), "voted": False })
+        # Send DM
+        link = url + str(token)
+        embed = discord.Embed(title = "Votazione Pubblica - Concorso \"Investigatore Cosmico\"", description = f"La richiesta per registrare la tua preferenza al fine di selezionare le Candidature vincitrici è stata elaborata. Il sistema di voto è anonimo e limitato ad una sola votazione per utente, in quanto il link è univoco per ognuno che decide di votare.", color = discord.Color.gold())
+        embed.add_field(name="*Ricordati che, dopo l'invio del modulo, non sarà possibile votare nuovamente.*", value=f"[***Cliccando qui puoi accedere alla votazione. Grazie della collaborazione!***]({link})")
+        await payload.member.send(embed=embed)
       # Reaction Remove
       msg = await guild.get_channel(payload.channel_id).fetch_message(payload.message_id)
       await msg.remove_reaction(payload.emoji, guild.get_member(payload.user_id))
