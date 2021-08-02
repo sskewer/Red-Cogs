@@ -17,16 +17,39 @@ class VoteSystem(BaseCog):
     default_guild = { "url": None, "channel": None, "message": None }
     self.config.register_guild(**default_guild)
     self.mongo = db["vote-system"]
+  
+  
+  #--------------# COMMANDS #--------------#
+  
+  @commands.group(name="vote", aliases=["votesystem", "votation"])
+  @commands.guild_only()
+  async def _vs(self, ctx: commands.Context):
+    """Vote System Cog by Simo#2471"""
+    if ctx.invoked_subcommand is None:
+        pass
       
+  @_vs.command()
+  async def url(self, ctx: commands.Context, value):
+    """Modificare l'url del modulo di voto nel database"""
+    if value.startswith("https://docs.google.com/forms/"):
+      await self.config.guild(ctx.guild).url.set(value)
+      await ctx.message.add_reaction("✅")
+    else:
+      await ctx.message.add_reaction("🚫")
+  
+  
+  #------------# VOTE SYSTEM #-------------#
+  
   @commands.Cog.listener()
   async def on_raw_reaction_add(self, payload : discord.RawReactionActionEvent):
     # Token Generation
     token = uuid4()
     # Variables
     guild = self.bot.get_guild(payload.guild_id)
+    url = await self.config.guild(guild).url()
     channel_id = await self.config.guild(guild).channel()
     message_id = await self.config.guild(guild).message()
-    if channel_id is None or message_id is None:
+    if url is None or channel_id is None or message_id is None:
       return
     # Get Object
     channel = guild.get_channel(channel_id)
@@ -42,7 +65,7 @@ class VoteSystem(BaseCog):
       # Database Update
       self.mongo.insert_one({ "_id": str(token), "user": str(payload.member.id), "voted": False })
       # Send DM
-      link = self.vote_config["url"] + str(token)
+      link = url + str(token)
       embed = discord.Embed(title = "Votazione Pubblica - Concorso \"Investigatore Cosmico\"", description = f"La richiesta per registrare la tua preferenza al fine di selezionare le Candidature vincitrici è stata elaborata. Il sistema di voto è anonimo e limitato ad una sola votazione per utente, in quanto il link è univoco per ognuno che decide di votare.", color = discord.Color.gold())
       embed.add_field(name="*Ricordati che, dopo l'invio del modulo, non sarà possibile votare nuovamente.*", value=f"[***Cliccando qui puoi accedere alla votazione. Grazie della collaborazione!***]({link})")
       await payload.member.send(embed=embed)
