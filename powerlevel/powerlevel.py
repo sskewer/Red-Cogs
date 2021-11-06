@@ -25,7 +25,21 @@ class PowerLevel(BaseCog):
     @commands.guild_only()
     @commands.command()
     async def powerlevel(self, ctx, *, content:str):
-        """Assegnare il livello di Potenza STW al proprio nickname.\n\n**Utilizzo**\n**`/powerlevel <livello>`** - Aggiungere il livello al proprio nickname\n**`/powerlevel reset`** - Rimuovere il livello dal proprio nickname\n\n**Esempi**\n**`/powerlevel 131`** - Nickname [\\⚡131]\n**`/powerlevel reset`** - Nickname\n\n**Accorgimenti**\n- I nickname non possono superare i 32 caratteri.\n- Utilizzare esclusivamente in <#454274882688122880>."""
+        """
+        Assegnare il livello di Potenza STW al proprio nickname.
+        
+        **Utilizzo**
+        **`?powerlevel <livello>`** - Aggiungere il livello al proprio nickname
+        **`?powerlevel reset`** - Rimuovere il livello dal proprio nickname
+        
+        **Esempi**
+        **`?powerlevel 131`** - Nickname [\\⚡131]
+        **`?powerlevel reset`** - Nickname
+        
+        **Accorgimenti**
+        - I nickname non possono superare i 32 caratteri.
+        - Utilizzare esclusivamente in <#702576186185875546>.
+        """
         error = '**<@' + str(ctx.message.author.id) + '>, per favore inserisci un power level valido.**'
         #channel check
         if ctx.channel.id in allowed_channels:
