@@ -1,6 +1,8 @@
-from discord.ext import commands
-from discord.utils import get
 import re
+import discord
+
+from redbot.core import Config, commands
+from redbot.core.bot import Red
 
 def getNick(nick:str):
   form_nick = re.sub(r'\s+\[⚡\d+\]', '', nick)
@@ -12,11 +14,15 @@ def getNick(nick:str):
 # Setup
 max_level = 138
 allowed_channels = [702576186185875546]
+
+BaseCog = getattr(commands, "Cog", object)
  
-class PowerLevel(commands.Cog):
+class PowerLevel(BaseCog):
+  
     def __init__(self, bot):
         self.bot = bot
-     
+    
+    @commands.guild_only()
     @commands.command()
     async def powerlevel(self, ctx, *, content:str):
         """Assegnare il livello di Potenza STW al proprio nickname.\n\n**Utilizzo**\n**`/powerlevel <livello>`** - Aggiungere il livello al proprio nickname\n**`/powerlevel reset`** - Rimuovere il livello dal proprio nickname\n\n**Esempi**\n**`/powerlevel 131`** - Nickname [\\⚡131]\n**`/powerlevel reset`** - Nickname\n\n**Accorgimenti**\n- I nickname non possono superare i 32 caratteri.\n- Utilizzare esclusivamente in <#454274882688122880>."""
@@ -55,6 +61,3 @@ class PowerLevel(commands.Cog):
         else:
           # Remove Author Message
           await ctx.message.delete()
-       
-def setup(bot):
-    bot.add_cog(PowerLevel(bot))
