@@ -44,7 +44,7 @@ class NitroBoosters(BaseCog):
       return
     # Remove Reactions
     for reaction in msg.reactions:
-      if str(reaction.emoji) != str(payload.emoji):
+      #if str(reaction.emoji) != str(payload.emoji):
         try:
           await reaction.remove(member)
         except:
