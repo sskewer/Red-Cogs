@@ -37,16 +37,16 @@ class NitroBoosters(BaseCog):
     # Get Message
     msg = None
     channel = guild.get_channel(channel_id)
-    async for message in channel.history():
+    for message in (await channel.history().flatten()):
       if message.id == message_id:
         msg = message
     if message is None:
       return
     # Remove Reactions
     for reaction in msg.reactions:
-      #if str(reaction.emoji) != str(payload.emoji):
+      if str(reaction.emoji) != str(payload.emoji):
         try:
-          await msg.remove_reaction(reaction.emoji, member)
+          await reaction.remove(member)
         except:
           pass 
       
@@ -56,7 +56,7 @@ class NitroBoosters(BaseCog):
     msg = None
     role = before.guild.get_role(nitro_id)
     channel = before.guild.get_channel(channel_id)
-    async for message in channel.history():
+    for message in (await channel.history().flatten()):
       if message.id == message_id:
         msg = message
     if message is None:
