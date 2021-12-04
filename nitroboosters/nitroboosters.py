@@ -27,17 +27,25 @@ class NitroBoosters(BaseCog):
     guild = self.bot.get_guild(payload.guild_id)
     if not guild:
       return
-    if payload.channel_id != channel_id or payload.message_id == message_id:
+    if payload.channel_id != channel_id or payload.message_id != message_id:
       return
     # Member Checks
     member = guild.get_member(payload.user_id)
     nitro = guild.get_role(nitro_id)
     if nitro not in member.roles:
       return
+    # Get Message
+    channel = guild.get_channel(channel_id)
+    msg = await channel.fetch_message(message_id)
+    # Remove Reactions
+    for reaction in msg.reactions:
+      try:
+        await reaction.remove(member)
+      except:
+        pass 
+    
     
     for n, role in enumerate(roles):
         role = ctx.guild.get_role(role)
         roles[n] = role
     len(set(ctx.author.roles).intersection(set(roles))) > 0
-    # Reactions
-    
