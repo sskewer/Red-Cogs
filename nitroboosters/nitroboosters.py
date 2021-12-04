@@ -39,20 +39,30 @@ class NitroBoosters(BaseCog):
     msg = await channel.fetch_message(message_id)
     # Remove Reactions
     for reaction in msg.reactions:
+      if reaction.emoji != payload.emoji:
+        try:
+          await reaction.remove(member)
+        except:
+          pass 
+      
+  @commands.Cog.listener()
+  async def on_member_update(self, before, after):
+    # Vars
+    role = before.guild.get_role(nitro_id)
+    channel = before.guild.get_channel(channel_id)
+    msg = await channel.fetch_message(message_id)
+    # Remove Reactions
+    for reaction in msg.reactions:
       try:
-        await reaction.remove(member)
+        await reaction.remove(after)
       except:
         pass 
-      
-    @commands.Cog.listener()
-    async def on_member_update(self, before, after):
-      role = before.guild.get_role(nitro_id)
-      # Remove Color Roles
-      if role in before.roles and role not in after.roles:
-        for id in colors_id:
-          color = before.guild.get_role(id)
-          if color in before.roles:
-            try:
-              await after.remove_roles(color)
-            except:
-              pass
+    # Remove Color Roles
+    if role in before.roles and role not in after.roles:
+      for id in colors_id:
+        color = before.guild.get_role(id)
+        if color in before.roles:
+          try:
+            await after.remove_roles(color)
+          except:
+            pass
