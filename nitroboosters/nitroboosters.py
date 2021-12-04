@@ -23,11 +23,21 @@ class NitroBoosters(BaseCog):
         
   @commands.Cog.listener()
   async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
+    # Channel & Message Checks
+    guild = self.bot.get_guild(payload.guild_id)
     if not guild:
       return
     if payload.channel_id != channel_id or payload.message_id == message_id:
       return
-    # Vars
+    # Member Checks
     member = guild.get_member(payload.user_id)
+    nitro = guild.get_role(nitro_id)
+    if nitro not in member.roles:
+      return
+    
+    for n, role in enumerate(roles):
+        role = ctx.guild.get_role(role)
+        roles[n] = role
+    len(set(ctx.author.roles).intersection(set(roles))) > 0
     # Reactions
     
