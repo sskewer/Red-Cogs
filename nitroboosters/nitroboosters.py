@@ -43,9 +43,16 @@ class NitroBoosters(BaseCog):
         await reaction.remove(member)
       except:
         pass 
-    
-    
-    for n, role in enumerate(roles):
-        role = ctx.guild.get_role(role)
-        roles[n] = role
-    len(set(ctx.author.roles).intersection(set(roles))) > 0
+      
+    @commands.Cog.listener()
+    async def on_member_update(self, before, after):
+      role = before.guild.get_role(nitro_id)
+      # Remove Color Roles
+      if role in before.roles and role not in after.roles:
+        for id in colors_id:
+          color = before.guild.get_role(id)
+          if color in before.roles:
+            try:
+              await after.remove_roles(color)
+            except:
+              pass
