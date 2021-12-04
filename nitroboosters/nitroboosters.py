@@ -35,11 +35,16 @@ class NitroBoosters(BaseCog):
     if nitro not in member.roles:
       return
     # Get Message
+    msg = None
     channel = guild.get_channel(channel_id)
-    msg = await channel.fetch_message(message_id)
+    async for message in channel.history():
+      if message.id == message_id:
+        msg = message
+    if message is None:
+      return
     # Remove Reactions
     for reaction in msg.reactions:
-      #if str(reaction.emoji) != str(payload.emoji):
+      if str(reaction.emoji) != str(payload.emoji):
       try:
         await reaction.remove(member)
       except:
@@ -48,9 +53,14 @@ class NitroBoosters(BaseCog):
   @commands.Cog.listener()
   async def on_member_update(self, before, after):
     # Vars
+    msg = None
     role = before.guild.get_role(nitro_id)
     channel = before.guild.get_channel(channel_id)
-    msg = await channel.fetch_message(message_id)
+    async for message in channel.history():
+      if message.id == message_id:
+        msg = message
+    if message is None:
+      return
     # Remove Reactions
     for reaction in msg.reactions:
       try:
