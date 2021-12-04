@@ -39,11 +39,11 @@ class NitroBoosters(BaseCog):
     msg = await channel.fetch_message(message_id)
     # Remove Reactions
     for reaction in msg.reactions:
-      if str(reaction.emoji) != str(payload.emoji):
-        try:
-          await reaction.remove(member)
-        except:
-          pass 
+      #if str(reaction.emoji) != str(payload.emoji):
+      try:
+        await reaction.remove(member)
+      except:
+        pass 
       
   @commands.Cog.listener()
   async def on_member_update(self, before, after):
