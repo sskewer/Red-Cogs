@@ -20,5 +20,10 @@ class NitroBoosters(BaseCog):
     self.bot = bot
         
   @commands.Cog.listener()
-  async def on_message(self, message):
+  async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
+    if not guild:
+      return
+    # Vars
+    member = guild.get_member(payload.user_id)
+    # Reactions
     
