@@ -35,12 +35,9 @@ class NitroBoosters(BaseCog):
     if nitro not in member.roles:
       return
     # Get Message
-    msg = None
     channel = guild.get_channel(channel_id)
-    for message in (await channel.history().flatten()):
-      if message.id == message_id:
-        msg = message
-    if message is None:
+    msg = await channel.get_message(message_id)
+    if msg is None:
       return
     # Remove Reactions
     for reaction in msg.reactions:
@@ -53,13 +50,10 @@ class NitroBoosters(BaseCog):
   @commands.Cog.listener()
   async def on_member_update(self, before, after):
     # Vars
-    msg = None
     role = before.guild.get_role(nitro_id)
     channel = before.guild.get_channel(channel_id)
-    for message in (await channel.history().flatten()):
-      if message.id == message_id:
-        msg = message
-    if message is None:
+    msg = await channel.get_message(message_id)
+    if msg is None:
       return
     # Remove Reactions
     for reaction in msg.reactions:
