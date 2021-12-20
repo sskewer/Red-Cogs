@@ -36,7 +36,7 @@ class NitroBoosters(BaseCog):
       return
     # Get Message
     channel = guild.get_channel(channel_id)
-    msg = await channel.get_message(message_id)
+    msg = await channel.fetch_message(message_id)
     if msg is None:
       return
     # Remove Reactions
@@ -52,7 +52,7 @@ class NitroBoosters(BaseCog):
     # Vars
     role = before.guild.get_role(nitro_id)
     channel = before.guild.get_channel(channel_id)
-    msg = await channel.get_message(message_id)
+    msg = await channel.fetch_message(message_id)
     if msg is None:
       return
     # Remove Reactions
