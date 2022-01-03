@@ -65,7 +65,7 @@ class VoteSystem(BaseCog):
   @checks.admin_or_permissions(manage_guild = True)
   async def name(self, ctx: commands.Context, *, value: str):
     """Modificare il nome della votazione nel database"""
-    if len(value) < 1:
+    if len(value) > 0:
       name = f"\"{name}\""
     else:
       name = None
