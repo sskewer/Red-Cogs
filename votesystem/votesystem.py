@@ -66,7 +66,7 @@ class VoteSystem(BaseCog):
   async def name(self, ctx: commands.Context, *, value: str):
     """Modificare il nome della votazione nel database"""
     if len(value) > 0:
-      name = f"\"{name}\""
+      name = f"\"{value}\""
     else:
       name = None
     await self.config.guild(ctx.guild).name.set(name)
