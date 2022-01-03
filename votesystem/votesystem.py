@@ -35,10 +35,14 @@ class VoteSystem(BaseCog):
   async def current(self, ctx: commands.Context):
     """Visualizzare la impostazioni di voto correnti"""
     name = await self.config.guild(ctx.guild).name()
+    if name is None:
+      name = ""
+    else:
+      name = f"- {name}"
     channel = await self.config.guild(ctx.guild).channel()
     message = await self.config.guild(ctx.guild).message()
     url = await self.config.guild(ctx.guild).url()
-    embed = discord.Embed(colour = discord.Color.gold(), title = f"Impostazioni Sistema Voto - \"{name}\"", timestamp = datetime.datetime.utcnow())
+    embed = discord.Embed(colour = discord.Color.gold(), title = f"Impostazioni Sistema Voto {name}", timestamp = datetime.datetime.utcnow())
     embed.add_field(name = "Canale", value = f"<#{channel}>", inline = True)
     embed.add_field(name = "Messaggio", value = f"[`{message}`](https://discord.com/channels/{ctx.guild.id}/{channel}/{message})", inline = True)
     embed.add_field(name = "Modulo Votazione", value = f"[*Cliccare qui per il modulo*]({url})", inline = False)
@@ -59,9 +63,13 @@ class VoteSystem(BaseCog):
   @_vs.command()
   @commands.guild_only()
   @checks.admin_or_permissions(manage_guild = True)
-  async def name(self, ctx: commands.Context, value: str):
+  async def name(self, ctx: commands.Context, *, value: str):
     """Modificare il nome della votazione nel database"""
-    await self.config.guild(ctx.guild).name.set(value)
+    if len(value) < 1:
+      name = f"\"{name}\""
+    else:
+      name = None
+    await self.config.guild(ctx.guild).name.set(name)
     await ctx.message.add_reaction("✅")
       
   @_vs.command()
@@ -119,6 +127,9 @@ class VoteSystem(BaseCog):
       token = uuid4()
     # User Check
     user_check = self.mongo.find_one({ "user": str(payload.member.id) })
+    # Name Check
+    if name is None:
+      name = ""
     # Script
     if payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
       if user_check is None:
@@ -126,7 +137,7 @@ class VoteSystem(BaseCog):
         self.mongo.insert_one({ "_id": str(token), "user": str(payload.member.id), "voted": False })
         # Send DM
         link = url + str(token)
-        embed = discord.Embed(title = f"Votazione Pubblica - Concorso \"{name}\"", description = f"La richiesta per registrare la tua preferenza al fine di selezionare le Candidature vincitrici è stata elaborata. Il sistema di voto è anonimo e limitato ad una sola votazione per utente, in quanto il link è univoco per ognuno che decide di votare.", color = discord.Color.gold())
+        embed = discord.Embed(title = f"Votazione Pubblica - Concorso {name}", description = f"La richiesta per registrare la tua preferenza al fine di selezionare le Candidature vincitrici è stata elaborata. Il sistema di voto è anonimo e limitato ad una sola votazione per utente, in quanto il link è univoco per ognuno che decide di votare.", color = discord.Color.gold())
         embed.add_field(name="*Ricordati che, dopo l'invio del modulo, non sarà possibile votare nuovamente.*", value=f"[***Cliccando qui puoi accedere alla votazione. Grazie della collaborazione!***]({link})")
         await payload.member.send(embed=embed)
       # Reaction Remove
