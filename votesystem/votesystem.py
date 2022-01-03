@@ -37,6 +37,8 @@ class VoteSystem(BaseCog):
     name = await self.config.guild(ctx.guild).name()
     if name is None:
       name = ctx.guild.name
+    else:
+      name = f"Concorso {name}"
     channel = await self.config.guild(ctx.guild).channel()
     message = await self.config.guild(ctx.guild).message()
     url = await self.config.guild(ctx.guild).url()
