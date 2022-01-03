@@ -36,17 +36,15 @@ class VoteSystem(BaseCog):
     """Visualizzare la impostazioni di voto correnti"""
     name = await self.config.guild(ctx.guild).name()
     if name is None:
-      name = ""
-    else:
-      name = f"- {name}"
+      name = ctx.guild.name
     channel = await self.config.guild(ctx.guild).channel()
     message = await self.config.guild(ctx.guild).message()
     url = await self.config.guild(ctx.guild).url()
-    embed = discord.Embed(colour = discord.Color.gold(), title = f"Impostazioni Sistema Voto {name}", timestamp = datetime.datetime.utcnow())
+    embed = discord.Embed(colour = discord.Color.gold(), title = "Impostazioni Sistema Voto", timestamp = datetime.datetime.utcnow())
     embed.add_field(name = "Canale", value = f"<#{channel}>", inline = True)
     embed.add_field(name = "Messaggio", value = f"[`{message}`](https://discord.com/channels/{ctx.guild.id}/{channel}/{message})", inline = True)
     embed.add_field(name = "Modulo Votazione", value = f"[*Cliccare qui per il modulo*]({url})", inline = False)
-    embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
+    embed.set_footer(text = name, icon_url = ctx.guild.icon_url)
     await ctx.send(embed = embed)
   
   @_vs.command()
