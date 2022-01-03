@@ -15,7 +15,7 @@ class VoteSystem(BaseCog):
     super().__init__()
     self.bot = bot    
     self.config = Config.get_conf(self, identifier=4000121111111111, force_registration = True)
-    default_guild = { "name": None, "url": None, "channel": None, "message": None }
+    default_guild = { "current": None, "name": None, "url": None, "channel": None, "message": None }
     self.config.register_guild(**default_guild)
     self.mongo = db["vote-system"]
   
@@ -55,6 +55,8 @@ class VoteSystem(BaseCog):
   async def url(self, ctx: commands.Context, value: str):
     """Modificare l'url del modulo di voto nel database"""
     if value.startswith("https://docs.google.com/forms/"):
+      current = max(value.split("/"), key=len)
+      await self.config.guild(ctx.guild).current.set(current)
       await self.config.guild(ctx.guild).url.set(value)
       await ctx.message.add_reaction("✅")
     else:
@@ -113,6 +115,7 @@ class VoteSystem(BaseCog):
     # Variables
     guild = self.bot.get_guild(payload.guild_id)
     name = await self.config.guild(guild).name()
+    module = await self.config.guild(guild).current()
     url = await self.config.guild(guild).url()
     channel_id = await self.config.guild(guild).channel()
     message_id = await self.config.guild(guild).message()
@@ -134,7 +137,7 @@ class VoteSystem(BaseCog):
     if payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
       if user_check is None:
         # Database Update
-        self.mongo.insert_one({ "_id": str(token), "user": str(payload.member.id), "voted": False })
+        self.mongo.insert_one({ "_id": str(token), "user": str(payload.member.id), "voted": False, "module": str(module) })
         # Send DM
         link = url + str(token)
         embed = discord.Embed(title = f"Votazione Pubblica - Concorso {name}", description = f"La richiesta per registrare la tua preferenza al fine di selezionare le Candidature vincitrici è stata elaborata. Il sistema di voto è anonimo e limitato ad una sola votazione per utente, in quanto il link è univoco per ognuno che decide di votare.", color = discord.Color.gold())
