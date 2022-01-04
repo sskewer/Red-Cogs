@@ -167,30 +167,23 @@ class VoteSystem(BaseCog):
     url = await self.config.guild(guild).url()
     channel_id = await self.config.guild(guild).channel()
     message_id = await self.config.guild(guild).message()
-    print("1")
     if url is None or channel_id is None or message_id is None:
       return
-    print("2")
     # Get Object
     channel = guild.get_channel(channel_id)
     message = await channel.fetch_message(message_id)
-    print("3")
     # Token Check
     token_list = self.mongo.find({})
     while len([x for x in list(token_list) if x["_id"] == token]) > 0:
       token = uuid4()
-    print("4")
     # User Check
     user_check = self.mongo.find_one({ "user": str(payload.member.id) })
-    print("5")
     # Name Check
     if name is None:
       name = ""
     # Script
     if status == True and payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
-      print("6")
       if user_check is None:
-        print("7")
         # Database Update
         self.mongo.insert_one({ "_id": str(token), "user": str(payload.member.id), "voted": False, "module": str(module) })
         # Send DM
@@ -199,10 +192,8 @@ class VoteSystem(BaseCog):
         embed.add_field(name="*Ricordati che, dopo l'invio del modulo, non sarà possibile votare nuovamente.*", value=f"[***Cliccando qui puoi accedere alla votazione. Grazie della collaborazione!***]({link})")
         await payload.member.send(embed=embed)
       # Reaction Remove
-      print("8")
       msg = await guild.get_channel(payload.channel_id).fetch_message(payload.message_id)
       await msg.remove_reaction(str(payload.emoji), guild.get_member(payload.user_id))
-      print("9")
 
 def setup(bot):
   bot.add_cog(VoteSystem(bot))
