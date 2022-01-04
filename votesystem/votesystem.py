@@ -15,7 +15,7 @@ class VoteSystem(BaseCog):
     super().__init__()
     self.bot = bot    
     self.config = Config.get_conf(self, identifier=4000121111111111, force_registration = True)
-    default_guild = { "current": None, "name": None, "url": None, "channel": None, "message": None }
+    default_guild = { "enabled": True, "current": None, "name": None, "url": None, "channel": None, "message": None }
     self.config.register_guild(**default_guild)
     self.mongo = db["vote-system"]
   
@@ -34,6 +34,11 @@ class VoteSystem(BaseCog):
   @checks.admin_or_permissions(manage_guild = True)
   async def current(self, ctx: commands.Context):
     """Visualizzare la impostazioni di voto correnti"""
+    status = await self.config.guild(ctx.guild).enabled()
+    if status == True:
+      colour = discord.Color.green()
+    else:
+      colour = discord.Color.red()
     name = await self.config.guild(ctx.guild).name()
     if name is None:
       name = ctx.guild.name
@@ -42,7 +47,7 @@ class VoteSystem(BaseCog):
     channel = await self.config.guild(ctx.guild).channel()
     message = await self.config.guild(ctx.guild).message()
     url = await self.config.guild(ctx.guild).url()
-    embed = discord.Embed(colour = discord.Color.gold(), title = "Impostazioni Sistema Voto", timestamp = datetime.datetime.utcnow())
+    embed = discord.Embed(colour = colour, title = "Impostazioni Sistema Voto", timestamp = datetime.datetime.utcnow())
     embed.add_field(name = "Canale", value = f"<#{channel}>", inline = True)
     embed.add_field(name = "Messaggio", value = f"[`{message}`](https://discord.com/channels/{ctx.guild.id}/{channel}/{message})", inline = True)
     embed.add_field(name = "Modulo Votazione", value = f"[*Cliccare qui per il modulo*]({url})", inline = False)
@@ -104,6 +109,48 @@ class VoteSystem(BaseCog):
         await ctx.message.add_reaction("🚫")
     except:
       await ctx.message.add_reaction("🚫")
+      
+  @_vs.command()
+  @commands.guild_only()
+  @checks.admin_or_permissions(manage_guild = True)
+  async def enable(self, ctx: commands.Context):
+    """Attivare la votazione con le impostazione correnti"""
+    status = await self.config.guild(ctx.guild).enabled()
+    if status == False:
+      channel_id = await self.config.guild(ctx.guild).channel()
+      message_id = await self.config.guild(ctx.guild).message()
+      if channel_id is not None and message_id is not None:
+        # Get Object
+        channel = ctx.guild.get_channel(channel_id)
+        message = await channel.fetch_message(message_id)
+        # Remove Reactions
+        await message.clear_reaction(emoji)
+        await message.add_reaction("🚫")
+      await self.config.guild(ctx.guild).enabled.set(True)
+      await ctx.message.add_reaction("✅")
+    else:
+      await ctx.message.add_reaction("🚫")
+                    
+  @_vs.command()
+  @commands.guild_only()
+  @checks.admin_or_permissions(manage_guild = True)
+  async def disable(self, ctx: commands.Context):
+    """Disattivare la votazione con le impostazione correnti"""
+    status = await self.config.guild(ctx.guild).enabled()
+    if status == True:
+      channel_id = await self.config.guild(ctx.guild).channel()
+      message_id = await self.config.guild(ctx.guild).message()
+      if channel_id is not None and message_id is not None:
+        # Get Object
+        channel = ctx.guild.get_channel(channel_id)
+        message = await channel.fetch_message(message_id)
+        # Remove Reactions
+        await message.clear_reaction(emoji)
+        await message.add_reaction("✅")
+      await self.config.guild(ctx.guild).enabled.set(False)
+      await ctx.message.add_reaction("✅")
+    else:
+      await ctx.message.add_reaction("🚫")
 
   
   #------------# VOTE SYSTEM #------------#
@@ -114,12 +161,16 @@ class VoteSystem(BaseCog):
     token = uuid4()
     # Variables
     guild = self.bot.get_guild(payload.guild_id)
+    status = await self.config.guild(ctx.guild).enabled()
     name = await self.config.guild(guild).name()
     module = await self.config.guild(guild).current()
     url = await self.config.guild(guild).url()
     channel_id = await self.config.guild(guild).channel()
     message_id = await self.config.guild(guild).message()
     if url is None or channel_id is None or message_id is None:
+      return
+    # Status Check
+    if status == False:
       return
     # Get Object
     channel = guild.get_channel(channel_id)
