@@ -124,8 +124,8 @@ class VoteSystem(BaseCog):
         channel = ctx.guild.get_channel(channel_id)
         message = await channel.fetch_message(message_id)
         # Remove Reactions
-        await message.clear_reaction(emoji)
-        await message.add_reaction("🚫")
+        await message.clear_reaction("🚫")
+        await message.add_reaction("✅")
       await self.config.guild(ctx.guild).enabled.set(True)
       await ctx.message.add_reaction("✅")
     else:
@@ -145,8 +145,8 @@ class VoteSystem(BaseCog):
         channel = ctx.guild.get_channel(channel_id)
         message = await channel.fetch_message(message_id)
         # Remove Reactions
-        await message.clear_reaction(emoji)
-        await message.add_reaction("✅")
+        await message.clear_reaction("✅")
+        await message.add_reaction("🚫")
       await self.config.guild(ctx.guild).enabled.set(False)
       await ctx.message.add_reaction("✅")
     else:
