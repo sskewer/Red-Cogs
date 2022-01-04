@@ -161,7 +161,7 @@ class VoteSystem(BaseCog):
     token = uuid4()
     # Variables
     guild = self.bot.get_guild(payload.guild_id)
-    status = await self.config.guild(ctx.guild).enabled()
+    status = await self.config.guild(guild).enabled()
     name = await self.config.guild(guild).name()
     module = await self.config.guild(guild).current()
     url = await self.config.guild(guild).url()
