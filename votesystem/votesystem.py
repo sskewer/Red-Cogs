@@ -169,9 +169,6 @@ class VoteSystem(BaseCog):
     message_id = await self.config.guild(guild).message()
     if url is None or channel_id is None or message_id is None:
       return
-    # Status Check
-    if status == False:
-      return
     # Get Object
     channel = guild.get_channel(channel_id)
     message = await channel.fetch_message(message_id)
@@ -185,7 +182,7 @@ class VoteSystem(BaseCog):
     if name is None:
       name = ""
     # Script
-    if payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
+    if status == True and payload.member.bot == False and payload.channel_id == channel.id and payload.message_id == message.id and str(payload.emoji) == "✅":
       if user_check is None:
         # Database Update
         self.mongo.insert_one({ "_id": str(token), "user": str(payload.member.id), "voted": False, "module": str(module) })
@@ -196,7 +193,7 @@ class VoteSystem(BaseCog):
         await payload.member.send(embed=embed)
       # Reaction Remove
       msg = await guild.get_channel(payload.channel_id).fetch_message(payload.message_id)
-      await msg.remove_reaction(payload.emoji, guild.get_member(payload.user_id))
+      await msg.remove_reaction(str(payload.emoji), guild.get_member(payload.user_id))
 
 def setup(bot):
   bot.add_cog(VoteSystem(bot))
