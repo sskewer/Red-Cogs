@@ -76,7 +76,7 @@ class VoteSystem(BaseCog):
     """Modificare l'url del modulo di voto nel database"""
     if value.startswith("https://docs.google.com/forms/"):
       current = max(value.split("/"), key=len)
-      msg = await ctx.send("Impostando un nuovo modulo, **ripristinerai** il database per una nuova votazione.\nSei **sicuro** di procedere? Utilizza le reazioni per confermare o meno.")
+      msg = await ctx.send("Impostando un nuovo modulo, **ripristinerai** il database per una nuova votazione.\nSei **sicuro** di procedere? Utilizza le reazioni per confermare o annullare l'operazione.")
       check = await reaction_confirm(self, ctx, msg)
       await msg.delete()
       if check == True:
