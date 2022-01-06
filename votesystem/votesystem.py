@@ -1,3 +1,4 @@
+import asyncio
 import discord
 import datetime
 from uuid import uuid4
@@ -6,6 +7,20 @@ from pymongo import MongoClient
 
 client = MongoClient("mongodb+srv://Kitbash:6j68WjZGI3Nmvw8Q@modmail.rsxw7.mongodb.net/FortniteITA?retryWrites=true&w=majority")
 db = client.FortniteITA
+
+async def reaction_confirm(self, ctx, msg):
+  await msg.add_reaction("✅")
+  await msg.add_reaction("❎")
+  def reaction_check(reaction, user):
+    return user.id == ctx.message.author.id and ["✅", "❎"].count(str(reaction.emoji)) > 0 and reaction.message.id == msg.id
+  try:
+    reaction, user = await self.bot.wait_for('reaction_add', check=reaction_check, timeout=60.0)
+    if str(reaction.emoji) == "✅":
+      return True
+    else:
+      return False
+  except asyncio.TimeoutError:
+    return False
 
 BaseCog = getattr(commands, "Cog", object)
 
@@ -61,9 +76,20 @@ class VoteSystem(BaseCog):
     """Modificare l'url del modulo di voto nel database"""
     if value.startswith("https://docs.google.com/forms/"):
       current = max(value.split("/"), key=len)
-      await self.config.guild(ctx.guild).current.set(current)
-      await self.config.guild(ctx.guild).url.set(value)
-      await ctx.message.add_reaction("✅")
+      msg = await ctx.send("Impostando un nuovo modulo, **ripristinerai** il database per una nuova votazione.\nSei **sicuro** di procedere? Utilizza le reazioni per confermare o meno.")
+      check = await reaction_confirm(self, ctx, msg)
+      await msg.delete()
+      if check == True:
+        try:
+          module = await self.config.guild(ctx.guild).current()
+          self.mongo.delete_many({ "module": str(module) })
+          await self.config.guild(ctx.guild).current.set(current)
+          await self.config.guild(ctx.guild).url.set(value)
+          await ctx.message.add_reaction("✅")
+        except:
+          await ctx.message.add_reaction("🚫")
+      else:
+        await ctx.message.add_reaction("🚫")
     else:
       await ctx.message.add_reaction("🚫")
       
