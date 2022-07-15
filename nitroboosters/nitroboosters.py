@@ -2,6 +2,7 @@ import discord
 import yaml
 
 from contextlib import suppress
+from redbot.core import Config
 from redbot.core.commands import commands
 from redbot.core import checks
 from dislash import *
@@ -22,6 +23,9 @@ class NitroBoosters(BaseCog):
   def __init__(self, bot, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.bot = bot
+    self.config = Config.get_conf(self, identifier=4000121111111002, force_registration=True)
+    default_guild = {"channelID": None, "messageID": None}
+    self.config.register_guild(**default_guild)
 
   def cog_unload(self):
     self.bot.slash.teardown()
@@ -60,11 +64,17 @@ class NitroBoosters(BaseCog):
     for chunk in chunked_btns:
       components.append(ActionRow(*chunk))
       
-    await ctx.send(message, components=components)
+    btnMessage = await ctx.send(message, components=components)
     
+    await self.config.guild(ctx.guild).channelID.set(ctx.channel.id)
+    await self.config.guild(ctx.guild).messageID.set(btnMessage.id)
+    
+    
+  #-------------------------------------------------------#
     
   @commands.Cog.listener()
   async def on_button_click(self, inter):
+    
     button_id = inter.component.custom_id
     if not button_id.startswith(CUSTOM_ID_PREFIX):
       return
@@ -96,20 +106,24 @@ class NitroBoosters(BaseCog):
     await inter.author.add_roles(role)
     await inter.reply(f"👉 Ti ho aggiunto il colore `{inter.component.label}`!", ephemeral=True)
     
+  #-------------------------------------------------------#
     
   @commands.Cog.listener()
   async def on_member_update(self, before, after):
+    
     nitro_role = discord.utils.get(after.guild.roles, name="Nitro Booster")
     if nitro_role not in before.roles or nitro_role in after.roles:
       return
     
-    category = discord.utils.get(after.guild.categories, name="NITRO BOOSTERS")
-    channel = category.channels[0]
+    channelID = await self.config.guild(after.guild).channelID()
+    messageID = await self.config.guild(after.guild).messageID()
+    
+    channel = self.bot.get_channel(channelID)
     
     if channel is None:
       return
     
-    msg = await channel.fetch_message(channel.last_message_id)
+    msg = await channel.fetch_message(messageID)
     
     if msg is None:
       return
