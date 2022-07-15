@@ -99,16 +99,16 @@ class NitroBoosters(BaseCog):
     
   @commands.Cog.listener()
   async def on_member_update(self, before, after):
-    nitro_role = discord.utils.get(before.guild.roles, name="Nitro Booster")
-    channel = await self.bot.fetch_channel(778165263928655882)
+    nitro_role = discord.utils.get(after.guild.roles, name="Nitro Booster")
+    channel = discord.utils.get((await after.guild.fetch_channels()), name="cambia-colore")
     
-    messages = await channel.history(limit=1, oldest_first=True).flatten()
-    if messages[0] is None:
+    msg = await channel.fetch_message(channel.last_message_id)
+    if msg is None:
       return
 
     if nitro_role in before.roles and nitro_role not in after.roles:
       color_ids = []
-      for component in messages[0].components:
+      for component in msg.components:
         for button in component.to_dict().get("components"):
           color_ids.append(int(button.get("custom_id").replace(CUSTOM_ID_PREFIX, "")))
         
