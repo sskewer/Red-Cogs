@@ -35,13 +35,19 @@ class RoleBtns(BaseCog):
     if not ctx.message.attachments:
       return await ctx.send("Devi **allegare** un file YAML!", delete_after=20.0)
     
-    yaml = [item for item in ctx.message.attachments if item.filename.lower().endswith((".yaml", ".yml"))]
-    if len(yaml) < 1:
-      return await ctx.send("Devi **allegare** un file YAML!", delete_after=20.0)
-    attachment: discord.Attachment = yaml[0]
+    attachment: discord.Attachment = None
+    file: discord.File = None
       
-    images = [item for item in ctx.message.attachments if item.filename.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".tiff"))]
-    file: discord.File = await images[0].to_file(use_cached=True)
+    for item in ctx.message.attachments:
+      if item.filename.lower().endswith((".yaml", ".yml")):
+        attachment = item
+      elif item.filename.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".tiff")):
+        file = await item.to_file(use_cached=True)
+      else:
+        pass
+    
+    if attachment is None:
+      return await ctx.send("Devi **allegare** un file YAML!", delete_after=20.0)  
 
     try:
       yaml_file = yaml.safe_load(await attachment.read())
