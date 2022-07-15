@@ -1,7 +1,11 @@
 import discord
-from contextlib import suppress
-from redbot.core import commands
+import yaml
 
+from contextlib import suppress
+from redbot.core.commands import commands
+from redbot.core import checks
+from dislash import *
+from yaml.scanner import ScannerError
 
 #----------------# SETUP #----------------#
 
@@ -12,14 +16,26 @@ colors_id = [778163336910471168, 778164006971113473, 778181408128237628, 7781641
 
 #-----------------------------------------#
 
+CUSTOM_ID_PREFIX = "btnroles:"
 
+def get_custom_id(role_id: str):
+    return f"{CUSTOM_ID_PREFIX}{role_id}"
+
+  
 BaseCog = getattr(commands, "Cog", object)
 
 class NitroBoosters(BaseCog):
   """Gestire i ruoli dei colori dei Nitro Booster"""
   
-  def __init__(self, bot):
+  def __init__(self, bot, *args, **kwargs):
+    super().__init__(*args, **kwargs)
     self.bot = bot
+
+  def cog_unload(self):
+    """
+    Teardown the slash client so we don't have multiple clients
+    """
+    self.bot.slash.teardown()
         
   @commands.Cog.listener()
   async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
