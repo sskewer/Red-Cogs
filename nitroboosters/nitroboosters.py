@@ -74,7 +74,9 @@ class NitroBoosters(BaseCog):
     
   @commands.Cog.listener()
   async def on_button_click(self, inter):
-        
+    
+    await inter.channel.send("Triggered")
+    
     messageID = await self.config.guild(inter.channel.guild).messageID()
     msg = await inter.channel.fetch_message(inter.message.id)
     
