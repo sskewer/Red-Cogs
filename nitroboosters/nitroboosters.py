@@ -100,6 +100,9 @@ class NitroBoosters(BaseCog):
   @commands.Cog.listener()
   async def on_member_update(self, before, after):
     nitro_role = discord.utils.get(after.guild.roles, name="Nitro Booster")
+    if nitro_role not in before.roles or nitro_role in after.roles:
+      return
+    
     category = discord.utils.get(after.guild.categories, name="NITRO BOOSTERS")
     channel = category.channels[0]
     
@@ -111,16 +114,15 @@ class NitroBoosters(BaseCog):
     if msg is None:
       return
 
-    if nitro_role in before.roles and nitro_role not in after.roles:
-      color_ids = []
-      for component in msg.components:
-        for button in component.to_dict().get("components"):
-          color_ids.append(int(button.get("custom_id").replace(CUSTOM_ID_PREFIX, "")))
-        
-      for color_id in color_ids:
-        color = after.guild.get_role(color_id)
-        if color.id in [r.id for r in after.roles]:
-          try:
-            await after.remove_roles(color)
-          except:
-            pass
+    color_ids = []
+    for component in msg.components:
+      for button in component.to_dict().get("components"):
+        color_ids.append(int(button.get("custom_id").replace(CUSTOM_ID_PREFIX, "")))
+
+    for color_id in color_ids:
+      color = after.guild.get_role(color_id)
+      if color.id in [r.id for r in after.roles]:
+        try:
+          await after.remove_roles(color)
+        except:
+          pass
