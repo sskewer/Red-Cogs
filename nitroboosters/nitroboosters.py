@@ -90,6 +90,8 @@ class NitroBoosters(BaseCog):
       for button in component.to_dict().get("components"):
         role_ids.append(int(button.get("custom_id").replace(CUSTOM_ID_PREFIX, "")))
     
+    button_id = inter.component.custom_id.replace(CUSTOM_ID_PREFIX, "")
+    
     for role_id in role_ids:
       to_remove = inter.guild.get_role(role_id)
       if to_remove.id is not int(button_id) and to_remove.id in [r.id for r in inter.author.roles]:
