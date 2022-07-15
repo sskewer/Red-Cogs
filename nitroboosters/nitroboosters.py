@@ -54,6 +54,7 @@ class NitroBoosters(BaseCog):
     row = ActionRow(*btns)
     await ctx.send(message, components=[row])
     
+    
   @commands.Cog.listener()
   async def on_button_click(self, inter):
     button_id = inter.component.custom_id
