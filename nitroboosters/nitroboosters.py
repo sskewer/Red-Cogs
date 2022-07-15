@@ -79,7 +79,7 @@ class NitroBoosters(BaseCog):
       await inter.author.remove_roles(role)
       return await inter.reply(f"🙃 Ti ho rimosso il colore `{role}`!", ephemeral=True, delete_after=20)
     
-    print(inter)
+    print(inter.message)
     role_ids = []
     msg = await inter.original_message()
     for button in msg.components[0].to_dict().get("components"):
