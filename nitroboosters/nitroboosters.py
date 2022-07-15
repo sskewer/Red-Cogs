@@ -77,7 +77,7 @@ class NitroBoosters(BaseCog):
 
     if role.id in [r.id for r in inter.author.roles]:
       await inter.author.remove_roles(role)
-      return await inter.reply(f"🙃 Ti ho rimosso il colore `{role}`!", ephemeral=True, delete_after=20)
+      return await inter.reply(f"🙃 Ti ho rimosso il colore `{inter.component.label}`!", ephemeral=True, delete_after=20)
     
     role_ids = []
     msg = await inter.channel.fetch_message(inter.message.id)
@@ -93,4 +93,4 @@ class NitroBoosters(BaseCog):
           pass
         
     await inter.author.add_roles(role)
-    await inter.reply(f"👉 Ti ho aggiunto il colore `{role}`!", ephemeral=True, delete_after=20)
+    await inter.reply(f"👉 Ti ho aggiunto il colore `{inter.component.label}`!", ephemeral=True, delete_after=20)
