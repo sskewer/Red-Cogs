@@ -72,6 +72,7 @@ class NitroBoosters(BaseCog):
       return await inter.reply(f"🙃 Ti ho rimosso il colore `{role}`!", ephemeral=True, delete_after=20)
     
     role_ids = []
+    msg = await inter.original_message()
     for button in msg.components[0].to_dict().get("components"):
       role_ids.append(int(button.get("custom_id").replace(CUSTOM_ID_PREFIX, "")))
     
