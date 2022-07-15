@@ -76,26 +76,12 @@ class NitroBoosters(BaseCog):
   async def on_button_click(self, inter):
         
     messageID = await self.config.guild(inter.channel.guild).messageID()
-    
-    if messageID is None or messageID is not inter.message.id:
-      return
-    
-    button_id = inter.component.custom_id
-    if not button_id.startswith(CUSTOM_ID_PREFIX):
-      return
-
-    button_id = button_id.replace(CUSTOM_ID_PREFIX, "")
-
-    role = inter.guild.get_role(int(button_id))
-    if not role:
-      return await inter.reply(f"***Ops... qualcosa è andato storto!***", ephemeral=True)
-
-    if role.id in [r.id for r in inter.author.roles]:
-      await inter.author.remove_roles(role)
-      return await inter.reply(f"🙃 Ti ho rimosso il colore `{inter.component.label}`!", ephemeral=True)
-    
-    role_ids = []
     msg = await inter.channel.fetch_message(inter.message.id)
+    
+    if messageID is None or msg is None or messageID != msg.id:
+      return
+
+    role_ids = []
     for component in msg.components:
       for button in component.to_dict().get("components"):
         role_ids.append(int(button.get("custom_id").replace(CUSTOM_ID_PREFIX, "")))
@@ -107,9 +93,6 @@ class NitroBoosters(BaseCog):
           await inter.author.remove_roles(to_remove)
         except:
           pass
-        
-    await inter.author.add_roles(role)
-    await inter.reply(f"👉 Ti ho aggiunto il colore `{inter.component.label}`!", ephemeral=True)
     
   #-------------------------------------------------------#
     
