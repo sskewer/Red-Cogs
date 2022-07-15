@@ -100,7 +100,7 @@ class NitroBoosters(BaseCog):
   @commands.Cog.listener()
   async def on_member_update(self, before, after):
     nitro_role = discord.utils.get(before.guild.roles, name="Nitro Booster")
-    channel = discord.utils.get(before.guild.text_channels, name="cambia-colore")
+    channel = await self.bot.fetch_channel(778165263928655882)
     
     messages = await channel.history(limit=1, oldest_first=True).flatten()
     if messages[0] is None:
