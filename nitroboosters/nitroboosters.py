@@ -79,7 +79,32 @@ class NitroBoosters(BaseCog):
     for role_id in role_ids:
       to_remove = inter.guild.get_role(role_id)
       if role_id is not int(button_id) and to_remove in inter.author.roles:
-        await inter.author.remove_roles(to_remove)
-    
+        try:
+          await inter.author.remove_roles(to_remove)
+        except:
+          pass
+        
     await inter.author.add_roles(role)
     await inter.reply(f"👉 Ti ho aggiunto il colore `{role}`!", ephemeral=True, delete_after=20)
+    
+    
+  @commands.Cog.listener()
+  async def on_member_update(self, before, after):
+    # Vars
+    nitro_role = discord.utils.get(before.guild.roles, name="Nitro Booster")
+    channel = discord.utils.get(before.guild.channels, name="cambia-colore")
+    msg = (await channel.history(limit=1, oldest_first=True).flatten())[0]
+    if msg is None:
+      return
+    # Remove Color Roles
+    if nitro_role in before.roles and nitro_role not in after.roles:
+      role_ids = []
+      for button in msg.components[0].to_dict().get("components"):
+        role_ids.append(int(button.get("custom_id").replace(CUSTOM_ID_PREFIX, "")))
+      for color_id in colors_id:
+        color = before.guild.get_role(color_id)
+        if color in before.roles:
+          try:
+            await after.remove_roles(color)
+          except:
+            pass
