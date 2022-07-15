@@ -90,7 +90,6 @@ class NitroBoosters(BaseCog):
     
   @commands.Cog.listener()
   async def on_member_update(self, before, after):
-    # Vars
     nitro_role = discord.utils.get(before.guild.roles, name="Nitro Booster")
     channel = discord.utils.get(before.guild.channels, name="cambia-colore")
     
