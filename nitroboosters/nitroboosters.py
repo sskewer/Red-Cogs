@@ -73,11 +73,11 @@ class NitroBoosters(BaseCog):
 
     role = inter.guild.get_role(int(button_id))
     if not role:
-      return await inter.reply(f"***Ops... qualcosa è andato storto!***", ephemeral=True, delete_after=20.0)
+      return await inter.reply(f"***Ops... qualcosa è andato storto!***", ephemeral=True)
 
     if role.id in [r.id for r in inter.author.roles]:
       await inter.author.remove_roles(role)
-      return await inter.reply(f"🙃 Ti ho rimosso il colore `{inter.component.label}`!", ephemeral=True, delete_after=20.0)
+      return await inter.reply(f"🙃 Ti ho rimosso il colore `{inter.component.label}`!", ephemeral=True)
     
     role_ids = []
     msg = await inter.channel.fetch_message(inter.message.id)
@@ -94,13 +94,18 @@ class NitroBoosters(BaseCog):
           pass
         
     await inter.author.add_roles(role)
-    await inter.reply(f"👉 Ti ho aggiunto il colore `{inter.component.label}`!", ephemeral=True, delete_after=20.0)
+    await inter.reply(f"👉 Ti ho aggiunto il colore `{inter.component.label}`!", ephemeral=True)
     
     
   @commands.Cog.listener()
   async def on_member_update(self, before, after):
     nitro_role = discord.utils.get(after.guild.roles, name="Nitro Booster")
-    channel = discord.utils.get((await after.guild.fetch_channels()), name="cambia-colore")
+    category = discord.utils.get(after.guild.categories, name="NITRO BOOSTERS")
+    channel = category.channels[0]
+    
+    if channel is None:
+      return
+    
     msg = await channel.fetch_message(channel.last_message_id)
     
     if msg is None:
