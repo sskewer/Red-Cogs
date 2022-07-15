@@ -78,8 +78,8 @@ class NitroBoosters(BaseCog):
     await inter.channel.send("Triggered")
     
     messageID = await self.config.guild(inter.channel.guild).messageID()
-    await inter.channel.send(string(messageID))
-    await inter.channel.send(string(inter.message.id))
+    await inter.channel.send(str(messageID))
+    await inter.channel.send(str(inter.message.id))
     
     if messageID is None or messageID != inter.message.id:
       return
