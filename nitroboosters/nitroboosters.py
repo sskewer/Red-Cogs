@@ -99,11 +99,11 @@ class NitroBoosters(BaseCog):
       return
 
     if nitro_role in before.roles and nitro_role not in after.roles:
-      role_ids = []
+      color_ids = []
       for button in msg.components[0].to_dict().get("components"):
-        role_ids.append(int(button.get("custom_id").replace(CUSTOM_ID_PREFIX, "")))
+        color_ids.append(int(button.get("custom_id").replace(CUSTOM_ID_PREFIX, "")))
         
-      for color_id in colors_id:
+      for color_id in color_ids:
         color = before.guild.get_role(color_id)
         if color in before.roles:
           try:
