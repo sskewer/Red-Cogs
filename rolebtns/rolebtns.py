@@ -30,7 +30,7 @@ class RoleBtns(BaseCog):
   @checks.admin_or_permissions(manage_roles=True)
   async def setroles(self, ctx):
     
-    message = ctx.message.content.replace("?setroles ", "")
+    message = ctx.message.content.replace("?setroles", "")
     
     if not ctx.message.attachments:
       return await ctx.send("Devi **allegare** un file YAML!", delete_after=20.0)
