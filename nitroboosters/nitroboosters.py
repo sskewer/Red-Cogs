@@ -31,11 +31,11 @@ class NitroBoosters(BaseCog):
   async def setcolors(self, ctx, *, message: str):
     
     if not ctx.message.attachments:
-      return await ctx.send("Devi **allegare** un file YAML!", delete_after=20)
+      return await ctx.send("Devi **allegare** un file YAML!", delete_after=20.0)
 
     attachment: discord.Attachment = ctx.message.attachments[0]
     if not attachment.filename.lower().endswith((".yaml", ".yml")):
-      return await ctx.send("Solo **file YAML** sono supportati!", delete_after=20)
+      return await ctx.send("Solo **file YAML** sono supportati!", delete_after=20.0)
 
     try:
       yaml_file = yaml.safe_load(await attachment.read())
@@ -73,11 +73,11 @@ class NitroBoosters(BaseCog):
 
     role = inter.guild.get_role(int(button_id))
     if not role:
-      return await inter.reply(f"***Ops... qualcosa è andato storto!***", ephemeral=True, delete_after=20)
+      return await inter.reply(f"***Ops... qualcosa è andato storto!***", ephemeral=True, delete_after=20.0)
 
     if role.id in [r.id for r in inter.author.roles]:
       await inter.author.remove_roles(role)
-      return await inter.reply(f"🙃 Ti ho rimosso il colore `{inter.component.label}`!", ephemeral=True, delete_after=20)
+      return await inter.reply(f"🙃 Ti ho rimosso il colore `{inter.component.label}`!", ephemeral=True, delete_after=20.0)
     
     role_ids = []
     msg = await inter.channel.fetch_message(inter.message.id)
@@ -94,7 +94,7 @@ class NitroBoosters(BaseCog):
           pass
         
     await inter.author.add_roles(role)
-    await inter.reply(f"👉 Ti ho aggiunto il colore `{inter.component.label}`!", ephemeral=True, delete_after=20)
+    await inter.reply(f"👉 Ti ho aggiunto il colore `{inter.component.label}`!", ephemeral=True, delete_after=20.0)
     
     
   @commands.Cog.listener()
