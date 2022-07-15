@@ -16,8 +16,8 @@ def get_custom_id(role_id: str):
   
 BaseCog = getattr(commands, "Cog", object)
 
-class NitroBoosters(BaseCog):
-  """Gestire i ruoli dei colori dei Nitro Booster"""
+class RoleBtns(BaseCog):
+  """Gestire i self-roles attraverso i pulsanti"""
   
   def __init__(self, bot, *args, **kwargs):
     super().__init__(*args, **kwargs)
@@ -28,7 +28,7 @@ class NitroBoosters(BaseCog):
     
   @commands.command()
   @checks.admin_or_permissions(manage_roles=True)
-  async def setcolors(self, ctx, *, message: str):
+  async def setroles(self, ctx, *, message: str):
     
     if not ctx.message.attachments:
       return await ctx.send("Devi **allegare** un file YAML!", delete_after=20.0)
