@@ -80,7 +80,6 @@ class NitroBoosters(BaseCog):
       return await inter.reply(f"🙃 Ti ho rimosso il colore `{role}`!", ephemeral=True, delete_after=20)
     
     msgid = inter.message.id
-    print("Test", str(msgid))
     role_ids = []
     #msg = await inter.original_message()
     #for button in msg.components[0].to_dict().get("components"):
@@ -95,4 +94,4 @@ class NitroBoosters(BaseCog):
     #      pass
         
     await inter.author.add_roles(role)
-    await inter.reply(f"👉 Ti ho aggiunto il colore `{role}`!", ephemeral=True, delete_after=20)
+    await inter.reply(f"👉 Ti ho aggiunto il colore `{role}` {str(msgid)}!", ephemeral=True, delete_after=20)
