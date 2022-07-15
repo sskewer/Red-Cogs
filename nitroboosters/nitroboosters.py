@@ -78,12 +78,14 @@ class NitroBoosters(BaseCog):
     await inter.channel.send("Triggered")
     
     messageID = await self.config.guild(inter.channel.guild).messageID()
-    msg = await inter.channel.fetch_message(inter.message.id)
+    await inter.channel.send(string(messageID))
+    await inter.channel.send(string(inter.message.id))
     
-    if messageID is None or msg is None or messageID != msg.id:
+    if messageID is None or messageID != inter.message.id:
       return
 
     role_ids = []
+    msg = await inter.channel.fetch_message(inter.message.id)
     for component in msg.components:
       for button in component.to_dict().get("components"):
         role_ids.append(int(button.get("custom_id").replace(CUSTOM_ID_PREFIX, "")))
