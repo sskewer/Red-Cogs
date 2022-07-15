@@ -7,14 +7,6 @@ from redbot.core import checks
 from dislash import *
 from yaml.scanner import ScannerError
 
-#----------------# SETUP #----------------#
-
-channel_id = 778165263928655882
-message_id = 778180901678219266
-nitro_id = 613774322179375105
-colors_id = [778163336910471168, 778164006971113473, 778181408128237628, 778164137184329748, 778164311503667200, 778164647584464896, 778163064364990505, 778164449738489877, 778161810653839360]
-
-#-----------------------------------------#
 
 CUSTOM_ID_PREFIX = "btnroles:"
 
@@ -32,57 +24,51 @@ class NitroBoosters(BaseCog):
     self.bot = bot
 
   def cog_unload(self):
-    """
-    Teardown the slash client so we don't have multiple clients
-    """
     self.bot.slash.teardown()
-        
+    
+  @commands.command()
+  @checks.admin_or_permissions(manage_roles=True)
+  async def setroles(self, ctx, *, message: str):
+    """Impostare i ruoli usando bottoni & YAML."""
+    if not ctx.message.attachments:
+      return await ctx.send("Devi **allegare** un file YAML!", delete_after=20)
+
+    attachment: discord.Attachment = ctx.message.attachments[0]
+    if not attachment.filename.lower().endswith((".yaml", ".yml")):
+      return await ctx.send("Solo **file YAML** sono supportati!", delete_after=20)
+
+    try:
+      yaml_file = yaml.safe_load(await attachment.read())
+    except yaml.scanner.ScannerError as e:
+      return await ctx.send(f"**Fil YAML non valido**\n{e.problem_mark}")
+
+    btns = []
+    for label, config in yaml_file.items():
+      b = Button(
+        label=label,
+        emoji=config.get("emoji"),
+        custom_id=get_custom_id(config.get("role_id")),
+        style=config.get("style", 1))
+      btns.append(b)
+
+    row = ActionRow(*btns)
+    await ctx.send(message, components=[row])
+    
   @commands.Cog.listener()
-  async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
-    # Channel & Message Checks
-    guild = self.bot.get_guild(payload.guild_id)
-    if not guild:
+  async def on_button_click(self, inter):
+    button_id = inter.component.custom_id
+    if not button_id.startswith(CUSTOM_ID_PREFIX):
       return
-    if payload.channel_id != channel_id or payload.message_id != message_id:
-      return
-    # Member Checks
-    member = guild.get_member(payload.user_id)
-    nitro = guild.get_role(nitro_id)
-    if nitro not in member.roles:
-      return
-    # Get Message
-    channel = guild.get_channel(channel_id)
-    msg = await channel.fetch_message(message_id)
-    if msg is None:
-      return
-    # Remove Reactions
-    for reaction in msg.reactions:
-      if str(reaction.emoji) != str(payload.emoji):
-        try:
-          await reaction.remove(member)
-        except:
-          pass 
-      
-  @commands.Cog.listener()
-  async def on_member_update(self, before, after):
-    # Vars
-    role = before.guild.get_role(nitro_id)
-    channel = before.guild.get_channel(channel_id)
-    msg = await channel.fetch_message(message_id)
-    if msg is None:
-      return
-    # Remove Reactions
-    for reaction in msg.reactions:
-      try:
-        await reaction.remove(after)
-      except:
-        pass 
-    # Remove Color Roles
-    if role in before.roles and role not in after.roles:
-      for id in colors_id:
-        color = before.guild.get_role(id)
-        if color in before.roles:
-          try:
-            await after.remove_roles(color)
-          except:
-            pass
+
+    button_id = button_id.replace(CUSTOM_ID_PREFIX, "")
+
+    role = inter.guild.get_role(int(button_id))
+    if not role:
+      return await inter.reply(f"***Ops... qualcosa è andato storto!***", ephemeral=True, delete_after=20)
+
+    if role.id in [r.id for r in inter.author.roles]:
+      await inter.author.remove_roles(role)
+      return await inter.reply(f"🙃 Ti ho rimosso il colore `{role}`!", ephemeral=True, delete_after=20)
+
+    await inter.author.add_roles(role)
+    await inter.reply(f"👉 Ti ho aggiunto il colore `{role}`!", ephemeral=True, delete_after=20)
