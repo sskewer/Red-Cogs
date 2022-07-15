@@ -74,6 +74,11 @@ class NitroBoosters(BaseCog):
     
   @commands.Cog.listener()
   async def on_button_click(self, inter):
+        
+    messageID = await self.config.guild(inter.guild).messageID()
+    
+    if messageID is None or messageID is not inter.message.id:
+      return
     
     button_id = inter.component.custom_id
     if not button_id.startswith(CUSTOM_ID_PREFIX):
