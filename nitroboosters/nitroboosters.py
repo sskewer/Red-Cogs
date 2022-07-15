@@ -70,16 +70,14 @@ class NitroBoosters(BaseCog):
     await self.config.guild(ctx.guild).messageID.set(btnMessage.id)
     
     
+  # Pulsanti gestiti da un altro cog --> ROLEBTNS (https://github.com/sskewer/Red-Cogs/tree/master/rolebtns)
+    
   #-------------------------------------------------------#
     
   @commands.Cog.listener()
   async def on_button_click(self, inter):
     
-    await inter.channel.send("Triggered")
-    
     messageID = await self.config.guild(inter.channel.guild).messageID()
-    await inter.channel.send(str(messageID))
-    await inter.channel.send(str(inter.message.id))
     
     if messageID is None or messageID != inter.message.id:
       return
