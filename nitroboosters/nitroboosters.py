@@ -50,9 +50,17 @@ class NitroBoosters(BaseCog):
         custom_id=get_custom_id(config.get("role_id")),
         style=config.get("style", 1))
       btns.append(b)
+        
+    chunked_btns = []
+    chunk_size = 5
+    for i in range(0, len(btns), chunk_size):
+      chunked_btns.append(btns[i:i+chunk_size])
 
-    row = ActionRow(*btns)
-    await ctx.send(message, components=[row])
+    components = []
+    for chunk in chunked_btns:
+      components.append(ActionRow(*chunk))
+      
+    await ctx.send(message, components=components)
     
     
   @commands.Cog.listener()
