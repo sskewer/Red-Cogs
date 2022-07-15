@@ -28,8 +28,8 @@ class NitroBoosters(BaseCog):
     
   @commands.command()
   @checks.admin_or_permissions(manage_roles=True)
-  async def setroles(self, ctx, *, message: str):
-    """Impostare i ruoli usando bottoni & YAML."""
+  async def setcolors(self, ctx, *, message: str):
+    
     if not ctx.message.attachments:
       return await ctx.send("Devi **allegare** un file YAML!", delete_after=20)
 
@@ -40,7 +40,7 @@ class NitroBoosters(BaseCog):
     try:
       yaml_file = yaml.safe_load(await attachment.read())
     except yaml.scanner.ScannerError as e:
-      return await ctx.send(f"**Fil YAML non valido**\n{e.problem_mark}")
+      return await ctx.send(f"**File YAML non valido**\n{e.problem_mark}")
 
     btns = []
     for label, config in yaml_file.items():
