@@ -77,8 +77,8 @@ class NitroBoosters(BaseCog):
     
     for role_id in role_ids:
       to_remove = inter.guild.get_role(role_id)
-      if role_id != int(button_id) and to_remove in inter.author.roles:
-        await inter.author.remove_roles(role)
+      if role_id is not int(button_id) and to_remove in inter.author.roles:
+        await inter.author.remove_roles(to_remove)
     
     await inter.author.add_roles(role)
     await inter.reply(f"👉 Ti ho aggiunto il colore `{role}`!", ephemeral=True, delete_after=20)
