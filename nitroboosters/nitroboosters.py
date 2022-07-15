@@ -101,8 +101,8 @@ class NitroBoosters(BaseCog):
   async def on_member_update(self, before, after):
     nitro_role = discord.utils.get(after.guild.roles, name="Nitro Booster")
     channel = discord.utils.get((await after.guild.fetch_channels()), name="cambia-colore")
-    
     msg = await channel.fetch_message(channel.last_message_id)
+    
     if msg is None:
       return
 
