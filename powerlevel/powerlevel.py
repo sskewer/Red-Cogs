@@ -42,6 +42,8 @@ class PowerLevel(BaseCog):
     ]
   )
   async def set(self, inter, level=None):
+    if inter.channel.id not in allowed_channels:
+      return
     # Vars
     index = int(level)
     member = inter.guild.get_member(inter.author.id)
@@ -53,7 +55,10 @@ class PowerLevel(BaseCog):
     if len(new_nick) > 32:
       return await inter.reply(f"😕 Ops... qualcosa è andato storto: **massimo dei caratteri superato**!", ephemeral=True)
     # Set Nickname
-    await member.edit(nick=new_nick)
+    try:
+      await member.edit(nick=new_nick)
+    except:
+      return await inter.reply(f"😕 Ops... qualcosa è andato storto: **permessi insufficienti**!", ephemeral=True)
     await inter.reply(f"👉 Ho **aggiunto** il livello al tuo nickname!", ephemeral=True)
   
   
@@ -64,6 +69,11 @@ class PowerLevel(BaseCog):
     member = inter.guild.get_member(inter.author.id)
     # New Nickname
     original_nick = getNick(inter.author.display_name)
-    await member.edit(nick=original_nick)
-    # Response
+    if original_nick is inter.author.display_name:
+      return await inter.reply(f"😕 Sembra che non ci sia **nessun livello** nel tuo nickname!", ephemeral=True)
+    # Reset Nickname
+    try:
+      await member.edit(nick=original_nick)
+    except:
+      return await inter.reply(f"😕 Ops... qualcosa è andato storto: **permessi insufficienti**!", ephemeral=True)
     await inter.reply(f"🙃 Ho **rimosso** il livello dal tuo nickname!", ephemeral=True)
