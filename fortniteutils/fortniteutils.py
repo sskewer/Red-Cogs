@@ -21,19 +21,21 @@ allowed_channel = 702576186185875546
 
 BaseCog = getattr(commands, "Cog", object)
  
-class PowerLevel(BaseCog):
+class FortniteUtils(BaseCog):
   
   def __init__(self, bot, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
   def cog_unload(self):
     self.bot.slash.teardown()
+    
 
+  #---------------------------# PowerLevel #---------------------------# 
+  
   @dislash.guild_only()
   @slash_command(description="Gestisce il livello di Potenza STW all'interno del server")
   async def powerlevel(self, inter):
       pass
-    
     
   @powerlevel.sub_command(
     description="Aggiunge il livello di Potenza STW al proprio nickname",
@@ -61,7 +63,6 @@ class PowerLevel(BaseCog):
       return await inter.reply(f"😕 Ops... qualcosa è andato storto: **permessi insufficienti**!", ephemeral=True)
     await inter.reply(f"👉 Ho **aggiunto** il livello al tuo nickname!", ephemeral=True)
   
-  
   @powerlevel.sub_command(description="Rimuove il livello di Potenza STW dal proprio nickname")
   async def reset(self, inter):
     if int(inter.channel.id) != int(allowed_channel):
@@ -77,3 +78,8 @@ class PowerLevel(BaseCog):
     except:
       return await inter.reply(f"😕 Ops... qualcosa è andato storto: **permessi insufficienti**!", ephemeral=True)
     await inter.reply(f"🙃 Ho **rimosso** il livello dal tuo nickname!", ephemeral=True)
+    
+    
+    #---------------------------# Fortnite Map #---------------------------# 
+    
+    
