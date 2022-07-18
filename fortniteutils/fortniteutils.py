@@ -1,6 +1,7 @@
 import re
 import dislash
 import discord
+import fortnite_api
 
 from redbot.core import Config, commands
 from redbot.core.bot import Red
@@ -25,6 +26,7 @@ class FortniteUtils(BaseCog):
   
   def __init__(self, bot, *args, **kwargs):
     super().__init__(*args, **kwargs)
+    self.fn_api = fortnite_api.FortniteAPI()
 
   def cog_unload(self):
     self.bot.slash.teardown()
