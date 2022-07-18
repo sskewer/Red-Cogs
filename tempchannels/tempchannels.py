@@ -27,7 +27,7 @@ async def on_voice_state_update(self, member, before, after):
 
         channel = await member.guild.create_voice_channel(member.nick)
         await member.move_to(channel)
-        await doc.insert_one({"_id": member.id, "channel", channel.id})
+        await doc.insert_one({"_id": member.id, "channel": channel.id})
         #add user to voice-commands
 
     if before.channel != None and after.channel == None:
