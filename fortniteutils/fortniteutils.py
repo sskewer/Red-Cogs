@@ -176,7 +176,7 @@ class FortniteUtils(BaseCog):
         page.set_author(name=title, icon_url=icon)
         page.set_footer(text="Notizie aggiornate a 🕓", icon_url=fn_api_icon)
         pages.append(page)
-        index++
+        index += 1
       row = ActionRow(
         Button(
           style = ButtonStyle.grey,
