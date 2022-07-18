@@ -136,8 +136,8 @@ class FortniteUtils(BaseCog):
     ]
   )
   async def news(self, inter, gamemode: str):
-    if int(inter.channel.id) != int(allowed_channel):
-      return await inter.reply(f"🤐 Spostati in <#{allowed_channel}> per usare questo comando!", ephemeral=True)
+    #if int(inter.channel.id) != int(allowed_channel):
+    #  return await inter.reply(f"🤐 Spostati in <#{allowed_channel}> per usare questo comando!", ephemeral=True)
     # FortniteAPI
     fn_api = fortnite_api.FortniteAPI(api_key=(await self.bot.get_shared_api_tokens('FortniteAPI'))['api_key'], run_async=True)
     # Getting Data
@@ -163,12 +163,61 @@ class FortniteUtils(BaseCog):
       return await inter.reply(f"😕 Sembra che **non ci siano notizie** da questa modalità!", ephemeral=True)
     # Save the World
     if gamemode == "stw":
-      pages = []
-      for msg in news.messages:
-        pass
+      try:
+        pages = []
+        for msg in news.messages:
+          page = discord.Embed(title=msg.title, description=msg.body, timestamp=date)
+          page.set_image(url=msg.image_url)
+          page.set_author(name=f"Notizie: {title}", icon_url=icon)
+          page.set_footer(text="🕓 Notizie aggiornate a ", icon_url=fn_api_icon)
+          pages.append(page)
+        row = ActionRow(
+          Button(
+            style = ButtonStyle.grey,
+            emoji = "◀️",
+            custom_id = f"menu_{str(inter.author.id)}_previous"
+          ),
+          Button(
+            style = ButtonStyle.grey,
+            emoji = "▶️",
+            custom_id = f"menu_{str(inter.author.id)}_next"
+          ),
+          Button(
+            style = ButtonStyle.grey,
+            emoji = "🛑",
+            custom_id = f"menu_{str(inter.author.id)}_close"
+          )
+        )
+        index = 1
+        menu = await intex.reply(embed=pages[index-1], components=[row], ephemeral=False)
+        on_click = menu.create_click_listener(timeout=60)
+        
+        @on_click.not_from_user(inter.author, cancel_others=True, reset_timeout=False)
+        async def on_wrong_user():
+          await inter.reply(f"🤐 Solo **{str(inter.author.display_name)}** può interagire con questi pulsanti!", ephemeral=True)
+        
+        @on_click.matching_id(f"menu_{str(inter.author.id)}_previous")
+        async def on_close_button():
+          index = index - 1
+          await menu.edit(embed=pages[index-1])
+          
+        @on_click.matching_id(f"menu_{str(inter.author.id)}_next")
+        async def on_close_button():
+          index = index + 1
+          await menu.edit(embed=pages[index-1])
+        
+        @on_click.matching_id(f"menu_{str(inter.author.id)}_close")
+        async def on_close_button():
+          await menu.edit(components=[])
+        
+        @on_click.timeout
+        async def on_timeout():
+          await menu.edit(components=[])
+      except:
+        return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Battle Royale & Creative
     embed = discord.Embed(timestamp=date)
-    embed.set_author(name=f"Notizie: {title}", icon_url=icon)
     embed.set_image(url=news.image)
+    embed.set_author(name=f"Notizie: {title}", icon_url=icon)
     embed.set_footer(text="🕓 Notizie aggiornate a ", icon_url=fn_api_icon)
-    await inter.reply(embed=embed, ephemeral=True)
+    await inter.reply(embed=embed, ephemeral=False)
