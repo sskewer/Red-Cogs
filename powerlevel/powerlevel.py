@@ -47,7 +47,6 @@ class PowerLevel(BaseCog):
     # Level Check
     if index < 1 or index > max_level:
       return await inter.reply(f"😕 Ops... qualcosa è andato storto: **livello non valido**!", ephemeral=True)
-    tag = " [⚡" + str(index) + "]"
     # New Nickname
     new_nick = getNick(inter.author.display_name) + " [⚡" + str(index) + "]"
     if len(new_nick) > 32:
