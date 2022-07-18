@@ -1,10 +1,10 @@
 from dislash import SlashClient
 
-from .powerlevel import PowerLevel
+from .fortniteutils import FortniteUtils
 
 
 def setup(bot):
-    cog = PowerLevel(bot)
+    cog = FortniteUtils(bot)
 
     bot.add_cog(cog)
 
