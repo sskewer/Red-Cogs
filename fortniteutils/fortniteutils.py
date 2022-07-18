@@ -110,7 +110,7 @@ class FortniteUtils(BaseCog):
     if url is None:
       return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Response
-    embed = discord.Embed(timestamp = datetime.datetime.utcnow())
+    embed = discord.Embed(timestamp=datetime.datetime.utcnow())
     embed.set_image(url=url)
     embed.set_footer(text="Creato con ❤️ · Fortnite IT", icon_url=fn_api_icon)
     await inter.reply(embed=embed, ephemeral=False)
@@ -128,9 +128,9 @@ class FortniteUtils(BaseCog):
             type=OptionType.STRING,
             required=True,
             choices=[
-                OptionChoice("br", "Battaglia Reale"),
-                OptionChoice("cr", "Creativa"),
-                OptionChoice("stw", "Salva il Mondo"),
+                OptionChoice("Battaglia Reale", "br"),
+                OptionChoice("Creativa", "cr"),
+                OptionChoice("Salva il Mondo", "stw"),
             ],
         )
     ]
@@ -151,12 +151,13 @@ class FortniteUtils(BaseCog):
       news = await fn_api.news.fetch_by_type(news_type=news_type, language=fortnite_api.GameLanguage.ITALIAN)
     except:
       return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
-    # News URL
+    # News Data
+    date = news.date if news.date is not None else datetime.datetime.utcnow()
     url = news.image
     if url is None:
       return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Response
-    #embed = discord.Embed(timestamp = datetime.datetime.utcnow())
-    #embed.set_image(url=url)
-    #embed.set_footer(text="Creato con ❤️ · Fortnite IT", icon_url=fn_api_icon)
-    await inter.reply(url + " " + news.date, ephemeral=True)
+    embed = discord.Embed(timestamp=date)
+    embed.set_image(url=url)
+    embed.set_footer(text="Creato con ❤️ · Fortnite IT", icon_url=fn_api_icon)
+    await inter.reply(embed=embed, ephemeral=True)
