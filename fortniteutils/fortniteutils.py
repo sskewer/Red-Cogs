@@ -171,7 +171,7 @@ class FortniteUtils(BaseCog):
       index = 1
       pages = []
       for msg in news.messages:
-        page = discord.Embed(title=f"{msg.title} ({str(index)}/{str(len(news.messages))})", description=msg.body", timestamp=date)
+        page = discord.Embed(title=f"{msg.title} ({str(index)}/{str(len(news.messages))})", description=msg.body, timestamp=date)
         page.set_image(url=msg.image_url)
         page.set_author(name=title, icon_url=icon)
         page.set_footer(text="Notizie aggiornate a 🕓", icon_url=fn_api_icon)
