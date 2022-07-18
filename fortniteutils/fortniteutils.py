@@ -101,7 +101,7 @@ class FortniteUtils(BaseCog):
     fn_api = fortnite_api.FortniteAPI(api_key=(await self.bot.get_shared_api_tokens('FortniteAPI'))['api_key'], run_async=True)
     # Getting Data
     try:
-      map = await fn_api.map.fetch(language="it")
+      map = await fn_api.map.fetch(language=fortnite_api.GameLanguage.ITALIAN)
     except:
       return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Map URL
