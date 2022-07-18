@@ -30,7 +30,8 @@ class FortniteUtils(BaseCog):
     self.bot = bot
 
   async def cog_load(self):
-    self.fn_api = fortnite_api.FortniteAPI(api_key=((await bot.get_shared_api_tokens('FortniteAPI'))['api_key']), run_async=True)
+    api_key = (await bot.get_shared_api_tokens('FortniteAPI'))['api_key']
+    self.fn_api = fortnite_api.FortniteAPI(api_key=api_key), run_async=True)
       
   def cog_unload(self):
     self.bot.slash.teardown()
