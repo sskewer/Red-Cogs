@@ -95,7 +95,7 @@ class FortniteUtils(BaseCog):
     ]
   )
   async def map(self, inter, pois=None):
-    pois = pois or True
+    pois = False if pois is False else True
     if int(inter.channel.id) != int(allowed_channel):
       return await inter.reply(f"🤐 Spostati in <#{allowed_channel}> per usare questo comando!", ephemeral=True)
     # FortniteAPI
@@ -106,7 +106,7 @@ class FortniteUtils(BaseCog):
     except:
       return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Map URL
-    url = map.poi_image if pois else map.blank_image
+    url = map.poi_image if pois is True else map.blank_image
     if url is None:
       return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Response
