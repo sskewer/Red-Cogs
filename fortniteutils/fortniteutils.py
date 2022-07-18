@@ -106,9 +106,9 @@ class FortniteUtils(BaseCog):
       return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Map URL
     if pois is True:
-      url = map.images.pois
+      url = map.poi_image
     else:
-      url = map.images.blank
+      url = map.blank_image
     if url is None:
       return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Response
