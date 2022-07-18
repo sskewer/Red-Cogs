@@ -145,22 +145,22 @@ class FortniteUtils(BaseCog):
     # FortniteAPI
     fn_api = fortnite_api.FortniteAPI(api_key=(await self.bot.get_shared_api_tokens('FortniteAPI'))['api_key'], run_async=True)
     # Getting Data
-    #try:
-    if gamemode == "stw":
-      news_type = fortnite_api.NewsType.SAVE_THE_WORLD
-      title = "Salva il Mondo"
-      icon = "https://cdn.discordapp.com/emojis/775676864055214080.png"
-    elif gamemode == "cr":
-      news_type = fortnite_api.NewsType.CREATIVE
-      title = "Creativa"
-      icon = "https://cdn.discordapp.com/emojis/775676864664305674.png"
-    else:
-      news_type = fortnite_api.NewsType.BATTLE_ROYALE
-      title = "Battaglia Reale"
-      icon = "https://cdn.discordapp.com/emojis/775676863976046592.png"
-    news = await fn_api.news.fetch_by_type(news_type=news_type, language=fortnite_api.GameLanguage.ITALIAN)
-    #except:
-      #return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
+    try:
+      if gamemode == "stw":
+        news_type = fortnite_api.NewsType.SAVE_THE_WORLD
+        title = "Salva il Mondo"
+        icon = "https://cdn.discordapp.com/emojis/775676864055214080.png"
+      elif gamemode == "cr":
+        news_type = fortnite_api.NewsType.CREATIVE
+        title = "Creativa"
+        icon = "https://cdn.discordapp.com/emojis/775676864664305674.png"
+      else:
+        news_type = fortnite_api.NewsType.BATTLE_ROYALE
+        title = "Battaglia Reale"
+        icon = "https://cdn.discordapp.com/emojis/775676863976046592.png"
+      news = await fn_api.news.fetch_by_type(news_type=news_type, language=fortnite_api.GameLanguage.ITALIAN)
+    except:
+      return await inter.reply(f"😕 Sembra che **non ci siano notizie** da questa modalità!", ephemeral=True)
     # News Data
     date = news.date if news.date is not None else datetime.datetime.utcnow()
     if news.image is None and gamemode != "stw":
@@ -205,20 +205,28 @@ class FortniteUtils(BaseCog):
       @on_click.matching_id(f"menu_{str(inter.author.id)}_previous")
       async def on_previous_button(click):
         index = get_index(click.message.embeds[0].title) - 1
-        await menu.edit(embed=pages[index-1])
+        menu = await menu.edit(embed=pages[index-1])
+        if index == 1:
+          menu.components[0].disable_buttons(0)       
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_next")
       async def on_next_button(click):
         index = get_index(click.message.embeds[0].title) + 1
         await menu.edit(embed=pages[index-1])
+        if index == 1:
+          menu.components[0].disable_buttons(0)
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_close")
       async def on_close_button(click):
-        await menu.edit(components=[])
+        new_embed = click.message.embeds[0].to_dict()
+        new_embed["title"] = click.message.embeds[0].title[:-6]
+        await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
 
       @on_click.timeout
-      async def on_timeoutclick():
-        await menu.edit(components=[])
+      async def on_timeout(click):
+        new_embed = click.message.embeds[0].to_dict()
+        new_embed["title"] = click.message.embeds[0].title[:-6]
+        await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
       #except:
         #return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Battle Royale & Creative
