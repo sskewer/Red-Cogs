@@ -25,11 +25,13 @@ BaseCog = getattr(commands, "Cog", object)
  
 class FortniteUtils(BaseCog):
   
-  async def __init__(self, bot, *args, **kwargs):
+  def __init__(self, bot, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.bot = bot
-    self.fn_api = fortnite_api.FortniteAPI(api_key=((await bot.get_shared_api_tokens('FortniteAPI'))['api_key']), run_async=True)
 
+  async def cog_load(self):
+    self.fn_api = fortnite_api.FortniteAPI(api_key=((await bot.get_shared_api_tokens('FortniteAPI'))['api_key']), run_async=True)
+      
   def cog_unload(self):
     self.bot.slash.teardown()
     
