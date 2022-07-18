@@ -26,6 +26,7 @@ class FortniteUtils(BaseCog):
   
   def __init__(self, bot, *args, **kwargs):
     super().__init__(*args, **kwargs)
+    self.bot = bot
     self.fn_api = fortnite_api.FortniteAPI()
 
   def cog_unload(self):
