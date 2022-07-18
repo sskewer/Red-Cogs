@@ -114,3 +114,49 @@ class FortniteUtils(BaseCog):
     embed.set_image(url=url)
     embed.set_footer(text="Creato con ❤️ · Fortnite IT", icon_url=fn_api_icon)
     await inter.reply(embed=embed, ephemeral=False)
+
+    
+  #---------------------------# Fortnite Map #---------------------------# 
+
+  @dislash.guild_only()
+  @slash_command(
+    description="Restituisce la notizie giornaliere di Fortnite",
+    options=[
+        Option(
+            "gamemode",
+            description="Seleziona la modalità tra quelle disponibili",
+            type=OptionType.STRING,
+            required=True,
+            choices=[
+                OptionChoice("br", "Battaglia Reale"),
+                OptionChoice("cr", "Creativa"),
+                OptionChoice("stw", "Salva il Mondo"),
+            ],
+        )
+    ]
+  )
+  async def news(self, inter, gamemode: str):
+    if int(inter.channel.id) != int(allowed_channel):
+      return await inter.reply(f"🤐 Spostati in <#{allowed_channel}> per usare questo comando!", ephemeral=True)
+    # FortniteAPI
+    fn_api = fortnite_api.FortniteAPI(api_key=(await self.bot.get_shared_api_tokens('FortniteAPI'))['api_key'], run_async=True)
+    # Getting Data
+    try:
+      if gamemode == "stw":
+        news_type = fortnite_api.NewsType.SAVE_THE_WORLD
+      elif gamemode == "cr":
+        news_type = fortnite_api.NewsType.CREATIVE
+      else:
+        news_type = fortnite_api.NewsType.BATTLE_ROYALE
+      news = await fn_api.news.fetch_by_type(news_type=news_type, language=fortnite_api.GameLanguage.ITALIAN)
+    except:
+      return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
+    # News URL
+    url = news.image
+    if url is None:
+      return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
+    # Response
+    #embed = discord.Embed(timestamp = datetime.datetime.utcnow())
+    #embed.set_image(url=url)
+    #embed.set_footer(text="Creato con ❤️ · Fortnite IT", icon_url=fn_api_icon)
+    await inter.reply(url + " " + news.date, ephemeral=True)
