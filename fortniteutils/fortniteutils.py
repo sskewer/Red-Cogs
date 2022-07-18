@@ -27,7 +27,7 @@ class FortniteUtils(BaseCog):
   def __init__(self, bot, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.bot = bot
-    self.fn_api = fortnite_api.FortniteAPI(api_key="", run_async=True)
+    self.fn_api = fortnite_api.FortniteAPI(api_key=((await self.bot.get_shared_api_tokens('dbsharing'))['api_key']), run_async=True)
 
   def cog_unload(self):
     self.bot.slash.teardown()
