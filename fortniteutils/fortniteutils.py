@@ -163,7 +163,9 @@ class FortniteUtils(BaseCog):
       return await inter.reply(f"😕 Sembra che **non ci siano notizie** da questa modalità!", ephemeral=True)
     # Save the World
     if gamemode == "stw":
-      pass
+      pages = []
+      for msg in news.messages:
+        pass
     # Battle Royale & Creative
     embed = discord.Embed(timestamp=date)
     embed.set_author(name=f"Notizie: {title}", icon_url=icon)
