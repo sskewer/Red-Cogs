@@ -208,7 +208,6 @@ class FortniteUtils(BaseCog):
         row_data = click.message.components[0].to_dict()
         index = get_index(click.message.embeds[0].title) - 1
         await menu.edit(embed=pages[index-1], components=[ActionRow.from_dict(row_data)])
-          
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_next")
       async def on_next_button(click):
