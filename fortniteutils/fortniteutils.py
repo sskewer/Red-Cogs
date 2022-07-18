@@ -1,6 +1,7 @@
 import re
 import dislash
 import discord
+import asyncio
 import fortnite_api
 
 from redbot.core import Config, commands
@@ -28,10 +29,6 @@ class FortniteUtils(BaseCog):
   def __init__(self, bot, *args, **kwargs):
     super().__init__(*args, **kwargs)
     self.bot = bot
-
-  async def cog_load(self):
-    api_key = (await bot.get_shared_api_tokens('FortniteAPI'))['api_key']
-    self.fn_api = fortnite_api.FortniteAPI(api_key=api_key, run_async=True)
       
   def cog_unload(self):
     self.bot.slash.teardown()
@@ -100,11 +97,13 @@ class FortniteUtils(BaseCog):
     pois = pois or True
     if int(inter.channel.id) != int(allowed_channel):
       return await inter.reply(f"🤐 Spostati in <#{allowed_channel}> per usare questo comando!", ephemeral=True)
+    # FortniteAPI
+    fn_api = fortnite_api.FortniteAPI(api_key=(await self.bot.get_shared_api_tokens('FortniteAPI'))['api_key'], run_async=True)
     # Getting Data
-    #try:
-    map = await self.fn_api.map.fetch(language="it")
-    #except:
-      #return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
+    try:
+      map = await fn_api.map.fetch(language="it")
+    except:
+      return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Map URL
     if pois is True:
       url = map.data.images.pois
