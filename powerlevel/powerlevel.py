@@ -1,4 +1,5 @@
 import re
+import dislash
 import discord
 
 from redbot.core import Config, commands
