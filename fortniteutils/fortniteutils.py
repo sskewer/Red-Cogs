@@ -194,7 +194,7 @@ class FortniteUtils(BaseCog):
 
       @on_click.not_from_user(inter.author, cancel_others=True, reset_timeout=False)
       async def on_wrong_user(click):
-        await interaction.reply(f"🤐 Solo **{str(inter.author.display_name)}** può interagire con questi pulsanti!", ephemeral=True)
+        await click.reply(f"🤐 Solo **{str(inter.author.display_name)}** può interagire con questi pulsanti!", ephemeral=True)
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_previous")
       async def on_previous_button(click):
