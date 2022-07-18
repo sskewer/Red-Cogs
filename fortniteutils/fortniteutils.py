@@ -83,6 +83,9 @@ class FortniteUtils(BaseCog):
     await inter.reply(f"🙃 Ho **rimosso** il livello dal tuo nickname!", ephemeral=True)
     
     
-    #---------------------------# Fortnite Map #---------------------------# 
-    
-    
+  #---------------------------# Fortnite Map #---------------------------# 
+
+  @dislash.guild_only()
+  @slash_command(description="Restituisce la mappa attuale di Fortnite Battaglia Reale")
+  async def map(self, inter):
+      pass
