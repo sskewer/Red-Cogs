@@ -159,12 +159,14 @@ class FortniteUtils(BaseCog):
       return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # News Data
     date = news.date if news.date is not None else datetime.datetime.utcnow()
-    url = news.image
-    if url is None:
-      return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
-    # Response
+    if news.image is None and gamemode != "stw":
+      return await inter.reply(f"😕 Sembra che **non ci siano notizie** da questa modalità!", ephemeral=True)
+    # Save the World
+    if gamemode == "stw":
+      pass
+    # Battle Royale & Creative
     embed = discord.Embed(timestamp=date)
     embed.set_author(name=f"Notizie: {title}", icon_url=icon)
-    embed.set_image(url=url)
+    embed.set_image(url=news.image)
     embed.set_footer(text="🕓 Notizie aggiornate a ", icon_url=fn_api_icon)
     await inter.reply(embed=embed, ephemeral=True)
