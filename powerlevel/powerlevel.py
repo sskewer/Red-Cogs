@@ -3,6 +3,7 @@ import discord
 
 from redbot.core import Config, commands
 from redbot.core.bot import Red
+from dislash import *
 
 def getNick(nick:str):
   form_nick = re.sub(r'\s+\[⚡\d+\]', '', nick)
@@ -19,8 +20,11 @@ BaseCog = getattr(commands, "Cog", object)
  
 class PowerLevel(BaseCog):
   
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self, bot, *args, **kwargs):
+      super().__init__(*args, **kwargs)
+    
+    def cog_unload(self):
+      self.bot.slash.teardown()
     
     @commands.guild_only()
     @commands.command()
