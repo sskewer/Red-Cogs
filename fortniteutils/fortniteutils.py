@@ -181,7 +181,8 @@ class FortniteUtils(BaseCog):
         Button(
           style = ButtonStyle.grey,
           emoji = "◀️",
-          custom_id = f"menu_{str(inter.author.id)}_previous"
+          custom_id = f"menu_{str(inter.author.id)}_previous",
+          disabled = True
         ),
         Button(
           style = ButtonStyle.grey,
@@ -204,17 +205,18 @@ class FortniteUtils(BaseCog):
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_previous")
       async def on_previous_button(click):
+        row_data = click.message.components[0].to_dict()
         index = get_index(click.message.embeds[0].title) - 1
-        menu = await menu.edit(embed=pages[index-1])
-        if index == 1:
-          menu.components[0].disable_buttons(0)       
+        await menu.edit(embed=pages[index-1], components=[ActionRow.from_dict(row_data)])
+          
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_next")
       async def on_next_button(click):
+        row_data = click.message.components[0].to_dict()
         index = get_index(click.message.embeds[0].title) + 1
-        await menu.edit(embed=pages[index-1])
-        if index == 1:
-          menu.components[0].disable_buttons(0)
+        if index > 1:
+          row_data["components"][0]["disabled"] = False
+        await menu.edit(embed=pages[index-1], components=[ActionRow.from_dict(row_data)])
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_close")
       async def on_close_button(click):
