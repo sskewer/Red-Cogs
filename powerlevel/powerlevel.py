@@ -37,7 +37,7 @@ class PowerLevel(BaseCog):
   @powerlevel.sub_command(
     description="Aggiunge il livello al proprio nickname",
     options=[
-        Option("level", "Inserisci il livello", OptionType.INTEGER)
+        Option("level", "Inserisci il livello", OptionType.INTEGER, required=True)
     ]
   )
   async def set(self, inter, level=None):
