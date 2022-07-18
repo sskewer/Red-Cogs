@@ -18,6 +18,7 @@ def getNick(nick:str):
 # Setup
 max_level = 138
 allowed_channel = 702576186185875546
+fn_api_icon = "https://fortnite-api.com/assets/img/logo_small.png"
 
 
 BaseCog = getattr(commands, "Cog", object)
@@ -86,8 +87,14 @@ class FortniteUtils(BaseCog):
   #---------------------------# Fortnite Map #---------------------------# 
 
   @dislash.guild_only()
-  @slash_command(description="Restituisce la mappa attuale di Fortnite Battaglia Reale")
-  async def map(self, inter):
+  @slash_command(
+    description="Restituisce la mappa attuale di Fortnite Battaglia Reale",
+    options=[
+        Option("pois", "Aggiunge o rimuove i punti di interesse sulla mappa", OptionType.BOOLEAN, required=False)
+    ]
+  )
+  async def map(self, inter, pois=None):
+    pois = pois or True
     if int(inter.channel.id) != int(allowed_channel):
       return await inter.reply(f"🤐 Spostati in <#{allowed_channel}> per usare questo comando!", ephemeral=True)
     # Getting Data
@@ -96,8 +103,14 @@ class FortniteUtils(BaseCog):
     except:
       return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Map URL
-    url = map.data.images.pois
+    if pois is True:
+      url = map.data.images.pois
+    else:
+      url = map.data.images.blank
     if url is None:
       return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Response
-    await inter.reply(f"🙃 Ho **rimosso** il livello dal tuo nickname!", ephemeral=True)
+    embed = discord.Embed(timestamp = datetime.datetime.utcnow())
+    embed.set_image(url=url)
+    embed.set_footer(text="Creato con ❤️ · Fortnite IT", icon_url=fn_api_icon)
+    await inter.reply(embed=embed, ephemeral=False)
