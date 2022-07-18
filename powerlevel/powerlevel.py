@@ -30,15 +30,15 @@ class PowerLevel(BaseCog):
     self.bot.slash.teardown()
 
   @dislash.guild_only()
-  @slash_command(description="Gestisce il PowerLevel all'interno del server")
+  @slash_command(description="Gestisce il livello di Potenza STW all'interno del server")
   async def powerlevel(self, inter):
       pass
     
     
   @powerlevel.sub_command(
-    description="Aggiunge il livello al proprio nickname",
+    description="Aggiunge il livello di Potenza STW al proprio nickname",
     options=[
-        Option("level", "Inserisci il livello", OptionType.INTEGER, required=True)
+        Option("level", "Inserisci il livello di Potenza STW", OptionType.INTEGER, required=True)
     ]
   )
   async def set(self, inter, level=None):
@@ -62,7 +62,7 @@ class PowerLevel(BaseCog):
     await inter.reply(f"👉 Ho **aggiunto** il livello al tuo nickname!", ephemeral=True)
   
   
-  @powerlevel.sub_command(description="Rimuove il livello dal proprio nickname")
+  @powerlevel.sub_command(description="Rimuove il livello di Potenza STW dal proprio nickname")
   async def reset(self, inter):
     if int(inter.channel.id) != int(allowed_channel):
       return await inter.reply(f"🤐 Spostati in <#{allowed_channel}> per usare questo comando!", ephemeral=True)
