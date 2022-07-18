@@ -88,4 +88,16 @@ class FortniteUtils(BaseCog):
   @dislash.guild_only()
   @slash_command(description="Restituisce la mappa attuale di Fortnite Battaglia Reale")
   async def map(self, inter):
-      pass
+    if int(inter.channel.id) != int(allowed_channel):
+      return await inter.reply(f"🤐 Spostati in <#{allowed_channel}> per usare questo comando!", ephemeral=True)
+    # Getting Data
+    try:
+      map = await self.fn_api.map.fetch(language="it")
+    except:
+      return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
+    # Map URL
+    url = map.data.images.pois
+    if url is None:
+      return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
+    # Response
+    await inter.reply(f"🙃 Ho **rimosso** il livello dal tuo nickname!", ephemeral=True)
