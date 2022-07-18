@@ -16,7 +16,7 @@ def getNick(nick:str):
 
 # Setup
 max_level = 138
-allowed_channels = [702576186185875546]
+allowed_channel = 702576186185875546
 
 
 BaseCog = getattr(commands, "Cog", object)
@@ -42,8 +42,8 @@ class PowerLevel(BaseCog):
     ]
   )
   async def set(self, inter, level=None):
-    if inter.channel.id not in allowed_channels:
-      return
+    if inter.channel.id is not allowed_channel:
+      return await inter.reply(f"🤐 Spostati in <#{allowed_channel} per usare questo comando!>", ephemeral=True)
     # Vars
     index = int(level)
     member = inter.guild.get_member(inter.author.id)
@@ -64,8 +64,8 @@ class PowerLevel(BaseCog):
   
   @powerlevel.sub_command(description="Rimuove il livello dal proprio nickname")
   async def reset(self, inter):
-    if inter.channel.id not in allowed_channels:
-      return
+    if inter.channel.id is not allowed_channel:
+      return await inter.reply(f"🤐 Spostati in <#{allowed_channel} per usare questo comando!>", ephemeral=True)
     member = inter.guild.get_member(inter.author.id)
     # New Nickname
     original_nick = getNick(inter.author.display_name)
