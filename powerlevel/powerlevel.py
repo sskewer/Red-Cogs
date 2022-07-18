@@ -42,7 +42,7 @@ class PowerLevel(BaseCog):
     ]
   )
   async def set(self, inter, level=None):
-    if inter.channel.id is not allowed_channel:
+    if int(inter.channel.id) != int(allowed_channel):
       return await inter.reply(f"🤐 Spostati in <#{allowed_channel}> per usare questo comando!", ephemeral=True)
     # Vars
     index = int(level)
@@ -64,7 +64,7 @@ class PowerLevel(BaseCog):
   
   @powerlevel.sub_command(description="Rimuove il livello dal proprio nickname")
   async def reset(self, inter):
-    if inter.channel.id is not allowed_channel:
+    if int(inter.channel.id) != int(allowed_channel):
       return await inter.reply(f"🤐 Spostati in <#{allowed_channel}> per usare questo comando!", ephemeral=True)
     member = inter.guild.get_member(inter.author.id)
     # New Nickname
