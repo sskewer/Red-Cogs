@@ -166,9 +166,9 @@ class FortniteUtils(BaseCog):
       #try:
       pages = []
       for msg in news.messages:
-        page = discord.Embed(title=msg.title, description=msg.body, timestamp=date)
+        page = discord.Embed(title=msg.title, description=f"```{msg.body}```", timestamp=date)
         page.set_image(url=msg.image_url)
-        page.set_author(name=f"Notizie: {title}", icon_url=icon)
+        page.set_author(name=title, icon_url=icon)
         page.set_footer(text="Notizie aggiornate a 🕓", icon_url=fn_api_icon)
         pages.append(page)
       row = ActionRow(
@@ -193,31 +193,31 @@ class FortniteUtils(BaseCog):
       on_click = menu.create_click_listener(timeout=60)
 
       @on_click.not_from_user(inter.author, cancel_others=True, reset_timeout=False)
-      async def on_wrong_user(interaction):
+      async def on_wrong_user(click):
         await interaction.reply(f"🤐 Solo **{str(inter.author.display_name)}** può interagire con questi pulsanti!", ephemeral=True)
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_previous")
-      async def on_close_button():
+      async def on_previous_button(click):
         index = index - 1
         await menu.edit(embed=pages[index-1])
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_next")
-      async def on_close_button():
+      async def on_next_button(click):
         index = index + 1
         await menu.edit(embed=pages[index-1])
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_close")
-      async def on_close_button():
+      async def on_close_button(click):
         await menu.edit(components=[])
 
       @on_click.timeout
-      async def on_timeout():
+      async def on_timeoutclick():
         await menu.edit(components=[])
       #except:
         #return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Battle Royale & Creative
     embed = discord.Embed(timestamp=date)
     embed.set_image(url=news.image)
-    embed.set_author(name=f"Notizie: {title}", icon_url=icon)
+    embed.set_author(name=title, icon_url=icon)
     embed.set_footer(text="Notizie aggiornate a 🕓", icon_url=fn_api_icon)
     await inter.reply(embed=embed, ephemeral=False)
