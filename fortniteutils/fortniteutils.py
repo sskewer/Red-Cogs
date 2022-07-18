@@ -142,11 +142,11 @@ class FortniteUtils(BaseCog):
     fn_api = fortnite_api.FortniteAPI(api_key=(await self.bot.get_shared_api_tokens('FortniteAPI'))['api_key'], run_async=True)
     # Getting Data
     try:
-      if gamemode == "Salva il Mondo":
+      if gamemode == "stw":
         news_type = fortnite_api.NewsType.SAVE_THE_WORLD
         title = "Salva il Mondo"
         icon = "https://cdn.discordapp.com/emojis/775676864055214080.png"
-      elif gamemode == "Creativa":
+      elif gamemode == "cr":
         news_type = fortnite_api.NewsType.CREATIVE
         title = "Creativa"
         icon = "https://cdn.discordapp.com/emojis/775676864664305674.png"
