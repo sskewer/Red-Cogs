@@ -100,10 +100,10 @@ class FortniteUtils(BaseCog):
     if int(inter.channel.id) != int(allowed_channel):
       return await inter.reply(f"🤐 Spostati in <#{allowed_channel}> per usare questo comando!", ephemeral=True)
     # Getting Data
-    try:
-      map = await self.fn_api.map.fetch(language="it")
-    except:
-      return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
+    #try:
+    map = await self.fn_api.map.fetch(language="it")
+    #except:
+      #return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Map URL
     if pois is True:
       url = map.data.images.pois
