@@ -112,7 +112,7 @@ class FortniteUtils(BaseCog):
     # Response
     embed = discord.Embed(timestamp=datetime.datetime.utcnow())
     embed.set_image(url=url)
-    embed.set_footer(text="Creato con ❤️ · Fortnite IT", icon_url=fn_api_icon)
+    embed.set_footer(text="Creato con ❤️ • Fortnite IT", icon_url=fn_api_icon)
     await inter.reply(embed=embed, ephemeral=False)
 
     
