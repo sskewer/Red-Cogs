@@ -201,7 +201,7 @@ class FortniteUtils(BaseCog):
                            
       @on_click.not_from_user(inter.author, cancel_others=True, reset_timeout=False)
       async def on_wrong_user(click):
-        await click.reply(f"🤐 Solo **{str(inter.author.display_name)}** può interagire con questi pulsanti!", ephemeral=True)
+        return await click.reply(f"🤐 Solo **{str(inter.author.display_name)}** può interagire con questi pulsanti!", ephemeral=True)
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_previous")
       async def on_previous_button(click):
@@ -209,7 +209,9 @@ class FortniteUtils(BaseCog):
         index = get_index(click.message.embeds[0].title) - 1
         if index == 1:
           row_data["components"][0]["disabled"] = True
-        await menu.edit(embed=pages[index-1], components=[ActionRow.from_dict(row_data)])
+        if index < len(pages):
+          row_data["components"][1]["disabled"] = False
+        return await menu.edit(embed=pages[index-1], components=[ActionRow.from_dict(row_data)])
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_next")
       async def on_next_button(click):
@@ -217,19 +219,21 @@ class FortniteUtils(BaseCog):
         index = get_index(click.message.embeds[0].title) + 1
         if index > 1:
           row_data["components"][0]["disabled"] = False
-        await menu.edit(embed=pages[index-1], components=[ActionRow.from_dict(row_data)])
+        if index == len(pages):
+          row_data["components"][1]["disabled"] = True
+        return await menu.edit(embed=pages[index-1], components=[ActionRow.from_dict(row_data)])
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_close")
       async def on_close_button(click):
         new_embed = click.message.embeds[0].to_dict()
         new_embed["title"] = click.message.embeds[0].title[:-6]
-        await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
+        return await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
 
       @on_click.timeout
       async def on_timeout(click):
         new_embed = click.message.embeds[0].to_dict()
         new_embed["title"] = click.message.embeds[0].title[:-6]
-        await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
+        return await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
       #except:
         #return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Battle Royale & Creative
