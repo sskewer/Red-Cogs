@@ -26,7 +26,7 @@ class TempChannels(BaseCog):
 
   @commands.Cog.listener()
   async def on_voice_state_update(self, member, before, after):
-    if member.guild.id != target_guild or member.bot:
+    if member.guild.id != target_guild or member.bot is True:
       return
     if before.channel is not None and before.channel.id == main_channel and after.channel is not None and after.channel.category_id == main_category:
       return
