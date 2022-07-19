@@ -225,15 +225,15 @@ class FortniteUtils(BaseCog):
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_close")
       async def on_close_button(click):
-        current_menu = await menu.channel.fetch_message(menu.id)
-        new_embed = current_menu.embeds[0].to_dict()
-        new_embed["title"] = current_menu.embeds[0].title[:-6]
+        new_embed = click.message.embeds[0].to_dict()
+        new_embed["title"] = click.message.embeds[0].title[:-6]
         return await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
 
       @on_click.timeout
       async def on_timeout():
-        new_embed = click.message.embeds[0].to_dict()
-        new_embed["title"] = click.message.embeds[0].title[:-6]
+        current_menu = await menu.channel.fetch_message(menu.id)
+        new_embed = current_menu.embeds[0].to_dict()
+        new_embed["title"] = current_menu.embeds[0].title[:-6]
         return await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
       #except:
         #return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
