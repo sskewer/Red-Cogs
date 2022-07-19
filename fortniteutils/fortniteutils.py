@@ -182,7 +182,6 @@ class FortniteUtils(BaseCog):
           style = ButtonStyle.grey,
           emoji = "◀️",
           custom_id = f"menu_{str(inter.author.id)}_previous",
-          disabled = True
         ),
         Button(
           style = ButtonStyle.grey,
@@ -195,8 +194,9 @@ class FortniteUtils(BaseCog):
           custom_id = f"menu_{str(inter.author.id)}_close"
         )
       )
-      index = 1
-      menu = await inter.reply(embed=pages[index-1], components=[row], ephemeral=False)
+      row_dict = row.to_dict()
+      row_dict["components"][0]["disabled"] = True
+      menu = await inter.reply(embed=pages[0], components=[ActionRow.from_dict(row_dict)], ephemeral=False)
       on_click = menu.create_click_listener(timeout=60)
                            
       @on_click.not_from_user(inter.author, cancel_others=True, reset_timeout=False)
@@ -225,12 +225,13 @@ class FortniteUtils(BaseCog):
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_close")
       async def on_close_button(click):
-        new_embed = click.message.embeds[0].to_dict()
-        new_embed["title"] = click.message.embeds[0].title[:-6]
+        current_menu = await menu.channel.fetch_message(menu.id)
+        new_embed = current_menu.embeds[0].to_dict()
+        new_embed["title"] = current_menu.embeds[0].title[:-6]
         return await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
 
       @on_click.timeout
-      async def on_timeout(click):
+      async def on_timeout():
         new_embed = click.message.embeds[0].to_dict()
         new_embed["title"] = click.message.embeds[0].title[:-6]
         return await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
