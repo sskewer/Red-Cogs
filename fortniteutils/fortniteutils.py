@@ -238,8 +238,9 @@ class FortniteUtils(BaseCog):
       #except:
         #return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Battle Royale & Creative
-    embed = discord.Embed(color=discord.Colour.gold(), timestamp=date)
-    embed.set_image(url=news.image)
-    embed.set_author(name=title, icon_url=icon)
-    embed.set_footer(text="Notizie aggiornate a 🕓", icon_url=fn_api_icon)
-    await inter.reply(embed=embed, ephemeral=False)
+    if gamemode != "stw":
+      embed = discord.Embed(color=discord.Colour.gold(), timestamp=date)
+      embed.set_image(url=news.image)
+      embed.set_author(name=title, icon_url=icon)
+      embed.set_footer(text="Notizie aggiornate a 🕓", icon_url=fn_api_icon)
+      return await inter.reply(embed=embed, ephemeral=False)
