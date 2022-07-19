@@ -114,7 +114,7 @@ class FortniteUtils(BaseCog):
     if url is None:
       return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Response
-    embed = discord.Embed(color=discord.Colour.gold(), timestamp=datetime.datetime.utcnow())
+    embed = discord.Embed(color=0x2f3136, timestamp=datetime.datetime.utcnow())
     embed.set_image(url=url)
     embed.set_footer(text="Creato con ❤️ • Fortnite IT", icon_url=fn_api_icon)
     await inter.reply(embed=embed, ephemeral=False)
@@ -140,8 +140,8 @@ class FortniteUtils(BaseCog):
     ]
   )
   async def news(self, inter, gamemode: str):
-    #if int(inter.channel.id) != int(allowed_channel):
-    #  return await inter.reply(f"🤐 Spostati in <#{allowed_channel}> per usare questo comando!", ephemeral=True)
+    if int(inter.channel.id) != int(allowed_channel):
+      return await inter.reply(f"🤐 Spostati in <#{allowed_channel}> per usare questo comando!", ephemeral=True)
     # FortniteAPI
     fn_api = fortnite_api.FortniteAPI(api_key=(await self.bot.get_shared_api_tokens('FortniteAPI'))['api_key'], run_async=True)
     # Getting Data
@@ -167,94 +167,94 @@ class FortniteUtils(BaseCog):
       return await inter.reply(f"😕 Sembra che **non ci siano notizie** da questa modalità!", ephemeral=True)
     # Save the World
     if gamemode == "stw":
-      #try:
-      index = 1
-      pages = []
-      for msg in news.messages:
-        page = discord.Embed(color=discord.Colour.gold(), title=f"{msg.title} ({str(index)}/{str(len(news.messages))})", description=msg.body, timestamp=date)
-        page.set_image(url=msg.image_url)
-        page.set_author(name=title, icon_url=icon)
-        page.set_footer(text="Notizie aggiornate a 🕓", icon_url=fn_api_icon)
-        pages.append(page)
-        index += 1
-      row = ActionRow(
-        Button(
-          style = ButtonStyle.grey,
-          emoji = "◀️",
-          custom_id = f"menu_{str(inter.author.id)}_previous",
-        ),
-        Button(
-          style = ButtonStyle.grey,
-          emoji = "▶️",
-          custom_id = f"menu_{str(inter.author.id)}_next"
-        ),
-        Button(
-          style = ButtonStyle.grey,
-          emoji = "🛑",
-          custom_id = f"menu_{str(inter.author.id)}_close"
+      try:
+        index = 1
+        pages = []
+        for msg in news.messages:
+          page = discord.Embed(color=0x2f3136, title=f"{msg.title} ({str(index)}/{str(len(news.messages))})", description=msg.body, timestamp=date)
+          page.set_image(url=msg.image_url)
+          page.set_author(name=title, icon_url=icon)
+          page.set_footer(text="Notizie aggiornate a 🕓", icon_url=fn_api_icon)
+          pages.append(page)
+          index += 1
+        row = ActionRow(
+          Button(
+            style = ButtonStyle.grey,
+            emoji = "◀️",
+            custom_id = f"menu_{str(inter.author.id)}_previous",
+          ),
+          Button(
+            style = ButtonStyle.grey,
+            emoji = "▶️",
+            custom_id = f"menu_{str(inter.author.id)}_next"
+          ),
+          Button(
+            style = ButtonStyle.grey,
+            emoji = "🛑",
+            custom_id = f"menu_{str(inter.author.id)}_close"
+          )
         )
-      )
-      row_dict = row.to_dict()
-      row_dict["components"][0]["disabled"] = True
-      menu = await inter.reply(embed=pages[0], components=[ActionRow.from_dict(row_dict)], ephemeral=False)
-      on_click = menu.create_click_listener(timeout=60)
-                           
-      @on_click.not_from_user(inter.author, cancel_others=True, reset_timeout=False)
-      async def on_wrong_user(click):
-        return await click.reply(f"🤐 Solo **{str(inter.author.display_name)}** può interagire con questi pulsanti!", ephemeral=True)
+        row_dict = row.to_dict()
+        row_dict["components"][0]["disabled"] = True
+        menu = await inter.reply(embed=pages[0], components=[ActionRow.from_dict(row_dict)], ephemeral=False)
+        on_click = menu.create_click_listener(timeout=60)
 
-      @on_click.matching_id(f"menu_{str(inter.author.id)}_previous")
-      async def on_previous_button(click):
-        row_data = row.to_dict()
-        index = get_index(click.message.embeds[0].title) - 1
-        if index == 1:
-          row_data["components"][0]["disabled"] = True
-        if index < len(pages):
-          row_data["components"][1]["disabled"] = False
-        await menu.edit(embed=pages[index-1], components=[ActionRow.from_dict(row_data)])
-        try:
-          await click.create_response("")
-        except:
-          pass
+        @on_click.not_from_user(inter.author, cancel_others=True, reset_timeout=False)
+        async def on_wrong_user(click):
+          return await click.reply(f"🤐 Solo **{str(inter.author.display_name)}** può interagire con questi pulsanti!", ephemeral=True)
 
-      @on_click.matching_id(f"menu_{str(inter.author.id)}_next")
-      async def on_next_button(click):
-        row_data = row.to_dict()
-        index = get_index(click.message.embeds[0].title) + 1
-        if index > 1:
-          row_data["components"][0]["disabled"] = False
-        if index == len(pages):
-          row_data["components"][1]["disabled"] = True
-        await menu.edit(embed=pages[index-1], components=[ActionRow.from_dict(row_data)])
-        try:
-          await click.create_response("")
-        except:
-          pass
+        @on_click.matching_id(f"menu_{str(inter.author.id)}_previous")
+        async def on_previous_button(click):
+          row_data = row.to_dict()
+          index = get_index(click.message.embeds[0].title) - 1
+          if index == 1:
+            row_data["components"][0]["disabled"] = True
+          if index < len(pages):
+            row_data["components"][1]["disabled"] = False
+          await menu.edit(embed=pages[index-1], components=[ActionRow.from_dict(row_data)])
+          try:
+            await click.create_response("")
+          except:
+            pass
 
-      @on_click.matching_id(f"menu_{str(inter.author.id)}_close")
-      async def on_close_button(click):
-        new_embed = click.message.embeds[0].to_dict()
-        new_embed["title"] = click.message.embeds[0].title[:-6]
-        await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
-        try:
-          await click.create_response("")
-        except:
-          pass
+        @on_click.matching_id(f"menu_{str(inter.author.id)}_next")
+        async def on_next_button(click):
+          row_data = row.to_dict()
+          index = get_index(click.message.embeds[0].title) + 1
+          if index > 1:
+            row_data["components"][0]["disabled"] = False
+          if index == len(pages):
+            row_data["components"][1]["disabled"] = True
+          await menu.edit(embed=pages[index-1], components=[ActionRow.from_dict(row_data)])
+          try:
+            await click.create_response("")
+          except:
+            pass
 
-      @on_click.timeout
-      async def on_timeout():
-        current_menu = await menu.channel.fetch_message(menu.id)
-        new_embed = current_menu.embeds[0].to_dict()
-        new_embed["title"] = current_menu.embeds[0].title[:-6]
-        try:
+        @on_click.matching_id(f"menu_{str(inter.author.id)}_close")
+        async def on_close_button(click):
+          new_embed = click.message.embeds[0].to_dict()
+          new_embed["title"] = click.message.embeds[0].title[:-6]
           await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
-        except:
-          pass
-      #except:
-        #return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
+          try:
+            await click.create_response("")
+          except:
+            pass
+
+        @on_click.timeout
+        async def on_timeout():
+          current_menu = await menu.channel.fetch_message(menu.id)
+          new_embed = current_menu.embeds[0].to_dict()
+          new_embed["title"] = current_menu.embeds[0].title[:-6]
+          try:
+            await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
+          except:
+            pass
+      except:
+        return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Battle Royale & Creative
     if gamemode != "stw":
-      embed = discord.Embed(color=discord.Colour.gold(), timestamp=date)
+      embed = discord.Embed(color=0x2f3136, timestamp=date)
       embed.set_image(url=news.image)
       embed.set_author(name=title, icon_url=icon)
       embed.set_footer(text="Notizie aggiornate a 🕓", icon_url=fn_api_icon)
