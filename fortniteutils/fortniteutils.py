@@ -212,7 +212,10 @@ class FortniteUtils(BaseCog):
         if index < len(pages):
           row_data["components"][1]["disabled"] = False
         await menu.edit(embed=pages[index-1], components=[ActionRow.from_dict(row_data)])
-        return await click.create_response("")
+        try:
+          await click.create_response("")
+        except:
+          pass
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_next")
       async def on_next_button(click):
@@ -223,21 +226,30 @@ class FortniteUtils(BaseCog):
         if index == len(pages):
           row_data["components"][1]["disabled"] = True
         await menu.edit(embed=pages[index-1], components=[ActionRow.from_dict(row_data)])
-        return await click.create_response("")
+        try:
+          await click.create_response("")
+        except:
+          pass
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_close")
       async def on_close_button(click):
         new_embed = click.message.embeds[0].to_dict()
         new_embed["title"] = click.message.embeds[0].title[:-6]
         await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
-        return await click.create_response("")
+        try:
+          await click.create_response("")
+        except:
+          pass
 
       @on_click.timeout
       async def on_timeout():
         current_menu = await menu.channel.fetch_message(menu.id)
         new_embed = current_menu.embeds[0].to_dict()
         new_embed["title"] = current_menu.embeds[0].title[:-6]
-        return await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
+        try:
+          await menu.edit(embed=discord.Embed.from_dict(new_embed), components=[])
+        except:
+          pass
       #except:
         #return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Battle Royale & Creative
