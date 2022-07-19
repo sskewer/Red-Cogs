@@ -24,7 +24,7 @@ class TempChannels(BaseCog):
 
   @commands.Cog.listener()
   async def on_voice_state_update(self, member, before, after):
-    print(after.channel)
+    self.bot.get_channel(603955376286728226).send(after.channel.id)
     if before.channel != main_channel and after.channel == main_channel:
       user_channel = await self.config.member(member).channel()
       # Existing User Channel
