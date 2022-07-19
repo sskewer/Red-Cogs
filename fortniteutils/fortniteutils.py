@@ -114,13 +114,13 @@ class FortniteUtils(BaseCog):
     if url is None:
       return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Response
-    embed = discord.Embed(timestamp=datetime.datetime.utcnow())
+    embed = discord.Embed(color=discord.Colour.gold, timestamp=datetime.datetime.utcnow())
     embed.set_image(url=url)
     embed.set_footer(text="Creato con ❤️ • Fortnite IT", icon_url=fn_api_icon)
     await inter.reply(embed=embed, ephemeral=False)
 
     
-  #---------------------------# Fortnite Map #---------------------------# 
+  #---------------------------# Fortnite News #---------------------------# 
 
   @dislash.guild_only()
   @slash_command(
@@ -171,7 +171,7 @@ class FortniteUtils(BaseCog):
       index = 1
       pages = []
       for msg in news.messages:
-        page = discord.Embed(title=f"{msg.title} ({str(index)}/{str(len(news.messages))})", description=msg.body, timestamp=date)
+        page = discord.Embed(color=discord.Colour.gold, title=f"{msg.title} ({str(index)}/{str(len(news.messages))})", description=msg.body, timestamp=date)
         page.set_image(url=msg.image_url)
         page.set_author(name=title, icon_url=icon)
         page.set_footer(text="Notizie aggiornate a 🕓", icon_url=fn_api_icon)
@@ -205,13 +205,15 @@ class FortniteUtils(BaseCog):
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_previous")
       async def on_previous_button(click):
-        row_data = click.message.components[0].to_dict()
+        row_data = row.to_dict()
         index = get_index(click.message.embeds[0].title) - 1
+        if index == 1:
+          row_data["components"][0]["disabled"] = True
         await menu.edit(embed=pages[index-1], components=[ActionRow.from_dict(row_data)])
 
       @on_click.matching_id(f"menu_{str(inter.author.id)}_next")
       async def on_next_button(click):
-        row_data = click.message.components[0].to_dict()
+        row_data = row.to_dict()
         index = get_index(click.message.embeds[0].title) + 1
         if index > 1:
           row_data["components"][0]["disabled"] = False
@@ -231,7 +233,7 @@ class FortniteUtils(BaseCog):
       #except:
         #return await inter.reply(f"😕 Ops... qualcosa è andato storto!", ephemeral=True)
     # Battle Royale & Creative
-    embed = discord.Embed(timestamp=date)
+    embed = discord.Embed(color=discord.Colour.gold, timestamp=date)
     embed.set_image(url=news.image)
     embed.set_author(name=title, icon_url=icon)
     embed.set_footer(text="Notizie aggiornate a 🕓", icon_url=fn_api_icon)
