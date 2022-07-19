@@ -7,6 +7,7 @@ from dislash import *
 
 main_channel = 709783766712713358
 main_category = 998609976044027984
+commands_channel = 998609829230813236
 
 BaseCog = getattr(commands, "Cog", object)
  
@@ -24,6 +25,7 @@ class TempChannels(BaseCog):
 
   @commands.Cog.listener()
   async def on_voice_state_update(self, member, before, after):
+    
     # Channel Creation
     if (before.channel is None or before.channel.id != main_channel) and after.channel.id == main_channel:
       user_channel = await self.config.member(member).channel()
@@ -34,16 +36,17 @@ class TempChannels(BaseCog):
       channel = await member.guild.create_voice_channel(name=member.display_name, topic=f"👤 **Proprietario: {member.mention}**", user_limit=4, category=self.bot.get_channel(main_category))
       await member.move_to(channel)
       await self.config.member(member).channel.set(channel.id)
-      #add user to voice-commands
+      return await self.bot.get_channel(commands_channel).set_permissions(member, view_channel=True, read_messages=True, read_message_history=True, send_messages=True, use_slash_commands=True)
       
     # Channel Elimination
     if before.channel is not None and before.channel.category_id == main_category:
       if len(before.channel.members) < 1:
         try:
-          member = before.channel.guild.get_member(before.channel.name[21:-3])
+          owner = before.channel.guild.get_member(before.channel.name[21:-3])
         except:
-          member = None
-        if member is not None:
-          await self.config.member(member).channel.set(None)
-        await before.channel.delete()
+          owner = None
+        if owner is not None:
+          await self.config.member(owner).channel.set(None)
+          await self.bot.get_channel(commands_channel).set_permissions(member, overwrite=None)
+        return await before.channel.delete()
 
