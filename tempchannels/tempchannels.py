@@ -5,6 +5,7 @@ from dislash import *
 
 #---------# SETUP #---------#
 
+target_guild = 454261607799717888
 main_channel = 709783766712713358
 main_category = 998609976044027984
 commands_channel = 998609829230813236
@@ -25,6 +26,10 @@ class TempChannels(BaseCog):
 
   @commands.Cog.listener()
   async def on_voice_state_update(self, member, before, after):
+    if member.guild.id != target_guilds or member.bot:
+      return
+    if before.channel is not None and before.channel.id == main_channel and after.channel is not None and after.channel.category_id == main_category:
+      return
     
     # Channel Creation
     if (before.channel is None or before.channel.id != main_channel) and after.channel.id == main_channel:
