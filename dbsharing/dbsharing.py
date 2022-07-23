@@ -18,7 +18,7 @@ async def get_epic_account(self, guild, user):
         if len(epiclinking.clients) > 0:
             try:
                 epic_user = await epiclinking.clients[0].fetch_user(epic_user["id"])
-                epic_account["name"] = epic_user.display_name if epic_user != None else None
+                epic_account["name"] = epic_user.display_name if epic_user is not None else None
             except:
                 pass
         return epic_account
@@ -51,7 +51,7 @@ class DatabaseSharing(BaseCog):
             user_id = request.match_info['user']
             guild_id = request.match_info['guild']
             # Check IDs Format
-            if guild_id.isdecimal() == False or user_id.isdecimal() == False:
+            if guild_id.isdecimal() is False or user_id.isdecimal() is False:
                 return web.Response(text = json.dumps({ "status": 404, "error": "One or more invalid IDs entered" }))
             # Get Guild
             guild = self.bot.get_guild(int(guild_id))
