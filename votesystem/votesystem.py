@@ -123,7 +123,7 @@ class VoteSystem(BaseCog):
     # Channel Check
     if channel_id is None or channel is None:
       return ctx.send("Per impostare il **messaggio di voto**, devi aver prima impostato il canale.\nUtilizza il comando **`[p]vote channel`** per configurare il canale di voto.")
-    if len(str(msg)) != 18:
+    if len(str(msg)) not in [18, 19]:
       return await ctx.message.add_reaction("🚫")
     try:
       message = await channel.fetch_message(msg)
