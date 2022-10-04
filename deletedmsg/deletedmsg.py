@@ -5,7 +5,6 @@ from contextlib import suppress
 from redbot.core.commands import commands
 from redbot.core import checks
 from dislash import *
-from yaml.scanner import ScannerError
 
   
 BaseCog = getattr(commands, "Cog", object)
