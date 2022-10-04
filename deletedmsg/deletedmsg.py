@@ -42,7 +42,7 @@ class DeletedMsg(BaseCog):
     embed = discord.Embed(color = color, title = "Log Settings for Deleted Messages", timestamp = datetime.datetime.utcnow())
     embed.add_field(name = "Channel", value = channel, inline = True)
     embed.add_field(name = "Status", value = status, inline = True)
-    embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
+    embed.set_footer(text = inter.guild.name, icon_url = inter.guild.icon_url)
     await inter.reply(embed=embed, ephemeral=False)
   
   @deletedmsg.sub_command(
@@ -110,12 +110,13 @@ class DeletedMsg(BaseCog):
     toggle = await self.config.guild(guild).enabled()
     if toggle is False:
       return
-    log_ch = await guild.fetch_channel(int(ch))
+    guild_chs = await guild.fetch_channels()
+    log_ch = next(filter(lambda c: c.id == int(ch), guild_chs), None)
     if log_ch is None:
       return
     msg = payload.cached_message if payload.cached_message is not None else None
     if msg is None:
-      msg_ch = await guild.fetch_channel(payload.channel_id)
+      msg_ch = next(filter(lambda c: c.id == payload.channel_id, guild_chs), None)
       if msg_ch is None:
         return
       msg = await msg_ch.fetch_message(payload.message_id)
