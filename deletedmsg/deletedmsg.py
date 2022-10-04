@@ -109,7 +109,19 @@ class DeletedMsg(BaseCog):
     toggle = await self.config.guild(guild).enabled()
     if toggle is False:
       return
-    log_ch = await guild.fetch_channel(ch)
+    log_ch = await guild.fetch_channel(int(ch))
     if log_ch is None:
       return
+    msg = payload.cached_message if payload.cached_message is not None else None
+    if msg is None:
+      msg_ch = await guild.fetch_channel(payload.channel_id)
+      if msg_ch is None:
+        return
+      msg = await msg_ch.fetch_message(payload.message_id)
+    if msg is None:
+      return
+    if msg.author.bot is True:
+      return
+    await log_ch.send(f"Test --> {msg.id}")
+    
     
