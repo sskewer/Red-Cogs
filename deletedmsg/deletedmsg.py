@@ -26,7 +26,7 @@ class DeletedMsg(BaseCog):
   #-------------------------------------------------------#
   
   @dislash.guild_only()
-  @dislash.has_permissions(manage_server=True)
+  @dislash.has_permissions(manage_guild=True)
   @slash_command(description="Impostazioni dei log dei messaggi eliminati del server")
   async def deletedmsg(self, inter):
     pass
