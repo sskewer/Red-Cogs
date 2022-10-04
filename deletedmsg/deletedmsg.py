@@ -98,6 +98,18 @@ class DeletedMsg(BaseCog):
     
   #-------------------------------------------------------#
     
-  #@commands.Cog.listener()
-  #async def on_raw_message_delete(self, payload : discord.RawMessageDeleteEvent):
+  @commands.Cog.listener()
+  async def on_raw_message_delete(self, payload : discord.RawMessageDeleteEvent):
+    if payload.guild_id is None:
+      return
+    guild = await self.bot.fetch_guild(guild_id=guild_id, with_counts=False)
+    if guild is None:
+      return
+    ch = await self.config.guild(guild).channel()
+    toggle = await self.config.guild(guild).enabled()
+    if toggle is False:
+      return
+    log_ch = await guild.fetch_channel(ch)
+    if log_ch is None:
+      return
     
