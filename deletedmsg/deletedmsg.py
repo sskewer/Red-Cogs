@@ -97,6 +97,6 @@ class DeletedMsg(BaseCog):
     
   #-------------------------------------------------------#
     
-  @commands.Cog.listener()
-  async def on_raw_message_delete(self, payload : discord.RawMessageDeleteEvent):
+  #@commands.Cog.listener()
+  #async def on_raw_message_delete(self, payload : discord.RawMessageDeleteEvent):
     
