@@ -119,9 +119,10 @@ class DeletedMsg(BaseCog):
       msg_ch = next(filter(lambda c: c.id == payload.channel_id, guild_chs), None)
       if msg_ch is None:
         return
-      msg = await msg_ch.fetch_message(payload.message_id)
-    if msg is None:
-      return
+      try:
+        msg = await msg_ch.fetch_message(payload.message_id)
+      except:
+        return
     if msg.author.bot is True:
       return
     await log_ch.send(f"Test --> {msg.id}")
