@@ -102,7 +102,7 @@ class DeletedMsg(BaseCog):
   async def on_raw_message_delete(self, payload : discord.RawMessageDeleteEvent):
     if payload.guild_id is None:
       return
-    guild = await self.bot.fetch_guild(guild_id=guild_id, with_counts=False)
+    guild = await self.bot.fetch_guild(guild_id=payload.guild_id, with_counts=False)
     if guild is None:
       return
     ch = await self.config.guild(guild).channel()
