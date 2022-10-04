@@ -36,8 +36,8 @@ class DeletedMsg(BaseCog):
     ch = await self.config.guild(inter.guild).channel()
     toggle = await self.config.guild(inter.guild).enabled()
     channel = f"<#{str(ch)}> **| `{str(ch)}`**" if ch is not None else "Not setted"
-    color = discord.Color.green() if toogle is True else discord.Color.red()
-    status = "Enabled" if toogle is True else "Disabled"
+    color = discord.Color.green() if toggle is True else discord.Color.red()
+    status = "Enabled" if toggle is True else "Disabled"
     embed = discord.Embed(color = color, title = "Log Settings for Deleted Messages", timestamp = datetime.datetime.utcnow())
     embed.add_field(name = "Channel", value = channel, inline = True)
     embed.add_field(name = "Status", value = status, inline = True)
