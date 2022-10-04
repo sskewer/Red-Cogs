@@ -1,5 +1,5 @@
 import discord
-import yaml
+import dislash
 
 from redbot.core.commands import commands
 from redbot.core import Config, checks
