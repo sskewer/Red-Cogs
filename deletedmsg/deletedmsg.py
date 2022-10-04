@@ -35,10 +35,11 @@ class DeletedMsg(BaseCog):
   async def settings(self, inter):
     ch = await self.config.guild(inter.guild).channel()
     toggle = await self.config.guild(inter.guild).enabled()
+    channel = f"<#{str(ch)}> **| `{str(ch)}`**" if ch is not None else "Not setted"
     color = discord.Color.green() if toogle is True else discord.Color.red()
     status = "Enabled" if toogle is True else "Disabled"
     embed = discord.Embed(color = color, title = "Log Settings for Deleted Messages", timestamp = datetime.datetime.utcnow())
-    embed.add_field(name = "Channel", value = f"<#{str(ch)}> **| `{str(ch)}`**", inline = True)
+    embed.add_field(name = "Channel", value = channel, inline = True)
     embed.add_field(name = "Status", value = status, inline = True)
     embed.set_footer(text = ctx.guild.name, icon_url = ctx.guild.icon_url)
     await inter.reply(embed=embed, ephemeral=False)
@@ -49,8 +50,8 @@ class DeletedMsg(BaseCog):
         Option("channel", "Specifica il canale in cui inviare i log", OptionType.CHANNEL, required=True)
     ]
   )
-  async def setchannel(self, inter, channel):
-    if channel.type not in ["text", "news", "forum"]:
+  async def channel(self, inter, channel):
+    if channel.type.name not in ["text", "news", "forum"]:
       return await inter.reply(f"🤐 Questo canale **non può essere utilizzato** per i log!", ephemeral=True)
     try:
       await self.config.guild(inter.guild).channel.set(channel.id)
