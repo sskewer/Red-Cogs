@@ -79,7 +79,7 @@ class DeletedMsg(BaseCog):
       if current is True:
         return await inter.reply(f"🤐 L'invio automatico di messaggi è **già abilitato**!", ephemeral=True)
       else:
-         try:
+        try:
           await self.config.guild(inter.guild).enabled.set(True)
           await inter.reply(f"✅ L'invio automatico di messaggi è **ora abilitato**!", ephemeral=False)
         except:
@@ -88,7 +88,7 @@ class DeletedMsg(BaseCog):
       if current is False:
         return await inter.reply(f"🤐 L'invio automatico di messaggi è **già disabilitato**!", ephemeral=True)
       else:
-         try:
+        try:
           await self.config.guild(inter.guild).enabled.set(False)
           await inter.reply(f"⛔ L'invio automatico di messaggi è **ora disabilitato**!", ephemeral=False)
         except:
