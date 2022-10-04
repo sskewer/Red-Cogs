@@ -120,7 +120,7 @@ class DeletedMsg(BaseCog):
       if msg_ch is None:
         return
       try:
-        msg = await msg_ch.fetch_message(payload.message_id)
+        msg = await msg_ch.fetch_message(payload.message_id) # Ottimizzare
       except:
         return
     if msg.author.bot is True:
