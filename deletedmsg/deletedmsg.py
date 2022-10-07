@@ -126,6 +126,8 @@ class DeletedMsg(BaseCog):
     if msg.author.bot is True:
       return
     embed = discord.Embed(color = discord.Color.gold(), title = "Messaggio Eliminato", timestamp = datetime.datetime.utcnow())
+    embed.add_field(name = "ID Messaggio", value = f"`{str(msg.id)}`", inline = True)
+    embed.add_field(name = "Canale", value = f"<#{str(msg.id)}>", inline = True)
     embed.set_footer(text = inter.guild.name, icon_url = inter.guild.icon_url)
     await log_ch.send(embed=embed)
     
