@@ -131,13 +131,8 @@ class DeletedMsg(BaseCog):
     audits = list(filter(lambda a: a.extra.channel.id == payload.channel_id and a.target.id == msg.author.id, logs))
     if len(audits) < 1:
       return
-    async for audit in audits:
-      try:
-        await audit.target.fetch_message(msg.id)
-      except discord.NotFound:
-        continue
-      if audit.user.bot is True:
-        return
+    if audits[0].user.bot is True:
+      return
     # Deleted Message Log
     content = msg.content if len(msg.content) < 2000 else "*Non è stato possibile inserire il contenuto del messaggio eliminato (allegato).*"
     embed = discord.Embed(color = discord.Color.gold(), title = "🗑️ | Messaggio Eliminato", description = content, timestamp = datetime.datetime.utcnow())
