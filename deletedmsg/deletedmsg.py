@@ -126,12 +126,24 @@ class DeletedMsg(BaseCog):
         return
     if msg.author.bot is True:
       return
+    # Check if the msg has been deleted by a bot
+    logs = await guild.audit_logs(limit=10, action=discord.AuditLogAction.message_delete).flatten()
+    audits = list(filter(lambda a: a.extra.channel.id == payload.channel_id and a.target.id == msg.author.id, logs))
+    if len(audits) < 1:
+      return
+    async for audit in audits:
+      try:
+        await audit.target.fetch_message(msg.id)
+      except discord.NotFound:
+        continue
+      if audit.user.bot is True:
+        return
+    # Deleted Message Log
     content = msg.content if len(msg.content) < 2000 else "*Non è stato possibile inserire il contenuto del messaggio eliminato (allegato).*"
     embed = discord.Embed(color = discord.Color.gold(), title = "🗑️ | Messaggio Eliminato", description = content, timestamp = datetime.datetime.utcnow())
-    embed.add_field(name = "ID Messaggio", value = f"`{str(msg.id)}`", inline = True)
     embed.add_field(name = "Canale", value = f"<#{str(msg.channel.id)}> **| `{msg.channel.id}`**", inline = True)
     embed.set_author(name = f"{msg.author.name}#{msg.author.discriminator} ({str(msg.author.id)})", icon_url = msg.author.avatar_url)
-    embed.set_footer(text = guild.name)
+    embed.set_footer(text = f"ID Messaggio: {str(msg.id)}")
     if len(msg.content) < 2000:
       await log_ch.send(embed=embed)
     else:
