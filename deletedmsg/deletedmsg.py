@@ -129,9 +129,9 @@ class DeletedMsg(BaseCog):
     content = msg.content if len(msg.content) < 2000 else "*Non è stato possibile inserire il contenuto del messaggio eliminato (allegato).*"
     embed = discord.Embed(color = discord.Color.gold(), title = "🗑️ | Messaggio Eliminato", description = content, timestamp = datetime.datetime.utcnow())
     embed.add_field(name = "ID Messaggio", value = f"`{str(msg.id)}`", inline = True)
-    embed.add_field(name = "Canale", value = f"<#{str(msg.channel.id)}>", inline = True)
+    embed.add_field(name = "Canale", value = f"<#{str(msg.channel.id)}> **| `{msg.channel.id}`**", inline = True)
     embed.set_author(name = f"{msg.author.name}#{msg.author.discriminator} ({str(msg.author.id)})", icon_url = msg.author.avatar_url)
-    embed.set_footer(text = guild.name, icon_url = guild.icon_url)
+    embed.set_footer(text = guild.name)
     if len(msg.content) < 2000:
       await log_ch.send(embed=embed)
     else:
