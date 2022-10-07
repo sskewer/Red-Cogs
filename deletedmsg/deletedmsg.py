@@ -1,3 +1,4 @@
+import os
 import discord
 import dislash
 import datetime
@@ -131,6 +132,12 @@ class DeletedMsg(BaseCog):
     embed.add_field(name = "Canale", value = f"<#{str(msg.channel.id)}>", inline = True)
     embed.set_author(name = f"{msg.author.name}#{msg.author.discriminator} ({str(msg.author.id)})", icon_url = msg.author.avatar_url)
     embed.set_footer(text = guild.name, icon_url = guild.icon_url)
-    await log_ch.send(embed=embed)
+    if len(msg.content) < 2000:
+      await log_ch.send(embed=embed)
+    else:
+      with open("deletedmsg.txt", "w") as f:
+        f.write(msg.content)
+      await log_ch.send(embed=embed, file=discord.File("deletedmsg.txt"))
+      os.remove("deletedmsg.txt")
     
     
