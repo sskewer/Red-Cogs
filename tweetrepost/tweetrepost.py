@@ -41,11 +41,11 @@ class TweetRepost(BaseCog):
       tweets = api.search_tweets(f"from:{str(api_tokens['tweet_user'])}", count = 10, tweet_mode = "extended")
       to_post = []
       for tweet in tweets:
-        print(tweet.id)
         # Getting tweet data
         input_data = tweet._json
         # Getting image
         try:
+          print(input_data["entities"])
           image = input_data["entities"]["media"][0]["media_url"]
         except IndexError:
           image = None
