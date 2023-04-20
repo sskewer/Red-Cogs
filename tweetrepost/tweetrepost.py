@@ -17,7 +17,7 @@ BaseCog = getattr(commands, "Cog", object)
 class TweetRepost(BaseCog):
   
   def __init__(self, bot):
-    super().__init__(*args, **kwargs)
+    super().__init__()
     self.bot = bot
     self.config = Config.get_conf(self, identifier=4000121212000335, force_registration=True)
     default_global = {"last_id": 0}
