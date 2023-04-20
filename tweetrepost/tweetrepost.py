@@ -23,9 +23,16 @@ class TweetRepost(BaseCog):
     self.config = Config.get_conf(self, identifier=4000121212000335, force_registration=True)
     default_global = {"last_id": 0}
     self.config.register_global(**default_global)
-    self.bot.loop.create_task(self.look_for_new_tweets())
-        
+    self.look_for_new_tweets = self.bot.loop.create_task(self.look_for_new_tweets())
+    
+  def cog_unload(self):
+    self.look_for_new_tweets.cancel()
+  
+  # Look for new tweets code
   async def look_for_new_tweets(self):
+    
+    await self.bot.wait_until_ready()
+    
     while True:
       print(f"[TWEETREPOST] Looking for new tweets to post...")
       try:
@@ -83,7 +90,8 @@ class TweetRepost(BaseCog):
           await self.config.last_id.set(post["id"])
         except:
           pass
-      print(f"[TWEETREPOST] Waiting for 15 minutes...")  
+      print(f"[TWEETREPOST] Waiting for 15 minutes...")
+      
       await asyncio.sleep(900)  # pause for 15 minutes
 
 
