@@ -7,11 +7,13 @@ from redbot.core import commands
 
 BaseCog = getattr(commands, "Cog", object)
 
+
 # REMEMBER TO SET PARAMETERS BELOW USING THIS COMMAND
 # [p]set api TweetRepost webhook_url,XXXXX consumer_key,XXXXX consumer_secret,XXXXX access_token,XXXXX access_token_secret,XXXXX
 
 # REMEMBER TO CHANGE THIS USER ACCORDING TO YOUR NEEDS
 tweet_user = "FortniteStatus" 
+
 
 class TweetRepost(BaseCog):
   
@@ -32,34 +34,41 @@ class TweetRepost(BaseCog):
     )
     api = tweepy.API(auth)
     tweets = api.search_tweets(f"from:{str(tweet_user)}", count = 5, tweet_mode = "extended")
-    # Getting Tweet Data
-    try:
-      input_data = tweets[0]._json
-    except IndexError:
-      return
-    # Getting Image
-    try:
-      image_url = input_data["entities"]["media"][0]["media_url"]
-    except IndexError:
-      image_url = None
-    # Webhook Post
-    try:
-      requests.post(
-        "https://Fortnite.mettiushyper.repl.co/webhook",
-        headers = {
-          "webhook_url": api_tokens["webhook_url"],
-        },
-        json = {
-          "text": input_data["full_text"],
-          "image": image_url,
-          "timestamp": input_data["created_at"],
-          "color": "#ffffff",
-          "translate_language": "it",
-        },
-      )
-    except:
-      return
-    
+    to_post = []
+    for tweet in tweets:
+      # Getting tweet data
+      input_data = tweet._json
+      # Getting image
+      try:
+        image = input_data["entities"]["media"][0]["media_url"]
+      except IndexError:
+        image = None
+      # Extracting important data
+      to_post.append({
+        "id": tweet.id,
+        "text": input_data["full_text"],
+        "image": image,
+        "timestamp": input_data["created_at"],
+      })
+    # Webhook Posts
+    for post in to_post:
+      try:
+        requests.post(
+          "https://Fortnite.mettiushyper.repl.co/webhook",
+          headers = {
+            "webhook_url": api_tokens["webhook_url"],
+          },
+          json = {
+            "text": post["text"],
+            "image": post["image"],
+            "timestamp": post["timestamp"],
+            "color": "#ffffff",
+            "translate_language": "it",
+          },
+        )
+      except:
+        pass
+
 
 def setup(bot):
   bot.add_cog(TweetRepost(bot))
