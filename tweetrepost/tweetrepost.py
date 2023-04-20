@@ -1,4 +1,6 @@
+import tweepy
 import requests
+
 import discord
 from contextlib import suppress
 from redbot.core import commands
@@ -23,7 +25,17 @@ class TweetRepost(BaseCog):
   @commands.Cog.listener()
   async def on_message(self, message):
     try:
-      webhook_url = (await self.bot.get_shared_api_tokens('TweetRepost'))['webhook_url'] # Remember to set the webhook_url key: [p]set api TweetRepost webhook_url,[YOUR_WEBHOOK_URL]
+      webhook_url = (await self.bot.get_shared_api_tokens('TweetRepost'))['webhook_url']
+      api_key = (await self.bot.get_shared_api_tokens('TweetRepost'))['api_key']
+      api_key_secret = (await self.bot.get_shared_api_tokens('TweetRepost'))['api_key_secret']
+      access_token = (await self.bot.get_shared_api_tokens('TweetRepost'))['access_token']
+      access_token_secret = (await self.bot.get_shared_api_tokens('TweetRepost'))['access_token_secret']
+    except:
+      return
+    auth = tweepy.OAuthHandler(api_key, api_key_secret)
+    auth.set_access_token(access_token, access_token_secret)
+    api = tweepy.API(auth)
+    try:
       requests.post(
         "https://Fortnite.mettiushyper.repl.co/webhook",
         headers = {
