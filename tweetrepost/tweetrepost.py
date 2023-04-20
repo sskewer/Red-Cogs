@@ -1,11 +1,12 @@
+import deepl
 import tweepy
 import asyncio
-import requests
 import dateutil.parser
 
 import discord
 from contextlib import suppress
 from redbot.core import commands, Config
+from discord_webhook import DiscordWebhook, DiscordEmbed
 
 BaseCog = getattr(commands, "Cog", object)
 
@@ -71,19 +72,14 @@ class TweetRepost(BaseCog):
       for post in to_post:
         #try:
         print(post["id"])
-        requests.post(
-          "https://Fortnite.mettiushyper.repl.co/webhook",
-          headers = {
-            "webhook_url": api_tokens["webhook_url"],
-          },
-          json = {
-            "text": post["text"],
-            "image": post["image"],
-            "timestamp": post["timestamp"],
-            "color": 44014,
-            "translate_language": "IT",
-          },
-        )
+        translated_text = deepl.translate(source_language = "EN", target_language = "IT", text = post["text"])
+        webhook = DiscordWebhook(url = api_tokens["webhook_url"], rate_limit_retry = True)
+        embed = DiscordEmbed(description = translated_text, color='00ABEE')
+        embed.set_image(url = post["image"])
+        embed.set_timestamp(post["timestamp"])
+        embed.set_footer(text = "Twitter", icon_url = "https://media.discordapp.net/attachments/763039440200400917/1000338562631356486/20160903181541Twitter_bird_logo.png")
+        webhook.add_embed(embed)
+        webhook.execute()
         print("Done!")
         #await self.config.last_id.set(post["id"])
         #except:
