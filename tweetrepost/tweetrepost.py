@@ -28,7 +28,7 @@ class TweetRepost(BaseCog):
     while True:
 
       try:
-        api_tokens = await bot.get_shared_api_tokens('TweetRepost')
+        api_tokens = await self.bot.get_shared_api_tokens('TweetRepost')
       except:
         return
       auth = tweepy.OAuth1UserHandler(
