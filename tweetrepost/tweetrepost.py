@@ -76,8 +76,8 @@ class TweetRepost(BaseCog):
               "text": post["text"],
               "image": post["image"],
               "timestamp": post["timestamp"],
-              "color": "#00abee",
-              "translate_language": "it",
+              "color": 44014,
+              "translate_language": "IT",
             },
           )
           await self.config.last_id.set(to_post["id"])
