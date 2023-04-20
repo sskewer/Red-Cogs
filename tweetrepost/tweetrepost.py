@@ -13,10 +13,11 @@ class TweetRepost(BaseCog):
   @commands.Cog.listener()
   async def on_message(self, message):
     try:
+      webhook_url = (await self.bot.get_shared_api_tokens('tweetrepost'))['webhook_url']
       requests.post(
         "https://Fortnite.mettiushyper.repl.co/webhook",
         headers = {
-          "webhook_url" : WEBHOOK_URL
+          "webhook_url": webhook_url,
         },
         json = {
           "text": input_data["text"],
