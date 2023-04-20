@@ -10,10 +10,7 @@ BaseCog = getattr(commands, "Cog", object)
 
 
 # REMEMBER TO SET PARAMETERS BELOW USING THIS COMMAND
-# [p]set api TweetRepost webhook_url,XXXXX consumer_key,XXXXX consumer_secret,XXXXX access_token,XXXXX access_token_secret,XXXXX
-
-# REMEMBER TO CHANGE THIS USER ACCORDING TO YOUR NEEDS
-tweet_user = "FortniteStatus" 
+# [p]set api TweetRepost tweet_user,XXXXX webhook_url,XXXXX consumer_key,XXXXX consumer_secret,XXXXX access_token,XXXXX access_token_secret,XXXXX
 
 
 class TweetRepost(BaseCog):
@@ -38,7 +35,7 @@ class TweetRepost(BaseCog):
       api_tokens["access_token_secret"]
     )
     api = tweepy.API(auth)
-    tweets = api.search_tweets(f"from:{str(tweet_user)}", count = 10, tweet_mode = "extended")
+    tweets = api.search_tweets(f"from:{str(api_tokens["tweet_user"])}", count = 10, tweet_mode = "extended")
     to_post = []
     for tweet in tweets:
       # Getting tweet data
