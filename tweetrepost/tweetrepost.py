@@ -83,7 +83,7 @@ class TweetRepost(BaseCog):
             "translate_language": "IT",
           },
         )
-        await self.config.last_id.set(post["id"])
+        #await self.config.last_id.set(post["id"])
         #except:
         #  pass
         
