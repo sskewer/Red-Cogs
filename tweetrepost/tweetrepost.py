@@ -23,7 +23,7 @@ class TweetRepost(BaseCog):
     self.config = Config.get_conf(self, identifier=4000121212000335, force_registration=True)
     default_global = {"last_id": 0}
     self.config.register_global(**default_global)
-    self.look_for_new_tweets = self.bot.loop.create_task(self.look_for_new_tweets())
+    self.look_for_new_tweets = asyncio.create_task(self.look_for_new_tweets())
     
   def cog_unload(self):
     self.look_for_new_tweets.cancel()
