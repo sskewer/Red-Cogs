@@ -5,6 +5,14 @@ from redbot.core import commands
 
 BaseCog = getattr(commands, "Cog", object)
 
+# REMEMBER TO SET PARAMETERS BELOW USING THIS COMMAND
+# [p]set api TweetRepost
+#   webhook_url,XXXXXXXXXXXXXXXXXXXXXXXXX
+#   api_key,XXXXXXXXXXXXXXXXXXXXXXXXX
+#   api_key_secret,XXXXXXXXXXXXXXXXXXXXXXXXX
+#   access_token,XXXXXXXXXXXXXXXXXXXXXXXXX
+#   access_token_secret,XXXXXXXXXXXXXXXXXXXXXXXXX
+
 tweet_user = "FortniteStatus" # Remember to change this parameter according to your needs
 
 class TweetRepost(BaseCog):
