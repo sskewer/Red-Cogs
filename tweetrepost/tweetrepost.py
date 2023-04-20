@@ -5,6 +5,8 @@ from redbot.core import commands
 
 BaseCog = getattr(commands, "Cog", object)
 
+# Remember to set the webhook_url key: [p]set api TweetRepost webhook_url,[YOUR_WEBHOOK_URL]
+
 class TweetRepost(BaseCog):
   
   def __init__(self, bot):
@@ -13,7 +15,7 @@ class TweetRepost(BaseCog):
   @commands.Cog.listener()
   async def on_message(self, message):
     try:
-      webhook_url = (await self.bot.get_shared_api_tokens('tweetrepost'))['webhook_url']
+      webhook_url = (await self.bot.get_shared_api_tokens('TweetRepost'))['webhook_url']
       requests.post(
         "https://Fortnite.mettiushyper.repl.co/webhook",
         headers = {
