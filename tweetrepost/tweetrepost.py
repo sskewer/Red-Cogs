@@ -10,7 +10,8 @@ BaseCog = getattr(commands, "Cog", object)
 # REMEMBER TO SET PARAMETERS BELOW USING THIS COMMAND
 # [p]set api TweetRepost webhook_url,XXXXX consumer_key,XXXXX consumer_secret,XXXXX access_token,XXXXX access_token_secret,XXXXX
 
-tweet_user = "FortniteStatus" # Remember to change this parameter according to your needs
+# REMEMBER TO CHANGE THIS USER ACCORDING TO YOUR NEEDS
+tweet_user = "FortniteStatus" 
 
 class TweetRepost(BaseCog):
   
