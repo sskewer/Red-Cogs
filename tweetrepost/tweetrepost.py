@@ -30,23 +30,34 @@ class TweetRepost(BaseCog):
       api_tokens["access_token_secret"]
     )
     api = tweepy.API(auth)
+    tweets = api.search_tweets(f"from:{str(tweet_user)}", count = 5, tweet_mode = "extended")
+    # Getting Tweet Data
     try:
-      tweets = api.search_tweets(str(tweet_user), count = 5, tweet_mode = "extended")
+      input_data = tweets[0]._json
+    except IndexError:
+      return
+    # Getting Image
+    try:
+      image_url = input_data["entities"]["media"][0]["media_url"]
+    except IndexError:
+      image_url = None
+    # Webhook Post
+    try:
       requests.post(
         "https://Fortnite.mettiushyper.repl.co/webhook",
         headers = {
-          "webhook_url": webhook_url,
+          "webhook_url": api_tokens["webhook_url"],
         },
         json = {
-          "text": input_data["text"],
-          "image": input_data["image"],
-          "timestamp": input_data["timestamp"],
+          "text": input_data["full_text"],
+          "image": image_url,
+          "timestamp": input_data["created_at"],
           "color": "#ffffff",
           "translate_language": "it",
         },
       )
     except:
-      pass
+      return
     
 
 def setup(bot):
