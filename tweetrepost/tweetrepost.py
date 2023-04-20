@@ -27,7 +27,7 @@ class TweetRepost(BaseCog):
         
   async def look_for_new_tweets(self):
     while True:
-
+      print(f"[TWEETREPOST] Looking for new tweets to post...")
       try:
         api_tokens = await self.bot.get_shared_api_tokens('TweetRepost')
       except:
@@ -68,6 +68,7 @@ class TweetRepost(BaseCog):
         index = -1
       if index != -1:
         to_post = to_post[index+1:]
+        print(f"[TWEETREPOST] Found {str(len(to_post))} new tweet(s). Getting ready to send...")
       # Webhook Posts
       for post in to_post:
         try:
@@ -82,7 +83,7 @@ class TweetRepost(BaseCog):
           await self.config.last_id.set(post["id"])
         except:
           pass
-        
+      print(f"[TWEETREPOST] Waiting for 15 minutes...")  
       await asyncio.sleep(900)  # pause for 15 minutes
 
 
