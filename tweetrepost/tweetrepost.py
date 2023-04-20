@@ -67,23 +67,23 @@ class TweetRepost(BaseCog):
         to_post = to_post[index+1:]
       # Webhook Posts
       for post in to_post:
-        try:
-          requests.post(
-            "https://Fortnite.mettiushyper.repl.co/webhook",
-            headers = {
-              "webhook_url": api_tokens["webhook_url"],
-            },
-            json = {
-              "text": post["text"],
-              "image": post["image"],
-              "timestamp": post["timestamp"],
-              "color": 44014,
-              "translate_language": "IT",
-            },
-          )
-          await self.config.last_id.set(to_post["id"])
-        except:
-          pass
+        #try:
+        requests.post(
+          "https://Fortnite.mettiushyper.repl.co/webhook",
+          headers = {
+            "webhook_url": api_tokens["webhook_url"],
+          },
+          json = {
+            "text": post["text"],
+            "image": post["image"],
+            "timestamp": post["timestamp"],
+            "color": 44014,
+            "translate_language": "IT",
+          },
+        )
+        await self.config.last_id.set(to_post["id"])
+        #except:
+        #  pass
         
       await asyncio.sleep(900)  # pause for 15 minutes
 
