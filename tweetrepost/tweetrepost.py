@@ -68,7 +68,7 @@ class TweetRepost(BaseCog):
         index = -1
       if index != -1:
         to_post = to_post[index+1:]
-        print(f"[TWEETREPOST] Found {str(len(to_post))} new tweet(s). Getting ready to send...")
+        print(f"[TWEETREPOST] Found {str(len(to_post))} new tweet(s). Getting ready to send if needed...")
       # Webhook Posts
       for post in to_post:
         try:
