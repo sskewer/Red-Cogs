@@ -1,4 +1,4 @@
-from .ticketalert import TicketAlert
+from .tweetrepost import TweetRepost
 
 def setup(bot):
-    bot.add_cog(TicketAlert(bot))
+    bot.add_cog(TweetRepost(bot))
