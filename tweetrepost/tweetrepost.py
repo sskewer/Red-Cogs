@@ -94,7 +94,7 @@ class TweetRepost(BaseCog):
           pass
       print(f"[TWEETREPOST] Waiting for 15 minutes...")
       
-      await asyncio.sleep(60)  # pause for 15 minutes 900
+      await asyncio.sleep(900)  # pause for 15 minutes 900
 
 
 def setup(bot):
