@@ -36,6 +36,10 @@ class TweetRepost(BaseCog):
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth)
     try:
+      tweets = api.user_timeline(screen_name=tweet_user, count=5, tweet_mode='extended', exclude_replies=True, include_rts=False)
+    except:
+      return
+    try:
       requests.post(
         "https://Fortnite.mettiushyper.repl.co/webhook",
         headers = {
