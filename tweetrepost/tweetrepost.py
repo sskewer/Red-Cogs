@@ -57,7 +57,7 @@ class TweetRepost(BaseCog):
       })
     # Last posted tweet check
     last_id = await self.config.guild(self.guild).last_id()
-    
+    to_post.sort(key = lambda x: x['timestamp'])
     await self.config.guild(self.guild).last_id.set(last_id)
     # Webhook Posts
     for post in to_post:
