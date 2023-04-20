@@ -38,7 +38,7 @@ class TweetRepost(BaseCog):
         api_tokens["access_token_secret"]
       )
       api = tweepy.API(auth)
-      tweets = api.search_tweets(f"from:{str(api_tokens["tweet_user"])}", count = 10, tweet_mode = "extended")
+      tweets = api.search_tweets(f"from:{str(api_tokens['tweet_user'])}", count = 10, tweet_mode = "extended")
       to_post = []
       for tweet in tweets:
         # Getting tweet data
