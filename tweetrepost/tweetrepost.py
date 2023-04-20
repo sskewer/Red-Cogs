@@ -1,5 +1,6 @@
 import tweepy
 import requests
+import dateutil.parser
 
 import discord
 from contextlib import suppress
