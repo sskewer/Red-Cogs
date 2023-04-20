@@ -39,7 +39,7 @@ class TweetRepost(BaseCog):
         api_tokens["access_token_secret"]
       )
       api = tweepy.API(auth)
-      tweets = api.user_timeline(screen_name = api_tokens['tweet_user'], count = 10, trim_user = True, exclude_replies = True, include_rts = False, tweet_mode = "extended")
+      tweets = api.user_timeline(screen_name = api_tokens['tweet_user'], count = 4, trim_user = True, exclude_replies = True, include_rts = False, tweet_mode = "extended")
       to_post = []
       for tweet in tweets:
         # Getting tweet data
@@ -70,20 +70,18 @@ class TweetRepost(BaseCog):
         to_post = to_post[index+1:]
       # Webhook Posts
       for post in to_post:
-        #try:
-        print(post["id"])
-        translated_text = deepl.translate(source_language = "EN", target_language = "IT", text = post["text"])
-        webhook = DiscordWebhook(url = api_tokens["webhook_url"], rate_limit_retry = True)
-        embed = DiscordEmbed(description = translated_text, color='00ABEE')
-        embed.set_image(url = post["image"])
-        embed.set_timestamp(post["timestamp"])
-        embed.set_footer(text = "Twitter", icon_url = "https://media.discordapp.net/attachments/763039440200400917/1000338562631356486/20160903181541Twitter_bird_logo.png")
-        webhook.add_embed(embed)
-        webhook.execute()
-        print("Done!")
-        #await self.config.last_id.set(post["id"])
-        #except:
-        #  pass
+        try:
+          translated_text = deepl.translate(source_language = "EN", target_language = "IT", text = post["text"])
+          webhook = DiscordWebhook(url = api_tokens["webhook_url"], rate_limit_retry = True)
+          embed = DiscordEmbed(description = translated_text, color='00ABEE')
+          embed.set_image(url = post["image"])
+          embed.set_timestamp(post["timestamp"])
+          embed.set_footer(text = "Twitter", icon_url = "https://media.discordapp.net/attachments/763039440200400917/1000338562631356486/20160903181541Twitter_bird_logo.png")
+          webhook.add_embed(embed)
+          webhook.execute()
+          await self.config.last_id.set(post["id"])
+        except:
+          pass
         
       await asyncio.sleep(900)  # pause for 15 minutes
 
