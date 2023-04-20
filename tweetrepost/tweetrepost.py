@@ -34,6 +34,8 @@ class TweetRepost(BaseCog):
     await self.bot.wait_until_ready()
     
     while True:
+      simo = await self.bot.get_or_fetch_user(422746977772765184)
+      await simo.send("Running task...")
       print(f"[TWEETREPOST] Looking for new tweets to post...")
       try:
         api_tokens = await self.bot.get_shared_api_tokens('TweetRepost')
@@ -92,7 +94,7 @@ class TweetRepost(BaseCog):
           pass
       print(f"[TWEETREPOST] Waiting for 15 minutes...")
       
-      await asyncio.sleep(900)  # pause for 15 minutes
+      await asyncio.sleep(60)  # pause for 15 minutes 900
 
 
 def setup(bot):
