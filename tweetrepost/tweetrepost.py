@@ -45,8 +45,10 @@ class TweetRepost(BaseCog):
         input_data = tweet._json
         # Getting image
         try:
-          print(input_data["entities"])
-          image = input_data["entities"]["media"][0]["media_url"]
+          if "media" in input_data["entities"]:
+            image = input_data["entities"]["media"][0]["media_url"]
+          else:
+            image = None
         except:
           image = None
         # Extracting important data
@@ -64,7 +66,7 @@ class TweetRepost(BaseCog):
       except ValueError:
         index = -1
       if index != -1:
-        to_post = to_post[int(index)+1:]
+        to_post = to_post[index+1:]
       # Webhook Posts
       for post in to_post:
         #try:
@@ -81,7 +83,7 @@ class TweetRepost(BaseCog):
             "translate_language": "IT",
           },
         )
-        await self.config.last_id.set(to_post["id"])
+        await self.config.last_id.set(post["id"])
         #except:
         #  pass
         
