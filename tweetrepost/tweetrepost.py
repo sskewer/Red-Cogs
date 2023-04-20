@@ -38,7 +38,7 @@ class TweetRepost(BaseCog):
         api_tokens["access_token_secret"]
       )
       api = tweepy.API(auth)
-      tweets = api.search_tweets(f"from:{str(api_tokens['tweet_user'])}", count = 10, tweet_mode = "extended")
+      tweets = api.search_tweets(f"from:{str(api_tokens['tweet_user'])} -is:retweet -is:reply -is:quote", count = 10, tweet_mode = "extended")
       to_post = []
       for tweet in tweets:
         # Getting tweet data
@@ -47,7 +47,7 @@ class TweetRepost(BaseCog):
         try:
           print(input_data["entities"])
           image = input_data["entities"]["media"][0]["media_url"]
-        except IndexError:
+        except:
           image = None
         # Extracting important data
         to_post.append({
