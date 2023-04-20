@@ -70,6 +70,7 @@ class TweetRepost(BaseCog):
       # Webhook Posts
       for post in to_post:
         #try:
+        print(post["id"])
         requests.post(
           "https://Fortnite.mettiushyper.repl.co/webhook",
           headers = {
@@ -83,6 +84,7 @@ class TweetRepost(BaseCog):
             "translate_language": "IT",
           },
         )
+        print("Done!")
         #await self.config.last_id.set(post["id"])
         #except:
         #  pass
