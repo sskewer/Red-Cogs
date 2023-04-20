@@ -42,7 +42,7 @@ class TweetRepost(BaseCog):
       to_post = []
       for tweet in tweets:
         # Getting tweet data
-        input_data = tweet._json
+        input_data = tweet["_json"]
         # Getting image
         try:
           image = input_data["entities"]["media"][0]["media_url"]
