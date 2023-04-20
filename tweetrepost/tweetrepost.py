@@ -38,7 +38,7 @@ class TweetRepost(BaseCog):
         api_tokens["access_token_secret"]
       )
       api = tweepy.API(auth)
-      tweets = api.user_timeline(screen_name = str(api_tokens['tweet_user']), count = 10, trim_user = True, exclude_replies = True, include_rts = False, tweet_mode = "extended")
+      tweets = api.user_timeline(screen_name = api_tokens['tweet_user'], count = 10, trim_user = True, exclude_replies = True, include_rts = False, tweet_mode = "extended")
       to_post = []
       for tweet in tweets:
         # Getting tweet data
@@ -51,7 +51,7 @@ class TweetRepost(BaseCog):
           image = None
         # Extracting important data
         to_post.append({
-          "id": tweet.id,
+          "id": int(tweet.id),
           "text": input_data["full_text"],
           "image": image,
           "timestamp": dateutil.parser.parse(input_data["created_at"]).timestamp(),
@@ -64,7 +64,7 @@ class TweetRepost(BaseCog):
       except ValueError:
         index = -1
       if index != -1:
-        to_post = to_post[index+1:]
+        to_post = to_post[int(index)+1:]
       # Webhook Posts
       for post in to_post:
         #try:
