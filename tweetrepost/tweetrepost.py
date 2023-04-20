@@ -10,12 +10,9 @@ BaseCog = getattr(commands, "Cog", object)
 # REMEMBER TO SET PARAMETERS BELOW USING THIS COMMAND
 # [p]set api TweetRepost
 #   webhook_url,XXXXXXXXXXXXXXXXXXXXXXXXX
-#   api_key,XXXXXXXXXXXXXXXXXXXXXXXXX
-#   api_key_secret,XXXXXXXXXXXXXXXXXXXXXXXXX
-#   access_token,XXXXXXXXXXXXXXXXXXXXXXXXX
-#   access_token_secret,XXXXXXXXXXXXXXXXXXXXXXXXX
+#   bearer_token,XXXXXXXXXXXXXXXXXXXXXXXXX
 
-tweet_user = "FortniteStatus" # Remember to change this parameter according to your needs
+tweet_user_id = "FortniteStatus" # Remember to change this parameter according to your needs
 
 class TweetRepost(BaseCog):
   
@@ -26,19 +23,14 @@ class TweetRepost(BaseCog):
   async def on_message(self, message):
     try:
       webhook_url = (await self.bot.get_shared_api_tokens('TweetRepost'))['webhook_url']
-      api_key = (await self.bot.get_shared_api_tokens('TweetRepost'))['api_key']
-      api_key_secret = (await self.bot.get_shared_api_tokens('TweetRepost'))['api_key_secret']
-      access_token = (await self.bot.get_shared_api_tokens('TweetRepost'))['access_token']
-      access_token_secret = (await self.bot.get_shared_api_tokens('TweetRepost'))['access_token_secret']
+      bearer_token = (await self.bot.get_shared_api_tokens('TweetRepost'))['bearer_token']
     except:
       return
-    auth = tweepy.OAuthHandler(api_key, api_key_secret)
-    auth.set_access_token(access_token, access_token_secret)
-    api = tweepy.API(auth)
-    try:
-      tweets = api.user_timeline(screen_name=tweet_user, count=5, tweet_mode='extended', exclude_replies=True, include_rts=False)
-    except:
-      return
+    client = tweepy.Client(bearer_token = bearer_token)
+    response = client.get_users_tweets(tweet_user_id, max_results = 5)
+    for tweet in response.data:
+      print(tweet.id)
+      print(tweet.text)
     try:
       requests.post(
         "https://Fortnite.mettiushyper.repl.co/webhook",
