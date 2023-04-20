@@ -57,10 +57,13 @@ class TweetRepost(BaseCog):
       })
     # Last posted tweet check
     last_id = await self.config.guild(self.guild).last_id()
-    to_post.sort(key = lambda x: x['timestamp'])                               # dal meno recente al più recente
-    
-    # Trovare il post relativo a last_id e tagliare dall'inizio dell'array fino a quell'indice compreso
-    
+    to_post.sort(key = lambda x: x['timestamp'])                               
+    try:
+      index = [t["id"] for t in to_post].index(last_id)
+    except ValueError:
+      index = -1
+    if index != -1:
+      to_post = to_post[index+1:]
     # Webhook Posts
     for post in to_post:
       try:
