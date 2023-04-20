@@ -1,3 +1,4 @@
+import requests
 import discord
 from contextlib import suppress
 from redbot.core import commands
@@ -11,6 +12,22 @@ class TweetRepost(BaseCog):
         
   @commands.Cog.listener()
   async def on_message(self, message):
+    try:
+      requests.post(
+        "https://Fortnite.mettiushyper.repl.co/webhook",
+        headers = {
+          "webhook_url" : WEBHOOK_URL
+        },
+        json = {
+          "text": input_data["text"],
+          "image": input_data["image"],
+          "timestamp": input_data["timestamp"],
+          "color": "#ffffff",
+          "translate_language": "it",
+        },
+      )
+    except:
+      pass
     
 
 def setup(bot):
