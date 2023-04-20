@@ -3,7 +3,7 @@ import requests
 
 import discord
 from contextlib import suppress
-from redbot.core import commands
+from redbot.core import commands, Config
 
 BaseCog = getattr(commands, "Cog", object)
 
@@ -18,7 +18,11 @@ tweet_user = "FortniteStatus"
 class TweetRepost(BaseCog):
   
   def __init__(self, bot):
+    super().__init__(*args, **kwargs)
     self.bot = bot
+    self.config = Config.get_conf(self, identifier=4000121212000335, force_registration=True)
+    default_guild = {"last_id": 0}
+    self.config.register_guild(**default_guild)
         
   @commands.Cog.listener()
   async def on_message(self, message):
@@ -48,8 +52,12 @@ class TweetRepost(BaseCog):
         "id": tweet.id,
         "text": input_data["full_text"],
         "image": image,
-        "timestamp": input_data["created_at"],
+        "timestamp": dateutil.parser.parse(input_data["created_at"]).timestamp(),
       })
+    # Last posted tweet check
+    last_id = await self.config.guild(self.guild).last_id()
+    
+    await self.config.guild(self.guild).last_id.set(last_id)
     # Webhook Posts
     for post in to_post:
       try:
