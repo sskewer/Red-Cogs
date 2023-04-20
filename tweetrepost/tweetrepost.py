@@ -76,7 +76,7 @@ class TweetRepost(BaseCog):
               "text": post["text"],
               "image": post["image"],
               "timestamp": post["timestamp"],
-              "color": "#ffffff",
+              "color": "#00abee",
               "translate_language": "it",
             },
           )
