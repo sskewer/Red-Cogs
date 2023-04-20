@@ -8,9 +8,7 @@ from redbot.core import commands
 BaseCog = getattr(commands, "Cog", object)
 
 # REMEMBER TO SET PARAMETERS BELOW USING THIS COMMAND
-# [p]set api TweetRepost
-#   webhook_url,XXXXXXXXXXXXXXXXXXXXXXXXX
-#   bearer_token,XXXXXXXXXXXXXXXXXXXXXXXXX
+# [p]set api TweetRepost webhook_url,XXXXX bearer_token,XXXXX
 
 tweet_user_id = "FortniteStatus" # Remember to change this parameter according to your needs
 
