@@ -8,9 +8,9 @@ from redbot.core import commands
 BaseCog = getattr(commands, "Cog", object)
 
 # REMEMBER TO SET PARAMETERS BELOW USING THIS COMMAND
-# [p]set api TweetRepost webhook_url,XXXXX bearer_token,XXXXX
+# [p]set api TweetRepost webhook_url,XXXXX consumer_key,XXXXX consumer_secret,XXXXX access_token,XXXXX access_token_secret,XXXXX
 
-tweet_user_id = 1181729392755707904 # Remember to change this parameter according to your needs
+tweet_user = "FortniteStatus" # Remember to change this parameter according to your needs
 
 class TweetRepost(BaseCog):
   
@@ -20,16 +20,18 @@ class TweetRepost(BaseCog):
   @commands.Cog.listener()
   async def on_message(self, message):
     try:
-      webhook_url = (await self.bot.get_shared_api_tokens('TweetRepost'))['webhook_url']
-      bearer_token = (await self.bot.get_shared_api_tokens('TweetRepost'))['bearer_token']
+      api_tokens = await bot.get_shared_api_tokens('TweetRepost')
     except:
       return
-    client = tweepy.Client(bearer_token = bearer_token)
-    response = client.get_users_tweets(tweet_user_id, max_results = 5)
-    for tweet in response.data:
-      print(tweet.id)
-      print(tweet.text)
+    auth = tweepy.OAuth1UserHandler(
+      api_tokens["consumer_key"], 
+      api_tokens["consumer_secret"], 
+      api_tokens["access_token"], 
+      api_tokens["access_token_secret"]
+    )
+    api = tweepy.API(auth)
     try:
+      tweets = api.search_tweets(str(tweet_user), count = 5, tweet_mode = "extended")
       requests.post(
         "https://Fortnite.mettiushyper.repl.co/webhook",
         headers = {
