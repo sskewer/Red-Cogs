@@ -104,7 +104,7 @@ class TweetRepost(BaseCog):
   @look_for_new_tweets.error
   async def look_for_new_tweets_error(self, error):
     log.error("Error in the task. Restarting the loop...", exc_info = True)
-    return self._shop_update_loop.restart()
+    return self.look_for_new_tweets.restart()
 
       
 def setup(bot):
