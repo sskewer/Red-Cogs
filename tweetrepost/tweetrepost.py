@@ -98,7 +98,7 @@ class TweetRepost(BaseCog):
         await self.config.last_id.set(post["id"])
       except:
         pass
-    log.info("Waiting for 15 minutes...")
+    log.info("Waiting for 10 minutes...")
 
     
   @look_for_new_tweets.error
